@@ -1,0 +1,11 @@
+C:\Users\Chingiz\Documents\Visual Studio 2017\Projects\CA-Uber2\WebApi\WebApi\WebApi\bin\Debug\netcoreapp2.0\WebApi.deps.json
+C:\Users\Chingiz\Documents\Visual Studio 2017\Projects\CA-Uber2\WebApi\WebApi\WebApi\bin\Debug\netcoreapp2.0\WebApi.runtimeconfig.json
+C:\Users\Chingiz\Documents\Visual Studio 2017\Projects\CA-Uber2\WebApi\WebApi\WebApi\bin\Debug\netcoreapp2.0\WebApi.runtimeconfig.dev.json
+C:\Users\Chingiz\Documents\Visual Studio 2017\Projects\CA-Uber2\WebApi\WebApi\WebApi\bin\Debug\netcoreapp2.0\WebApi.dll
+C:\Users\Chingiz\Documents\Visual Studio 2017\Projects\CA-Uber2\WebApi\WebApi\WebApi\obj\Debug\netcoreapp2.0\WebApi.csprojResolveAssemblyReference.cache
+C:\Users\Chingiz\Documents\Visual Studio 2017\Projects\CA-Uber2\WebApi\WebApi\WebApi\obj\Debug\netcoreapp2.0\WebApi.csproj.CoreCompileInputs.cache
+C:\Users\Chingiz\Documents\Visual Studio 2017\Projects\CA-Uber2\WebApi\WebApi\WebApi\obj\Debug\netcoreapp2.0\WebApi.AssemblyInfoInputs.cache
+C:\Users\Chingiz\Documents\Visual Studio 2017\Projects\CA-Uber2\WebApi\WebApi\WebApi\obj\Debug\netcoreapp2.0\WebApi.AssemblyInfo.cs
+C:\Users\Chingiz\Documents\Visual Studio 2017\Projects\CA-Uber2\WebApi\WebApi\WebApi\bin\Debug\netcoreapp2.0\WebApi.pdb
+C:\Users\Chingiz\Documents\Visual Studio 2017\Projects\CA-Uber2\WebApi\WebApi\WebApi\obj\Debug\netcoreapp2.0\WebApi.dll
+C:\Users\Chingiz\Documents\Visual Studio 2017\Projects\CA-Uber2\WebApi\WebApi\WebApi\obj\Debug\netcoreapp2.0\WebApi.pdb
