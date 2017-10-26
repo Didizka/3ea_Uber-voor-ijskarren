@@ -13,7 +13,7 @@ using WebApi.Models;
 namespace WebApi.Data.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20171026123044_UserInitialize")]
+    [Migration("20171026155117_UserInitialize")]
     partial class UserInitialize
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

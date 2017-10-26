@@ -32,7 +32,7 @@ namespace WebApi.Models
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        // Navigation Property
+        // Navigation Properties
         public UserRoleTypes UserRoleType { get; set; }
 
         public ContactInformation ContactInformation { get; set; }

@@ -17,14 +17,7 @@ namespace WebApi.Data
             {
                 return;
             }
-
-            //var roles = new List<UserRole>
-            //{
-            //    new UserRole { UserRoleType = UserRoleTypes.CUSTOMER },
-            //    new UserRole { UserRoleType = UserRoleTypes.DRIVER },
-            //    new UserRole { UserRoleType = UserRoleTypes.ADMIN}
-            //};
-            
+                        
 
             var customers = new List<Customer>
             {

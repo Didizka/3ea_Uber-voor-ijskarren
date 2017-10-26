@@ -17,7 +17,7 @@ namespace WebApi.Models
         public string Email { get; set; }
 
         [StringLength(13, MinimumLength = 9, ErrorMessage = "Telefoonnummer moet tussen 9 en 13 cijfers bevatten")]
-        [RegularExpression("[^0-9]", ErrorMessage = "Enkel cijfers zijn toegelaten")]
+        [DataType(DataType.PhoneNumber, ErrorMessage = "Enkel cijfers zijn toegelaten")]
         public string PhoneNumber { get; set; }
 
         // Navigation properties

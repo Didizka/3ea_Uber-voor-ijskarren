@@ -30,6 +30,7 @@ namespace WebApi
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddMvc();
+            services.AddMvcCore().AddDataAnnotations().AddJsonFormatters();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
