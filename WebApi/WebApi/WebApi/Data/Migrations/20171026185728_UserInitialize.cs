@@ -15,9 +15,9 @@ namespace WebApi.Data.Migrations
                 {
                     AddressID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    StreetName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    StreetNumber = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
-                    ZipCode = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: true)
+                    StreetName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    StreetNumber = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    ZipCode = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -32,7 +32,7 @@ namespace WebApi.Data.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AddressID = table.Column<int>(type: "int", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: true)
+                    PhoneNumber = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -54,9 +54,9 @@ namespace WebApi.Data.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     ContactInformationID = table.Column<int>(type: "int", nullable: true),
                     Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Password = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     RegistrationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserRoleType = table.Column<int>(type: "int", nullable: false)
                 },

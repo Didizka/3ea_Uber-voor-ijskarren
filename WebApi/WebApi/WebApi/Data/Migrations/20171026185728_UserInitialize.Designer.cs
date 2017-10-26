@@ -13,7 +13,7 @@ using WebApi.Models;
 namespace WebApi.Data.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20171026155117_UserInitialize")]
+    [Migration("20171026185728_UserInitialize")]
     partial class UserInitialize
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,12 +29,15 @@ namespace WebApi.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("StreetName")
+                        .IsRequired()
                         .HasMaxLength(50);
 
                     b.Property<string>("StreetNumber")
+                        .IsRequired()
                         .HasMaxLength(10);
 
                     b.Property<string>("ZipCode")
+                        .IsRequired()
                         .HasMaxLength(6);
 
                     b.HasKey("AddressID");
@@ -53,6 +56,7 @@ namespace WebApi.Data.Migrations
                         .IsRequired();
 
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasMaxLength(13);
 
                     b.HasKey("ContactInformationID");
@@ -73,12 +77,15 @@ namespace WebApi.Data.Migrations
                         .IsRequired();
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasMaxLength(50);
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasMaxLength(50);
 
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasMaxLength(100);
 
                     b.Property<DateTime>("RegistrationDate");

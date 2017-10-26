@@ -12,10 +12,11 @@ namespace WebApi.Models
     {
         public int ContactInformationID { get; set; }
 
-        [Required(ErrorMessage = "Email adres is verplicht")]
+        [Required(ErrorMessage = "De email adres is verplicht")]
         [DataType(DataType.EmailAddress, ErrorMessage = "Email is niet geldig")]
         public string Email { get; set; }
 
+        [Required(ErrorMessage = "Het telefoonnummer is verplicht")]
         [StringLength(13, MinimumLength = 9, ErrorMessage = "Telefoonnummer moet tussen 9 en 13 cijfers bevatten")]
         [DataType(DataType.PhoneNumber, ErrorMessage = "Enkel cijfers zijn toegelaten")]
         public string PhoneNumber { get; set; }
