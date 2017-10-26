@@ -82,29 +82,15 @@ namespace WebApi.Data.Migrations
 
                     b.Property<DateTime>("RegistrationDate");
 
-                    b.Property<int?>("UserRoleID");
+                    b.Property<int>("UserRoleType");
 
                     b.HasKey("UserID");
 
                     b.HasIndex("ContactInformationID");
 
-                    b.HasIndex("UserRoleID");
-
                     b.ToTable("Users");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("User");
-                });
-
-            modelBuilder.Entity("WebApi.Models.UserRole", b =>
-                {
-                    b.Property<int>("UserRoleID")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("UserRoleType");
-
-                    b.HasKey("UserRoleID");
-
-                    b.ToTable("UserRoles");
                 });
 
             modelBuilder.Entity("WebApi.Models.Customer", b =>
@@ -140,10 +126,6 @@ namespace WebApi.Data.Migrations
                     b.HasOne("WebApi.Models.ContactInformation", "ContactInformation")
                         .WithMany()
                         .HasForeignKey("ContactInformationID");
-
-                    b.HasOne("WebApi.Models.UserRole", "UserRole")
-                        .WithMany("Users")
-                        .HasForeignKey("UserRoleID");
                 });
 #pragma warning restore 612, 618
         }

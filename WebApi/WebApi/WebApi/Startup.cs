@@ -40,10 +40,7 @@ namespace WebApi
                 app.UseDeveloperExceptionPage();
             }
 
-            app.Run(async (context) =>
-            {
-                await context.Response.WriteAsync("Api server running!");
-            });
+            app.UseMvcWithDefaultRoute();
         }
     }
 }

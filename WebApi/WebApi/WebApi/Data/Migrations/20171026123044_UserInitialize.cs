@@ -25,19 +25,6 @@ namespace WebApi.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserRoles",
-                columns: table => new
-                {
-                    UserRoleID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    UserRoleType = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserRoles", x => x.UserRoleID);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ContactInformation",
                 columns: table => new
                 {
@@ -71,7 +58,7 @@ namespace WebApi.Data.Migrations
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Password = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     RegistrationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserRoleID = table.Column<int>(type: "int", nullable: true)
+                    UserRoleType = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -81,12 +68,6 @@ namespace WebApi.Data.Migrations
                         column: x => x.ContactInformationID,
                         principalTable: "ContactInformation",
                         principalColumn: "ContactInformationID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Users_UserRoles_UserRoleID",
-                        column: x => x.UserRoleID,
-                        principalTable: "UserRoles",
-                        principalColumn: "UserRoleID",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -99,11 +80,6 @@ namespace WebApi.Data.Migrations
                 name: "IX_Users_ContactInformationID",
                 table: "Users",
                 column: "ContactInformationID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_UserRoleID",
-                table: "Users",
-                column: "UserRoleID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -113,9 +89,6 @@ namespace WebApi.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "ContactInformation");
-
-            migrationBuilder.DropTable(
-                name: "UserRoles");
 
             migrationBuilder.DropTable(
                 name: "Addresses");

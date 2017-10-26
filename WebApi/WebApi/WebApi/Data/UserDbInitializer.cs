@@ -18,25 +18,19 @@ namespace WebApi.Data
                 return;
             }
 
-            var roles = new List<UserRole>
-            {
-                new UserRole { UserRoleType = UserRoleTypes.CUSTOMER },
-                new UserRole { UserRoleType = UserRoleTypes.DRIVER },
-                new UserRole { UserRoleType = UserRoleTypes.ADMIN}
-            };
-
-            foreach (var role in roles)
-            {
-                context.UserRoles.Add(role);
-            }
-
-            context.SaveChanges();
+            //var roles = new List<UserRole>
+            //{
+            //    new UserRole { UserRoleType = UserRoleTypes.CUSTOMER },
+            //    new UserRole { UserRoleType = UserRoleTypes.DRIVER },
+            //    new UserRole { UserRoleType = UserRoleTypes.ADMIN}
+            //};
+            
 
             var customers = new List<Customer>
             {
-                new Customer{ FirstName = "Sanjy", LastName = "Kanagarasa", Password = "test123", RegistrationDate = DateTime.Now, UserRole = roles[0], ContactInformation = new ContactInformation { Email = "sanjy@uber.be", PhoneNumber = "111222333444", Address =  new Address { StreetName = "Ellermanstraat", StreetNumber = "41", ZipCode = "2060"}}},
-                new Customer{ FirstName = "Chingiz", LastName = "Mizambekov", Password = "test123", RegistrationDate = DateTime.Now, UserRole = roles[0], ContactInformation = new ContactInformation { Email = "chingiz@uber.be", PhoneNumber = "4443332221111", Address =  new Address { StreetName = "Ellermanstraat", StreetNumber = "41", ZipCode = "2060"}}},
-                new Customer{ FirstName = "Stijn", LastName = "Pittomvils", Password = "test123", RegistrationDate = DateTime.Now, UserRole = roles[0], ContactInformation = new ContactInformation { Email = "stijn@uber.be", PhoneNumber = "99999999999", Address =  new Address { StreetName = "Ellermanstraat", StreetNumber = "41", ZipCode = "2060"}}},
+                new Customer{ FirstName = "Sanjy", LastName = "Kanagarasa", Password = "test123", RegistrationDate = DateTime.Now, UserRoleType = UserRoleTypes.CUSTOMER, ContactInformation = new ContactInformation { Email = "sanjy@uber.be", PhoneNumber = "111222333444", Address =  new Address { StreetName = "Ellermanstraat", StreetNumber = "41", ZipCode = "2060"}}},
+                new Customer{ FirstName = "Chingiz", LastName = "Mizambekov", Password = "test123", RegistrationDate = DateTime.Now, UserRoleType = UserRoleTypes.CUSTOMER, ContactInformation = new ContactInformation { Email = "chingiz@uber.be", PhoneNumber = "4443332221111", Address =  new Address { StreetName = "Ellermanstraat", StreetNumber = "41", ZipCode = "2060"}}},
+                new Customer{ FirstName = "Stijn", LastName = "Pittomvils", Password = "test123", RegistrationDate = DateTime.Now, UserRoleType = UserRoleTypes.CUSTOMER, ContactInformation = new ContactInformation { Email = "stijn@uber.be", PhoneNumber = "99999999999", Address =  new Address { StreetName = "Ellermanstraat", StreetNumber = "41", ZipCode = "2060"}}},
 
             };
 
@@ -49,9 +43,9 @@ namespace WebApi.Data
 
             var drivers = new List<Driver>
             {
-                new Driver{ FirstName = "Sanjy", LastName = "Kanagarasa", Password = "test123", RegistrationDate = DateTime.Now, UserRole = roles[1], ContactInformation = new ContactInformation { Email = "sanjy@uber.be", PhoneNumber = "111222333444", Address =  new Address { StreetName = "Ellermanstraat", StreetNumber = "41", ZipCode = "2060"}}},
-                new Driver{ FirstName = "Chingiz", LastName = "Mizambekov", Password = "test123", RegistrationDate = DateTime.Now, UserRole = roles[1], ContactInformation = new ContactInformation { Email = "chingiz@uber.be", PhoneNumber = "4443332221111", Address =  new Address { StreetName = "Ellermanstraat", StreetNumber = "41", ZipCode = "2060"}}},
-                new Driver{ FirstName = "Stijn", LastName = "Pittomvils", Password = "test123", RegistrationDate = DateTime.Now, UserRole = roles[1], ContactInformation = new ContactInformation { Email = "stijn@uber.be", PhoneNumber = "99999999999", Address =  new Address { StreetName = "Ellermanstraat", StreetNumber = "41", ZipCode = "2060"}}, IsApproved = true },
+                new Driver{ FirstName = "Sanjy", LastName = "Kanagarasa", Password = "test123", RegistrationDate = DateTime.Now, UserRoleType = UserRoleTypes.DRIVER, ContactInformation = new ContactInformation { Email = "sanjy@uber.be", PhoneNumber = "111222333444", Address =  new Address { StreetName = "Ellermanstraat", StreetNumber = "41", ZipCode = "2060"}}},
+                new Driver{ FirstName = "Chingiz", LastName = "Mizambekov", Password = "test123", RegistrationDate = DateTime.Now, UserRoleType = UserRoleTypes.DRIVER, ContactInformation = new ContactInformation { Email = "chingiz@uber.be", PhoneNumber = "4443332221111", Address =  new Address { StreetName = "Ellermanstraat", StreetNumber = "41", ZipCode = "2060"}}},
+                new Driver{ FirstName = "Stijn", LastName = "Pittomvils", Password = "test123", RegistrationDate = DateTime.Now, UserRoleType = UserRoleTypes.DRIVER, ContactInformation = new ContactInformation { Email = "stijn@uber.be", PhoneNumber = "99999999999", Address =  new Address { StreetName = "Ellermanstraat", StreetNumber = "41", ZipCode = "2060"}}, IsApproved = true },
 
             };
 

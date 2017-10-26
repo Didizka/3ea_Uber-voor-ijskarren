@@ -4,6 +4,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApi.Models
 {
+
+    public enum UserRoleTypes
+    {
+        CUSTOMER = 0,
+        DRIVER = 1,
+        ADMIN = 2
+    }
+
+
     [Table("Users")]
     public class User
     {
@@ -15,6 +24,8 @@ namespace WebApi.Models
         [StringLength(50, MinimumLength = 2, ErrorMessage = "Achternaam moet tussen 2 en 50 karakters bevatten")]
         public string LastName { get; set; }
 
+        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/mm/yyyy}")]
         public DateTime RegistrationDate { get; set; }
 
         [StringLength(100, ErrorMessage = "Het wachtwoord moet tussen {0} en {2} karakters bevatten", MinimumLength = 6)]
@@ -22,7 +33,7 @@ namespace WebApi.Models
         public string Password { get; set; }
 
         // Navigation Property
-        public UserRole UserRole { get; set; }
+        public UserRoleTypes UserRoleType { get; set; }
 
         public ContactInformation ContactInformation { get; set; }
     }
