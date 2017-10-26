@@ -7,6 +7,8 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using WebApi.Data;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace WebApi
 {
@@ -14,27 +16,26 @@ namespace WebApi
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            //BuildWebHost(args).Run();
 
-            //Will be used with dbcontext
-            //var host = BuildWebHost(args);
+            var host = BuildWebHost(args);
 
-            //using (var scope = host.Services.CreateScope())
-            //{
-            //    var services = scope.ServiceProvider;
-            //    try
-            //    {
-            //        var context = services.GetRequiredService<FitnessAppContext>();
-            //        DbInitializer.Initialize(context);
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        var logger = services.GetRequiredService<ILogger<Program>>();
-            //        logger.LogError(ex, "An error occurred while seeding the database.");
-            //    }
-            //}
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var context = services.GetRequiredService<UserContext>();
+                    UserDbInitializer.Initialize(context);
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred while seeding the database.");
+                }
+            }
 
-            //host.Run();
+            host.Run();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
