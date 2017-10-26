@@ -140,8 +140,12 @@ namespace WebApi.Controllers
         
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            var user = context.Users.Find(id);
+            context.Users.Remove(user);
+            context.SaveChanges();
+            return Ok(user);
         }
     }
 }
