@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using WebApi.HelperClasses;
 
 namespace WebApi.Models
 {
@@ -31,9 +32,21 @@ namespace WebApi.Models
         public DateTime RegistrationDate { get; set; }
 
         [Required(ErrorMessage = "Het wachtwoord is verplicht")]
-        [StringLength(100, ErrorMessage = "Het wachtwoord moet tussen {0} en {2} karakters bevatten", MinimumLength = 6)]
+        [StringLength(128, ErrorMessage = "Het wachtwoord moet tussen {0} en {2} karakters bevatten", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        public string Password { get; set; }
+        // Hash the passwords
+        private string _password;
+        public string Password
+        {
+            get
+            {
+                return this._password;
+            }
+            set
+            {
+                this._password = PasswordEncryption.getHash(value);
+            }
+        }
 
         // Navigation Properties
         [Required(ErrorMessage = "De user rol is verplicht")]
