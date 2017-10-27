@@ -13,8 +13,8 @@ using WebApi.Models;
 namespace WebApi.Data.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20171026185728_UserInitialize")]
-    partial class UserInitialize
+    [Migration("20171027202157_UsersInit")]
+    partial class UsersInit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -84,11 +84,11 @@ namespace WebApi.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(100);
+                    b.Property<string>("Password");
 
                     b.Property<DateTime>("RegistrationDate");
+
+                    b.Property<string>("Salt");
 
                     b.Property<int>("UserRoleType");
 

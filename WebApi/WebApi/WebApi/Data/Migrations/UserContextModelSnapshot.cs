@@ -83,11 +83,11 @@ namespace WebApi.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(100);
+                    b.Property<string>("Password");
 
                     b.Property<DateTime>("RegistrationDate");
+
+                    b.Property<string>("Salt");
 
                     b.Property<int>("UserRoleType");
 
