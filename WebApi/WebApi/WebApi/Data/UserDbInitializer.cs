@@ -13,7 +13,7 @@ namespace WebApi.Data
         {
             context.Database.EnsureCreated();
 
-            if (context.Customers.Any() || context.Drivers.Any())
+            if (context.Users.Any())
             {
                 return;
             }

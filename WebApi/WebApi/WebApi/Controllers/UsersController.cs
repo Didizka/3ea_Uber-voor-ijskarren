@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using WebApi.Models;
 using WebApi.Models.Users;
+using System.Linq;
+using AutoMapper;
+using Newtonsoft.Json.Linq;
 
 namespace WebApi.Controllers
 {
@@ -12,9 +15,11 @@ namespace WebApi.Controllers
     public class UsersController : Controller
     {
         private readonly UserContext context;
+        private readonly IMapper mapper;
 
-        public UsersController(UserContext _context) {
+        public UsersController(UserContext _context, IMapper _mapper) {
             context = _context;
+            mapper = _mapper;
         }
 
         //////////////////////////////////// 
@@ -35,9 +40,15 @@ namespace WebApi.Controllers
         ///     GET: api/Users/5    /////
         /// /////////////////////////////
         [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            return "value";
+            var user = await context.Users.Where(u => u.UserID == id)
+                            .Include(c => c.ContactInformation)
+                                   .ThenInclude(a => a.Address)
+                            .ToListAsync();
+            if (user != null)
+                return Ok(user);
+            return BadRequest(id);
         }
 
 
@@ -117,35 +128,78 @@ namespace WebApi.Controllers
                 if (user.GetType() == typeof(Customer))
                 {
                     context.Users.Add(user);
-                } else if (user.GetType() == typeof(Driver))
+                }
+                else if (user.GetType() == typeof(Driver))
                 {
                     context.Users.Add(user);
                 }
 
                 context.SaveChanges();
                 newUserSavedToDatabase = true;
-            } catch (DbUpdateConcurrencyException ex)
+            }
+            catch (DbUpdateConcurrencyException ex)
             {
                 // Log exception
             }
 
             return Json(newUserSavedToDatabase);
         }
-        
+
         // PUT: api/Users/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public async Task<IActionResult> Put(int id, [FromBody]RegistrationForm newUser)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var user = await context.Users
+                .Include(v => v.ContactInformation)
+                    .ThenInclude(vf => vf.Address)
+                .SingleOrDefaultAsync(v => v.UserID == id);
+
+            if (user == null)
+                return NotFound();
+
+            // Update Customer object
+            if (user.UserRoleType == UserRoleTypes.CUSTOMER)
+            {
+                var customer = mapper.Map<RegistrationForm, Customer>(newUser, (Customer) user);
+                context.Users.Update(customer);
+                await context.SaveChangesAsync();
+                return Ok(customer);
+
+            }
+
+            // Update driver object
+            else if (user.UserRoleType == UserRoleTypes.DRIVER)
+            {
+                var driver = mapper.Map<RegistrationForm, Driver>(newUser, (Driver) user);
+                context.Users.Update(driver);
+                await context.SaveChangesAsync();
+                return Ok(user);
+            }
+            return BadRequest(false);
         }
+    
         
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var user = context.Users.Find(id);
-            context.Users.Remove(user);
-            context.SaveChanges();
-            return Ok(user);
+            var user = await context.Users
+                .Include(v => v.ContactInformation)
+                    .ThenInclude(vf => vf.Address)
+                .SingleOrDefaultAsync(v => v.UserID == id);
+            if (user != null)
+            {
+                //context.Remove(user);
+                context.RemoveRange(user.ContactInformation.Address);
+                context.RemoveRange(user.ContactInformation);
+                context.RemoveRange(user);
+                context.SaveChanges();
+                return Ok(true);
+            }
+            return NotFound(id);
         }
     }
 }
