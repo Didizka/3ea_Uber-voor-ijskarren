@@ -158,7 +158,7 @@ namespace WebApi.Controllers
                 .SingleOrDefaultAsync(v => v.UserID == id);
 
             if (user == null)
-                return NotFound();
+                return NotFound(false);
 
             // Update Customer object
             if (user.UserRoleType == UserRoleTypes.CUSTOMER)
@@ -166,7 +166,7 @@ namespace WebApi.Controllers
                 var customer = mapper.Map<RegistrationForm, Customer>(newUser, (Customer) user);
                 context.Users.Update(customer);
                 await context.SaveChangesAsync();
-                return Ok(customer);
+                return Ok(true);
 
             }
 
@@ -176,7 +176,7 @@ namespace WebApi.Controllers
                 var driver = mapper.Map<RegistrationForm, Driver>(newUser, (Driver) user);
                 context.Users.Update(driver);
                 await context.SaveChangesAsync();
-                return Ok(user);
+                return Ok(true);
             }
             return BadRequest(false);
         }
@@ -199,7 +199,7 @@ namespace WebApi.Controllers
                 context.SaveChanges();
                 return Ok(true);
             }
-            return NotFound(id);
+            return NotFound(false);
         }
     }
 }
