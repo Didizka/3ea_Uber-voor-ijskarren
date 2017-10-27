@@ -26,21 +26,26 @@ namespace WebApi.Controllers
         ///     GET: api/Users      ////////
         //////////////////////////////////// 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAllUsers()
         {
             var result = await context.Users
                             .Include(c => c.ContactInformation)
                                    .ThenInclude(a => a.Address)
                             .ToListAsync();
                     
-            return Json(result);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+
+            return NotFound(false);
         }
 
         ///////////////////////////////// 
         ///     GET: api/Users/5    /////
-        /// /////////////////////////////
-        [HttpGet("{id}", Name = "Get")]
-        public async Task<IActionResult> Get(int id)
+        /////////////////////////////////
+        [HttpGet("{id:int}"), ActionName("GetUserById/{id}")]
+        public async Task<IActionResult> GetUserById(int id)
         {
             var user = await context.Users.Where(u => u.UserID == id)
                             .Include(c => c.ContactInformation)
@@ -51,12 +56,27 @@ namespace WebApi.Controllers
             return BadRequest(id);
         }
 
+        ///////////////////////////////////////////////
+        ///     GET: api/users/chingiz@uber.be    /////
+        ///////////////////////////////////////////////
+        [HttpGet("{email}"), ActionName("GetUserByEmail/{email}")]
+        public async Task<IActionResult> GetUserByEmail(string email)
+        {
+            var user = await context.Users.Where(u => u.ContactInformation.Email == email)
+                            .Include(c => c.ContactInformation)
+                                   .ThenInclude(a => a.Address)
+                            .ToListAsync();
+            if (user != null)
+                return Ok(user);
+            return BadRequest(email);
+        }
+
 
         ///////////////////////////////// 
         ///     POST: api/Users     /////
         /// /////////////////////////////
-        [HttpPost]
-        public IActionResult Post([FromBody] RegistrationForm newUser)
+        [HttpPost, ActionName("CreateNewUser")]
+        public IActionResult CreateNewUser([FromBody] RegistrationForm newUser)
         {
             // placeholder for new user object
             var user = new User();
@@ -142,12 +162,12 @@ namespace WebApi.Controllers
                 // Log exception
             }
 
-            return Json(newUserSavedToDatabase);
+            return Ok(newUserSavedToDatabase);
         }
 
         // PUT: api/Users/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody]RegistrationForm newUser)
+        public async Task<IActionResult> EditUserById(int id, [FromBody]RegistrationForm newUser)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -184,7 +204,7 @@ namespace WebApi.Controllers
         
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteUserById(int id)
         {
             var user = await context.Users
                 .Include(v => v.ContactInformation)
