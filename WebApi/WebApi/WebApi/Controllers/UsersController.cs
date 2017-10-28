@@ -6,7 +6,6 @@ using WebApi.Models;
 using WebApi.Models.Users;
 using System.Linq;
 using AutoMapper;
-using Newtonsoft.Json.Linq;
 
 namespace WebApi.Controllers
 {
@@ -38,7 +37,7 @@ namespace WebApi.Controllers
                 return BadRequest();
             }
 
-            return NotFound(false);
+            return Ok(result);
         }
 
         ///////////////////////////////// 
@@ -76,13 +75,16 @@ namespace WebApi.Controllers
         ///     POST: api/Users     /////
         /// /////////////////////////////
         [HttpPost, ActionName("CreateNewUser")]
-        public IActionResult CreateNewUser([FromBody] RegistrationForm newUser)
+        public async Task<IActionResult> CreateNewUserAsync([FromBody] RegistrationForm newUser)
         {
             // placeholder for new user object
             var user = new User();
 
             // placeholder for feedback
             var newUserSavedToDatabase = false;
+
+            // placeholder to check the uniqueness of the new users email address
+            var newUserHasUniqueEmail = true;
 
             // check if form was filled in correctly
             if (!ModelState.IsValid)
@@ -142,26 +144,45 @@ namespace WebApi.Controllers
                 };
             }
 
-            try
-            {
-                // Check if user is Customer or Driver
-                if (user.GetType() == typeof(Customer))
-                {
-                    context.Users.Add(user);
-                }
-                else if (user.GetType() == typeof(Driver))
-                {
-                    context.Users.Add(user);
-                }
+            // Get all existing users and check if new users email hasn't been used yet
+            var existingUsers = await context.Users
+                            .Include(c => c.ContactInformation)
+                                   .ThenInclude(a => a.Address)
+                            .ToListAsync();
 
-                context.SaveChanges();
-                newUserSavedToDatabase = true;
-            }
-            catch (DbUpdateException ex)
+            foreach (var u in existingUsers)
             {
-                // write custom message? OR check before saving
-                // Normally here only log info
-                return BadRequest(ex.InnerException.Message);
+                if (u.ContactInformation.Email == user.ContactInformation.Email)
+                {
+                    newUserHasUniqueEmail = false;
+                }
+            }
+
+            // Add new user to the database only if he's email is unique
+            if (newUserHasUniqueEmail)
+            {
+                try
+                {
+                    // Check if user is Customer or Driver
+                    if (user.GetType() == typeof(Customer))
+                    {
+                        context.Users.Add(user);
+                    }
+                    else if (user.GetType() == typeof(Driver))
+                    {
+                        context.Users.Add(user);
+                    }
+
+                    context.SaveChanges();
+                    newUserSavedToDatabase = true;
+                }
+                catch (DbUpdateException ex)
+                {
+                    return BadRequest(ex);
+                }
+            } else
+            {
+                return BadRequest("Email must be unique");
             }
 
             return Ok(newUserSavedToDatabase);
