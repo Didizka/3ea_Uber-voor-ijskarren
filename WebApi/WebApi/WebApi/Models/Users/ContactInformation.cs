@@ -14,6 +14,7 @@ namespace WebApi.Models
 
         [Required(ErrorMessage = "De email adres is verplicht")]
         [DataType(DataType.EmailAddress, ErrorMessage = "Email is niet geldig")]
+        [StringLength(50, ErrorMessage = "Email mag maximaal 50 karakters bevatten")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Het telefoonnummer is verplicht")]

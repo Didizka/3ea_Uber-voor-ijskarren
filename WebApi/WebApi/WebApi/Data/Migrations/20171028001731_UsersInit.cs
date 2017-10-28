@@ -31,7 +31,7 @@ namespace WebApi.Data.Migrations
                     ContactInformationID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AddressID = table.Column<int>(type: "int", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false)
                 },
                 constraints: table =>
@@ -58,7 +58,7 @@ namespace WebApi.Data.Migrations
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RegistrationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Salt = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Salt = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
                     UserRoleType = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -76,6 +76,12 @@ namespace WebApi.Data.Migrations
                 name: "IX_ContactInformation_AddressID",
                 table: "ContactInformation",
                 column: "AddressID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ContactInformation_Email",
+                table: "ContactInformation",
+                column: "Email",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_ContactInformationID",

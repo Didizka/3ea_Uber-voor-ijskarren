@@ -13,7 +13,7 @@ using WebApi.Models;
 namespace WebApi.Data.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20171027202157_UsersInit")]
+    [Migration("20171028001731_UsersInit")]
     partial class UsersInit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,7 +53,8 @@ namespace WebApi.Data.Migrations
                     b.Property<int?>("AddressID");
 
                     b.Property<string>("Email")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(50);
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
@@ -62,6 +63,9 @@ namespace WebApi.Data.Migrations
                     b.HasKey("ContactInformationID");
 
                     b.HasIndex("AddressID");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("ContactInformation");
                 });
@@ -88,7 +92,9 @@ namespace WebApi.Data.Migrations
 
                     b.Property<DateTime>("RegistrationDate");
 
-                    b.Property<string>("Salt");
+                    b.Property<string>("Salt")
+                        .IsRequired()
+                        .HasMaxLength(64);
 
                     b.Property<int>("UserRoleType");
 

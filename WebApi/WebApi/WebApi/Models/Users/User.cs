@@ -33,11 +33,11 @@ namespace WebApi.Models
         public DateTime RegistrationDate { get; set; }
 
         [Required]
-        [StringLength(32)]
+        [StringLength(64)]
         public string Salt { get; set; }
 
         [Required(ErrorMessage = "Het wachtwoord is verplicht")]
-        [StringLength(128, ErrorMessage = "Het wachtwoord moet tussen {0} en {2} karakters bevatten", MinimumLength = 6)]
+        [StringLength(256, ErrorMessage = "Het wachtwoord moet tussen {0} en {2} karakters bevatten", MinimumLength = 6)]
         [DataType(DataType.Password)]
         // Hash the passwords
         private string _password;

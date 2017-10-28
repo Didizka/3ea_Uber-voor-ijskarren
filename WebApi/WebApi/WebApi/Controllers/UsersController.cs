@@ -157,9 +157,11 @@ namespace WebApi.Controllers
                 context.SaveChanges();
                 newUserSavedToDatabase = true;
             }
-            catch (DbUpdateConcurrencyException ex)
+            catch (DbUpdateException ex)
             {
-                // Log exception
+                // write custom message? OR check before saving
+                // Normally here only log info
+                return BadRequest(ex.InnerException.Message);
             }
 
             return Ok(newUserSavedToDatabase);
