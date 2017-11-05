@@ -28,7 +28,7 @@ namespace WebApi
         {
             // Injection for Automapper
             services.AddAutoMapper();
-            //Uncomment for use 
+            // Database connection
             services.AddDbContext<UserContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 

@@ -20,6 +20,11 @@ namespace WebApi.Data
 
             modelBuilder.Entity<ContactInformation>()
                 .HasOne(a => a.Address);
+
+            modelBuilder
+                .Entity<ContactInformation>()
+                 .HasIndex(e => e.Email)
+                 .IsUnique(true);
         }
     }
 

@@ -6,8 +6,11 @@ using WebApi.Models;
 using WebApi.Models.Users;
 using System.Linq;
 using AutoMapper;
+<<<<<<< HEAD
 using Newtonsoft.Json.Linq;
 using System;
+=======
+>>>>>>> 7ed8467e6f062ef5091190cd5b7ddb06f7367242
 
 namespace WebApi.Controllers
 {
@@ -27,21 +30,26 @@ namespace WebApi.Controllers
         ///     GET: api/Users      ////////
         //////////////////////////////////// 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAllUsers()
         {
             var result = await context.Users
                             .Include(c => c.ContactInformation)
                                    .ThenInclude(a => a.Address)
                             .ToListAsync();
                     
-            return Json(result);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(result);
         }
 
         ///////////////////////////////// 
         ///     GET: api/Users/5    /////
-        /// /////////////////////////////
-        [HttpGet("{id}", Name = "Get")]
-        public async Task<IActionResult> Get(int id)
+        /////////////////////////////////
+        [HttpGet("{id:int}"), ActionName("GetUserById/{id}")]
+        public async Task<IActionResult> GetUserById(int id)
         {
             var user = await context.Users.Where(u => u.UserID == id)
                             .Include(c => c.ContactInformation)
@@ -52,18 +60,36 @@ namespace WebApi.Controllers
             return BadRequest(id);
         }
 
+        ///////////////////////////////////////////////
+        ///     GET: api/users/chingiz@uber.be    /////
+        ///////////////////////////////////////////////
+        [HttpGet("{email}"), ActionName("GetUserByEmail/{email}")]
+        public async Task<IActionResult> GetUserByEmail(string email)
+        {
+            var user = await context.Users.Where(u => u.ContactInformation.Email == email)
+                            .Include(c => c.ContactInformation)
+                                   .ThenInclude(a => a.Address)
+                            .ToListAsync();
+            if (user != null)
+                return Ok(user);
+            return BadRequest(email);
+        }
+
 
         ///////////////////////////////// 
         ///     POST: api/Users     /////
         /// /////////////////////////////
-        [HttpPost]
-        public IActionResult Post([FromBody] RegistrationForm newUser)
+        [HttpPost, ActionName("CreateNewUser")]
+        public async Task<IActionResult> CreateNewUserAsync([FromBody] RegistrationForm newUser)
         {
             // placeholder for new user object
             var user = new User();
 
             // placeholder for feedback
             var newUserSavedToDatabase = false;
+
+            // placeholder to check the uniqueness of the new users email address
+            var newUserHasUniqueEmail = true;
 
             // check if form was filled in correctly
             if (!ModelState.IsValid)
@@ -123,32 +149,53 @@ namespace WebApi.Controllers
                 };
             }
 
-            try
-            {
-                // Check if user is Customer or Driver
-                if (user.GetType() == typeof(Customer))
-                {
-                    context.Users.Add(user);
-                }
-                else if (user.GetType() == typeof(Driver))
-                {
-                    context.Users.Add(user);
-                }
+            // Get all existing users and check if new users email hasn't been used yet
+            var existingUsers = await context.Users
+                            .Include(c => c.ContactInformation)
+                                   .ThenInclude(a => a.Address)
+                            .ToListAsync();
 
-                context.SaveChanges();
-                newUserSavedToDatabase = true;
-            }
-            catch (DbUpdateConcurrencyException ex)
+            foreach (var u in existingUsers)
             {
-                // Log exception
+                if (u.ContactInformation.Email == user.ContactInformation.Email)
+                {
+                    newUserHasUniqueEmail = false;
+                }
             }
 
-            return Json(newUserSavedToDatabase);
+            // Add new user to the database only if he's email is unique
+            if (newUserHasUniqueEmail)
+            {
+                try
+                {
+                    // Check if user is Customer or Driver
+                    if (user.GetType() == typeof(Customer))
+                    {
+                        context.Users.Add(user);
+                    }
+                    else if (user.GetType() == typeof(Driver))
+                    {
+                        context.Users.Add(user);
+                    }
+
+                    context.SaveChanges();
+                    newUserSavedToDatabase = true;
+                }
+                catch (DbUpdateException ex)
+                {
+                    return BadRequest(ex);
+                }
+            } else
+            {
+                return BadRequest("Email must be unique");
+            }
+
+            return Ok(newUserSavedToDatabase);
         }
 
         // PUT: api/Users/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody]RegistrationForm newUser)
+        public async Task<IActionResult> EditUserById(int id, [FromBody]RegistrationForm newUser)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -185,7 +232,7 @@ namespace WebApi.Controllers
         
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteUserById(int id)
         {
             var user = await context.Users
                 .Include(v => v.ContactInformation)
