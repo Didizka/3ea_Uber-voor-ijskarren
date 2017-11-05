@@ -7,6 +7,7 @@ using WebApi.Models.Users;
 using System.Linq;
 using AutoMapper;
 using Newtonsoft.Json.Linq;
+using System;
 
 namespace WebApi.Controllers
 {
@@ -106,7 +107,7 @@ namespace WebApi.Controllers
                     LastName = newUser.LastName,
                     Password = newUser.Password,
                     UserRoleType = UserRoleTypes.DRIVER,
-                    RegistrationDate = System.DateTime.Now,
+                    RegistrationDate = DateTime.Now,
                     IsApproved = false,
                     ContactInformation = new ContactInformation
                     {

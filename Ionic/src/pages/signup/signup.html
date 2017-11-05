@@ -1,0 +1,148 @@
+<ion-header >
+
+  <ion-navbar color="darkGreen" >
+    <ion-title>Create Account</ion-title>
+  </ion-navbar>
+  <ion-toolbar class="toolbarUser" color="darkGreen" >
+    <ion-segment [(ngModel)]="user" color="light">
+      <ion-segment-button value="customer" >
+        Customer
+      </ion-segment-button>
+      <ion-segment-button value="driver">
+        Driver
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+
+<!--<ion-content class="login-content" padding>
+  <form class="form">
+    <ion-row >
+      <ion-col>
+        <ion-list inset class="loginField">
+
+          <ion-item>
+            <ion-label icon-only> <ion-icon name="person"></ion-icon></ion-label>
+            <ion-input type="text" placeholder="Email" name="email"  required></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label floating="">Name</ion-label>
+            <ion-input type="password" placeholder="Password" name="password" required></ion-input>
+          </ion-item>
+
+        </ion-list>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <button ion-button block large=""  class="btnLogin" type="submit">
+          Login
+        </button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <button ion-button block clear color="light" type="button">
+          Sign up
+        </button>
+      </ion-col>
+    </ion-row>
+  </form>
+</ion-content>-->
+<ion-content class="login-content">
+
+  <div [ngSwitch]="user">
+    <!--//cunsomer-->
+    <ion-card class="login-box" *ngSwitchCase="'customer'" >
+
+      <form (ngSubmit)="onRegister(registerForm)" #registerForm="ngForm">
+            <ion-card class="secondCard">
+              <ion-list >
+                <ion-item>
+                  <ion-label color="darkGreen" fixed="">Firstname</ion-label>
+                  <ion-input type="text" name="firstName" [(ngModel)]="customer.firstName" required></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label color="darkGreen" fixed="">Lastname</ion-label>
+                  <ion-input type="text" name="lastName" [(ngModel)]="customer.lastName" required></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label color="darkGreen" fixed="">Phone Number</ion-label>
+                  <ion-input type="tel" name="phoneNumber" [(ngModel)]="customer.phoneNumber" required></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label color="darkGreen" fixed="">Street</ion-label>
+                  <ion-input type="text" name="streetName" [(ngModel)]="customer.address.streetName" required></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label color="darkGreen" fixed="">Street Number</ion-label>
+                  <ion-input type="text" name="streetNumber" [(ngModel)]="customer.address.streetNumber" required></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label color="darkGreen" fixed="">Zip Code</ion-label>
+                  <ion-input type="number" name="zipCode" [(ngModel)]="customer.address.zipCode" required></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label color="darkGreen" fixed="">Email</ion-label>
+                  <ion-input type="email" name="email" [(ngModel)]="customer.email" required></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label fixed="" color="darkGreen"> Password</ion-label>
+                  <ion-input type="password" name="password" [(ngModel)]="customer.password" required></ion-input>
+                </ion-item>
+
+              </ion-list>
+            </ion-card>
+
+        <ion-row>
+          <ion-col class="signup-col">
+            <button ion-button class="submit-btn" full type="submit" [disabled]="!registerForm.valid">Register</button>
+          </ion-col>
+        </ion-row>
+
+      </form>
+    </ion-card>
+
+    <!--//driver-->
+    <ion-card class="login-box" *ngSwitchCase="'driver'" >
+
+      <form (ngSubmit)="register()" #registerForm="ngForm">
+        <ion-row>
+          <ion-col>
+            <ion-card class="secondCard">
+              <ion-list >
+                <ion-item>
+                  <ion-label color="darkGreen" floating="">Firstname</ion-label>
+                  <ion-input type="text" name="firstname"  required></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label color="darkGreen" floating="">Lastname</ion-label>
+                  <ion-input type="text" name="lastname"  required></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label color="darkGreen" floating="">Email</ion-label>
+                  <ion-input type="email" name="email"  required></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label floating="" color="darkGreen"> Password</ion-label>
+                  <ion-input type="password" name="password"  required></ion-input>
+                </ion-item>
+
+              </ion-list>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col class="signup-col">
+            <button ion-button class="submit-btn" full type="submit" [disabled]="!registerForm.form.valid">Register</button>
+          </ion-col>
+        </ion-row>
+
+      </form>
+    </ion-card>
+  </div>
+
+</ion-content>
