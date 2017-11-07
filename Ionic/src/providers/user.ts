@@ -17,4 +17,9 @@ export class UserProvider {
     return this.http.post('http://localhost:52468/api/users', user);
   }
 
+  login(email: string, user: JSON){
+    console.log(user);
+    return this.http.post('http://localhost:52468/api/users/' + email, user);
+  }
+
 }

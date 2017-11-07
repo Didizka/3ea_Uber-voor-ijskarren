@@ -10,7 +10,7 @@ import {UserProvider} from "../../providers/user";
   templateUrl: 'signup.html',
 })
 export class SignupPage {
-  user: string = 'customer';
+  user: string = 'Customer';
   customer: Customer = {
     firstName: '',
     lastName: '',
@@ -28,28 +28,24 @@ export class SignupPage {
               public navParams: NavParams,
               private userProvider: UserProvider) {
   }
-  onRegister(form: NgForm){
-    let customer= form.value;//JSON.parse(form.value);
-    customer['userRoleType'] = 0;
-    this.userProvider.createAccount(customer).subscribe(
+  onRegister(form: NgForm, type: string){
+    let user= form.value;//JSON.parse(form.value);
+
+    console.log(type);
+    if(type == 'Customer'){
+      user['userRoleType'] = 0;
+    }else {
+      user['userRoleType'] = 1;
+    }
+    this.userProvider.createAccount(user).subscribe(
       data => {
         console.log(data)
       },
-      error2 => {
-        console.log(error2);
+      err => {
+        console.log(err);
       }
     );
-    //console.log(this.customer);
-  }
-  register(){
-    this.userProvider.getAllUsers().subscribe(
-      data => {
-        console.log(data)
-      },
-      error2 => {
-        console.log(error2);
-      }
-    );
+    //console.log(this.user);
   }
 
 }
