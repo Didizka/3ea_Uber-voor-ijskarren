@@ -6,11 +6,9 @@ using WebApi.Models;
 using WebApi.Models.Users;
 using System.Linq;
 using AutoMapper;
-<<<<<<< HEAD
 using Newtonsoft.Json.Linq;
 using System;
-=======
->>>>>>> 7ed8467e6f062ef5091190cd5b7ddb06f7367242
+using WebApi.Models.Repositories;
 
 namespace WebApi.Controllers
 {
@@ -20,10 +18,12 @@ namespace WebApi.Controllers
     {
         private readonly UserContext context;
         private readonly IMapper mapper;
+        private readonly IUsersRepository usersRepo;
 
-        public UsersController(UserContext _context, IMapper _mapper) {
+        public UsersController(UserContext _context, IMapper _mapper, IUsersRepository usersRepo) {
             context = _context;
             mapper = _mapper;
+            this.usersRepo = usersRepo;
         }
 
         //////////////////////////////////// 
@@ -66,10 +66,7 @@ namespace WebApi.Controllers
         [HttpGet("{email}"), ActionName("GetUserByEmail/{email}")]
         public async Task<IActionResult> GetUserByEmail(string email)
         {
-            var user = await context.Users.Where(u => u.ContactInformation.Email == email)
-                            .Include(c => c.ContactInformation)
-                                   .ThenInclude(a => a.Address)
-                            .ToListAsync();
+            var user = await usersRepo.GetUserByEmail(email);
             if (user != null)
                 return Ok(user);
             return BadRequest(email);
@@ -193,17 +190,29 @@ namespace WebApi.Controllers
             return Ok(newUserSavedToDatabase);
         }
 
-        // PUT: api/Users/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> EditUserById(int id, [FromBody]RegistrationForm newUser)
+        // POST: api/Users/sanjy-driver@uber.be
+        [HttpPost("{email}")]
+        public async Task<IActionResult> UserLogin(string email, [FromBody]LoginForm loginUser)
+        {
+            User user = await usersRepo.GetUserByEmail(email);
+            if (user == null)
+                return BadRequest("You have to register first");
+
+            bool canAccess = usersRepo.CanUserLogin(user, loginUser);
+
+            return Ok(canAccess);
+
+
+        }
+
+        // PUT: api/Users/sanjy-driver@uber.be
+        [HttpPut("{email}")]
+        public async Task<IActionResult> EditUserByEmail(string email, [FromBody]RegistrationForm newUser)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = await context.Users
-                .Include(v => v.ContactInformation)
-                    .ThenInclude(vf => vf.Address)
-                .SingleOrDefaultAsync(v => v.UserID == id);
+            var user = await usersRepo.GetUserByEmail(email);
 
             if (user == null)
                 return NotFound(false);
@@ -231,13 +240,10 @@ namespace WebApi.Controllers
     
         
         // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUserById(int id)
+        [HttpDelete("{email}")]
+        public async Task<IActionResult> DeleteUserByEmail(string email)
         {
-            var user = await context.Users
-                .Include(v => v.ContactInformation)
-                    .ThenInclude(vf => vf.Address)
-                .SingleOrDefaultAsync(v => v.UserID == id);
+            var user = await usersRepo.GetUserByEmail(email);
             if (user != null)
             {
                 //context.Remove(user);

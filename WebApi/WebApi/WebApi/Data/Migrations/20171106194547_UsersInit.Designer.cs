@@ -10,10 +10,10 @@ using System;
 using WebApi.Data;
 using WebApi.Models;
 
-namespace WebApi.Data.Migrations
+namespace WebApi.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20171028001731_UsersInit")]
+    [Migration("20171106194547_UsersInit")]
     partial class UsersInit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

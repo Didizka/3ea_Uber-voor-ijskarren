@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 using System.Collections.Generic;
 
-namespace WebApi.Data.Migrations
+namespace WebApi.Migrations
 {
     public partial class UsersInit : Migration
     {

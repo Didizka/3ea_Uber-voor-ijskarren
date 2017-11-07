@@ -10,6 +10,7 @@ using WebApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using AutoMapper;
+using WebApi.Models.Repositories;
 
 namespace WebApi
 {
@@ -28,6 +29,10 @@ namespace WebApi
         {
             // Injection for Automapper
             services.AddAutoMapper();
+
+            //Inject UserRepo interface
+            services.AddScoped<IUsersRepository, UsersRepository>();
+
             // Database connection
             services.AddDbContext<UserContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));

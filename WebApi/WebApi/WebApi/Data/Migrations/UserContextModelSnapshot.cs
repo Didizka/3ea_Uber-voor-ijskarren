@@ -10,7 +10,7 @@ using System;
 using WebApi.Data;
 using WebApi.Models;
 
-namespace WebApi.Data.Migrations
+namespace WebApi.Migrations
 {
     [DbContext(typeof(UserContext))]
     partial class UserContextModelSnapshot : ModelSnapshot
