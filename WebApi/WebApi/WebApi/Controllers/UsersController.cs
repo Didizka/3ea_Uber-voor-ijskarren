@@ -32,10 +32,7 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
-            var result = await context.Users
-                            .Include(c => c.ContactInformation)
-                                   .ThenInclude(a => a.Address)
-                            .ToListAsync();
+            var result = await usersRepo.GetUsers();
                     
             if (result == null)
             {
@@ -51,10 +48,7 @@ namespace WebApi.Controllers
         [HttpGet("{id:int}"), ActionName("GetUserById/{id}")]
         public async Task<IActionResult> GetUserById(int id)
         {
-            var user = await context.Users.Where(u => u.UserID == id)
-                            .Include(c => c.ContactInformation)
-                                   .ThenInclude(a => a.Address)
-                            .ToListAsync();
+            var user = await usersRepo.GetUserById(id);
             if (user != null)
                 return Ok(user);
             return BadRequest(id);

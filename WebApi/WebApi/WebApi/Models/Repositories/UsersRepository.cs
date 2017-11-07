@@ -18,6 +18,13 @@ namespace WebApi.Models.Repositories
         {
             this.context = context;
         }
+        public async Task<IEnumerable<User>> GetUsers()
+        {
+            return await context.Users
+                            .Include(c => c.ContactInformation)
+                                   .ThenInclude(a => a.Address)
+                            .ToListAsync();             
+        }
 
         public async Task<User> GetUserByEmail(string email)
         {
