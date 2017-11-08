@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using WebApi.HelperClasses;
+using WebApi.Models.Users;
 
 namespace WebApi.Models
 {
@@ -54,11 +55,15 @@ namespace WebApi.Models
             }
         }
 
-        
+       
+
+
         // Navigation Properties
         [Required(ErrorMessage = "De user rol is verplicht")]
         public UserRoleTypes UserRoleType { get; set; }
 
         public ContactInformation ContactInformation { get; set; }
+
+        public Location Location { get; set; }
     }
 }

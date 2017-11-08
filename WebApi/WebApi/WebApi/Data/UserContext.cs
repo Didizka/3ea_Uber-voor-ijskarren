@@ -18,6 +18,9 @@ namespace WebApi.Data
             modelBuilder.Entity<User>()
                 .HasOne(a => a.ContactInformation);
 
+            modelBuilder.Entity<User>()
+                .HasOne(a => a.Location);
+
             modelBuilder.Entity<ContactInformation>()
                 .HasOne(a => a.Address);
 
@@ -25,6 +28,7 @@ namespace WebApi.Data
                 .Entity<ContactInformation>()
                  .HasIndex(e => e.Email)
                  .IsUnique(true);
+        
         }
     }
 
