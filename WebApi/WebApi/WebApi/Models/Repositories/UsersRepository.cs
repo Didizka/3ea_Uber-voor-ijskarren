@@ -32,6 +32,8 @@ namespace WebApi.Models.Repositories
                             .Include(c => c.ContactInformation)
                                    .ThenInclude(a => a.Address)
                             .SingleOrDefaultAsync(u => u.ContactInformation.Email == email);
+            user.Salt = null;
+            user.Password = null;
             return user;
         }
         public async Task<User> GetUserById(int id)
@@ -40,8 +42,18 @@ namespace WebApi.Models.Repositories
                             .Include(c => c.ContactInformation)
                                    .ThenInclude(a => a.Address)
                             .SingleOrDefaultAsync(u => u.UserID == id);
+            
             return user;
         }
+
+        public async Task<IEnumerable<Driver>> GetDriversLocations()
+        {
+            var users = await context.Drivers
+                                .Include(d => d.Location)
+                                .ToListAsync();
+            return users;
+        }
+
 
         public Boolean CanUserLogin(User user, LoginForm loginUser)
         {

@@ -53,6 +53,17 @@ namespace WebApi.Controllers
                 return Ok(user);
             return BadRequest(id);
         }
+        
+        // Get Location
+
+        [HttpGet("location")]
+        public async Task<IActionResult> GetDriversLocation()
+        {
+            var users = await usersRepo.GetDriversLocations();
+            if (users != null)
+                return Ok(users);
+            return BadRequest();
+        }
 
         ///////////////////////////////////////////////
         ///     GET: api/users/chingiz@uber.be    /////

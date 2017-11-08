@@ -11,5 +11,6 @@ namespace WebApi.Models.Repositories
         Task<User> GetUserById(int id);
         Boolean CanUserLogin(User user, LoginForm loginUser);
         Task<IEnumerable<User>> GetUsers();
+        Task<IEnumerable<Driver>> GetDriversLocations();
     }
 }

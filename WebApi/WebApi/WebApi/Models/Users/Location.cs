@@ -8,7 +8,7 @@ namespace WebApi.Models.Users
     public class Location
     {
         public int LocationID { get; set; }
-        public decimal latitude { get; set; }
-        public decimal longitude { get; set; }
+        public float latitude { get; set; }
+        public float longitude { get; set; }
     }
 }
