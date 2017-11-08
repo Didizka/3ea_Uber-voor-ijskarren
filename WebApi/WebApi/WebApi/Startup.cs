@@ -37,6 +37,14 @@ namespace WebApi
             services.AddDbContext<UserContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            // Cross origin 
+            services.AddCors(o => o.AddPolicy("AllowClient", builder =>
+            {
+                builder.WithOrigins("http://localhost:8100")
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
+
             services.AddMvc();
             services.AddMvcCore().AddDataAnnotations().AddJsonFormatters();
         }
@@ -48,6 +56,8 @@ namespace WebApi
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors("AllowClient");
 
             app.UseMvcWithDefaultRoute();
         }
