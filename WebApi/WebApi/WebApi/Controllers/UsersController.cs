@@ -154,7 +154,7 @@ namespace WebApi.Controllers
                 }
             }
 
-            // Add new user to the database only if he's email is unique
+            // Add new user to the database only if his email is unique
             if (newUserHasUniqueEmail)
             {
                 try
