@@ -40,7 +40,7 @@ namespace WebApi
             // Cross origin 
             services.AddCors(o => o.AddPolicy("AllowClient", builder =>
             {
-                builder.WithOrigins("http://localhost:8100")
+                builder.AllowAnyOrigin()
                        .AllowAnyMethod()
                        .AllowAnyHeader();
             }));

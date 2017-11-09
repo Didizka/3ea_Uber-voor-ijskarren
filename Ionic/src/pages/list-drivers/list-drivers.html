@@ -1,0 +1,37 @@
+
+<ion-header>
+
+  <ion-navbar>
+    <ion-buttons right="">
+      <button type="button" ion-button icon-only (click)="onLogout()">
+        <ion-icon name="log-out"></ion-icon>
+        Logout
+      </button>
+    </ion-buttons>
+    <ion-title>Ijs Karen</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <ion-range [(ngModel)]="zoom" min="8" max="16" snaps="true">
+    <ion-icon range-left small name="pin"></ion-icon>
+    <ion-icon range-right name="pin"></ion-icon>
+  </ion-range>
+  <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
+    <agm-marker
+      *ngFor="let driver of drivers"
+      [latitude]="driver.location.latitude"
+      [longitude]="driver.location.longitude"
+      [label]="driver.userID.toString()"></agm-marker>
+  </agm-map>
+  <ion-card *ngFor="let driver of drivers">
+    <ion-card-header>
+      {{driver.userID}}
+    </ion-card-header>
+    <ion-card-content>
+      {{driver.firstName }} {{ driver.lastName}}
+    </ion-card-content>
+  </ion-card>
+</ion-content>

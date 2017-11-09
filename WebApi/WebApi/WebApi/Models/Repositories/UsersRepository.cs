@@ -32,8 +32,8 @@ namespace WebApi.Models.Repositories
                             .Include(c => c.ContactInformation)
                                    .ThenInclude(a => a.Address)
                             .SingleOrDefaultAsync(u => u.ContactInformation.Email == email);
-            user.Salt = null;
-            user.Password = null;
+            //user.Salt = null;
+            //user.Password = null;
             return user;
         }
         public async Task<User> GetUserById(int id)
