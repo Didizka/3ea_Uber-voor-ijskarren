@@ -27,7 +27,32 @@ export class SigninPage {
       },
       err => {
         console.log(err);
+        this.presentConfirm();
       }
     );
+  }
+
+  // Show alert if email is not correct
+  presentConfirm() {
+    let alert = this.alertCtrl.create({
+      title: 'Account werd niet gevonden',
+      message: 'Een nieuwe account registreren?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Ja',
+          handler: () => {
+            this.nav.push('SignupPage');
+          }
+        }
+      ]
+    });
+    alert.present();
   }
 }

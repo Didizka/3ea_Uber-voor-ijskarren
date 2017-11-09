@@ -201,7 +201,7 @@ namespace WebApi.Controllers
         {
             User user = await usersRepo.GetUserByEmail(email);
             if (user == null)
-                return BadRequest("You have to register first");
+                return Ok("You have to register first");
 
             bool canAccess = usersRepo.CanUserLogin(user, loginUser);
 
