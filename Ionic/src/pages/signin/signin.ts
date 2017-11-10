@@ -34,11 +34,10 @@ export class SigninPage {
           this.navCtrl.setRoot(ListDriversPage);
         } else if(data == false) {
           loading.dismiss();
-          this.createErrorMsg('Password incorrect!');
+          this.passwordIncorrectError();
         }else{
-          console.log('no account');
           loading.dismiss();
-          this.presentConfirm();
+          this.accountDoesntExistError();
         }
       },
       err => {
@@ -48,7 +47,7 @@ export class SigninPage {
   }
 
   // Show alert if email is not correct
-  presentConfirm() {
+  accountDoesntExistError() {
     let alert = this.alertCtrl.create({
       title: 'Account werd niet gevonden',
       message: 'Een nieuwe account registreren?',
@@ -72,10 +71,10 @@ export class SigninPage {
     alert.present();
   }
 
-  createErrorMsg(msg: string){
+  passwordIncorrectError(){
     const alert = this.alertCtrl.create({
-      title: 'Signup failed!',
-      message: msg,
+      title: 'Inloggen mislukt',
+      message: 'Wachtwoord klopt niet, probeer het opnieuw',
       buttons: ['Ok']
     });
     alert.present();
