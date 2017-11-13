@@ -18,6 +18,9 @@ import {ListDriversPage} from "../pages/list-drivers/list-drivers";
   imports: [
     BrowserModule,
     HttpModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyBasd0lBYcZ1ymhHTkIXtDYjisndFIwK88'
+    }),
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
