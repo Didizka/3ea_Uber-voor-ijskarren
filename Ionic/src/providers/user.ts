@@ -6,7 +6,18 @@ import {Customer} from "../Models/customer";
 @Injectable()
 export class UserProvider {
   //ip: string = 'http://172.16.220.163';
-  ip: string = 'http://localhost';
+
+  // Run webapi backend on port 9000
+  // download iisexpress-proxy (see github repo)
+  // run iisexpress-proxy 9000 to 8080
+  // change ip address to your local ip address in order to test the app on the mobile and have access to the backend
+
+  // Home
+  ip: string = 'http://192.168.0.155:8080/api';
+
+  // School
+  // ip: string = 'http://172.16.235.4:8080/api';
+  
   constructor(public http: Http) {
 
   }
@@ -14,28 +25,28 @@ export class UserProvider {
     'Accept': 'application/json'
   });
   getAllUsers(){
-    return this.http.get(this.ip+':9000/api/users');
+    return this.http.get(this.ip+'/users');
   }
   createAccount(user: JSON){
     console.log(user);
-    return this.http.post(this.ip+':9000/api/users', user);
+    return this.http.post(this.ip+'/users', user);
   }
 
   login(email: string, user: JSON){
     console.log(user);
-    return this.http.post(this.ip+':9000/api/users/' + email, user, {headers: this.headers })
+    return this.http.post(this.ip+'/users/' + email, user, {headers: this.headers })
       .map((response: Response) => {
       return response.json();
     });
   }
   getUser(email: string){
-    return this.http.get(this.ip+':9000/api/users/' + email)
+    return this.http.get(this.ip+'/users/' + email)
       .map((response: Response) => {
       return response.json();
     });
   }
   getDriversLocation(){
-    return this.http.get(this.ip + ':9000/api/users/location')
+    return this.http.get(this.ip + '/users/location')
       .map((response: Response) => {
         return response.json();
       });

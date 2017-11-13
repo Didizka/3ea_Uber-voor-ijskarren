@@ -11,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using AutoMapper;
 using WebApi.Models.Repositories;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Rewrite;
 
 namespace WebApi
 {
@@ -47,6 +49,15 @@ namespace WebApi
 
             services.AddMvc();
             services.AddMvcCore().AddDataAnnotations().AddJsonFormatters();
+
+            // Require all requests to use https, http gets ignored here, see redirect below
+            //            Run the following command to create a certificate
+            //            cd C:\Program Files(x86)\IIS Express
+            //IisExpressAdminCmd.exe setupsslUrl -url:urlToYourSite - UseSelfSigned
+            //services.Configure<MvcOptions>(options =>
+            //{
+            //    options.Filters.Add(new RequireHttpsAttribute());
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,6 +71,9 @@ namespace WebApi
             app.UseCors("AllowClient");
 
             app.UseMvcWithDefaultRoute();
+
+            // Redirect http to https
+            //app.UseRewriter(new RewriteOptions().AddRedirectToHttps());
         }
     }
 }

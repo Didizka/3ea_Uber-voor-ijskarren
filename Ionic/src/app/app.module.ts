@@ -1,3 +1,4 @@
+import { ListDriversPageModule } from './../pages/list-drivers/list-drivers.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
@@ -7,26 +8,21 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { MyApp } from './app.component';
 import { UserProvider } from '../providers/user';
 import {HttpModule} from "@angular/http";
-import { AgmCoreModule } from  '@agm/core';
 import {ListDriversPage} from "../pages/list-drivers/list-drivers";
 
 @NgModule({
   declarations: [
-    MyApp,
-    ListDriversPage
+    MyApp
   ],
   imports: [
     BrowserModule,
     HttpModule,
-    AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyBasd0lBYcZ1ymhHTkIXtDYjisndFIwK88'
-    }),
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    ListDriversPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
-    MyApp,
-    ListDriversPage
+    MyApp
   ],
   providers: [
     StatusBar,

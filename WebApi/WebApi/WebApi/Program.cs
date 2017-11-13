@@ -42,6 +42,8 @@ namespace WebApi
             WebHost.CreateDefaultBuilder(args)
                 
                 .UseStartup<Startup>()
+                .UseUrls("http://*:9000")
+                //.UseUrls("https://*:9000")
                 .Build();
     }
 }
