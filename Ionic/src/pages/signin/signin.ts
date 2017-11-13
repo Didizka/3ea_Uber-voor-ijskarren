@@ -34,23 +34,47 @@ export class SigninPage {
           this.navCtrl.setRoot(ListDriversPage);
         } else if(data == false) {
           loading.dismiss();
-          this.createErrorMsg('Password incorrect!');
+          this.passwordIncorrectError();
         }else{
           loading.dismiss();
-          this.createErrorMsg(data.toString());
+          this.accountDoesntExistError();
         }
       },
       err => {
         console.log(err);
-        loading.dismiss();
-        this.createErrorMsg(err.message);
       }
     );
   }
-  createErrorMsg(msg: string){
+
+  // Show alert if email is not correct
+  accountDoesntExistError() {
+    let alert = this.alertCtrl.create({
+      title: 'Account werd niet gevonden',
+      message: 'Een nieuwe account registreren?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Ja',
+          handler: () => {
+            this.navCtrl.push('SignupPage');
+          }
+        }
+      ]
+      }
+    );
+    alert.present();
+  }
+
+  passwordIncorrectError(){
     const alert = this.alertCtrl.create({
-      title: 'Signup failed!',
-      message: msg,
+      title: 'Inloggen mislukt',
+      message: 'Wachtwoord klopt niet, probeer het opnieuw',
       buttons: ['Ok']
     });
     alert.present();

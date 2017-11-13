@@ -7,7 +7,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { MyApp } from './app.component';
 import { UserProvider } from '../providers/user';
 import {HttpModule} from "@angular/http";
-import { AgmCoreModule } from  '@agm/core'
+import { AgmCoreModule } from  '@agm/core';
 import {ListDriversPage} from "../pages/list-drivers/list-drivers";
 
 @NgModule({

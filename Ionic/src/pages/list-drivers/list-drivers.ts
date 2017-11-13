@@ -10,9 +10,9 @@ import {UserProvider} from "../../providers/user";
 })
 export class ListDriversPage implements OnInit{
   zoom: number = 10;
-  title: string = 'My first AGM project';
-  lat: number = 51.2217865;
-  lng: number = 4.461651;
+  title: string = 'Uber voor ijskarren';
+  lat: number;
+  lng: number;
   drivers: Driver[]= [];
 
   constructor(public navCtrl: NavController,
@@ -20,10 +20,11 @@ export class ListDriversPage implements OnInit{
               private userProvider: UserProvider) {
   }
   ngOnInit(){
+    this.setCurrentPosition();
     this.userProvider.getDriversLocation().subscribe(
       data => {
         this.drivers = data;
-        console.log(this.drivers[0].userID);
+        // console.log(this.drivers[0].userID);
       },
       err => {
         console.log(err);
@@ -31,6 +32,16 @@ export class ListDriversPage implements OnInit{
   }
   onLogout(){
     this.navCtrl.setRoot('SigninPage');
+  }
+
+  setCurrentPosition() {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        console.log(position);
+        this.lat = position.coords.latitude;
+        this.lng = position.coords.longitude;
+      });
+    }
   }
 
 }

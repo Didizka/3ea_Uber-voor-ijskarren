@@ -8,17 +8,19 @@
         Logout
       </button>
     </ion-buttons>
-    <ion-title>Ijs Karen</ion-title>
+    <ion-title>Ijs Karren</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
+
   <ion-range [(ngModel)]="zoom" min="8" max="16" snaps="true">
     <ion-icon range-left small name="pin"></ion-icon>
     <ion-icon range-right name="pin"></ion-icon>
   </ion-range>
+
   <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
     <agm-marker
       *ngFor="let driver of drivers"
@@ -26,6 +28,14 @@
       [longitude]="driver.location.longitude"
       [label]="driver.userID.toString()"></agm-marker>
   </agm-map>
+
+  <ion-buttons>
+      <button type="button" ion-button full (click)="setCurrentPosition()">
+        <ion-icon name="set-current-position"></ion-icon>
+        Get my position
+      </button>
+    </ion-buttons>
+
   <ion-card *ngFor="let driver of drivers">
     <ion-card-header>
       {{driver.userID}}
@@ -34,4 +44,5 @@
       {{driver.firstName }} {{ driver.lastName}}
     </ion-card-content>
   </ion-card>
+
 </ion-content>

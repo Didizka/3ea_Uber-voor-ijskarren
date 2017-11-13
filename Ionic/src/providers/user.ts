@@ -35,7 +35,7 @@ export class UserProvider {
     });
   }
   getDriversLocation(){
-    return this.http.get('http://localhost:9000/api/users/location')
+    return this.http.get(this.ip + ':9000/api/users/location')
       .map((response: Response) => {
         return response.json();
       });
