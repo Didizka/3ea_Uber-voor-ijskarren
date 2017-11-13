@@ -8,7 +8,7 @@
         Logout
       </button>
     </ion-buttons>
-    <ion-title>Ijs Karren</ion-title>
+    <ion-title>{{title}}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -16,19 +16,31 @@
 
 <ion-content padding>
 
+  <!-- Slidebar -->
   <ion-range [(ngModel)]="zoom" min="8" max="16" snaps="true">
     <ion-icon range-left small name="pin"></ion-icon>
     <ion-icon range-right name="pin"></ion-icon>
   </ion-range>
 
+  <!-- Map -->
   <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
+    <!-- Drivers markers-->
     <agm-marker
       *ngFor="let driver of drivers"
       [latitude]="driver.location.latitude"
       [longitude]="driver.location.longitude"
-      [label]="driver.userID.toString()"></agm-marker>
+      [label]="driver.userID.toString()"
+      ></agm-marker>
+
+      <!-- User marker-->
+      <agm-marker
+      [latitude]="lat"
+      [longitude]="lng"
+      iconUrl="https://maps.google.com/mapfiles/kml/shapes/library_maps.png"
+      ></agm-marker>
   </agm-map>
 
+  <!-- Position button -->
   <ion-buttons>
       <button type="button" ion-button full (click)="setCurrentPosition()">
         <ion-icon name="set-current-position"></ion-icon>
@@ -36,6 +48,7 @@
       </button>
     </ion-buttons>
 
+    <!-- List of drivers -->
   <ion-card *ngFor="let driver of drivers">
     <ion-card-header>
       {{driver.userID}}
