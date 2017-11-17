@@ -17,34 +17,18 @@
 <ion-content padding>
 
   <!-- Slidebar -->
-  <ion-range min="8" max="16" pin="true" (ionChange)="onRangeChange($event)" [(ngModel)]="zoom"><!----> <!--snaps="true"-->
+  <ion-range min="11" max="15" pin="true" [(ngModel)]="zoom" (ionChange)="onRangeChange($event)">  <!-- (ionChange)="onRangeChange($event)" -->
     <ion-icon range-left small name="pin"></ion-icon>
     <ion-icon range-right name="pin"></ion-icon>
   </ion-range>
 
-  <!-- Map -->
-  <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
-    <!-- Drivers markers-->
-    <agm-marker
-      *ngFor="let driver of driversInZone"
-      [latitude]="driver.location.latitude"
-      [longitude]="driver.location.longitude"
-      [label]="driver.userID.toString()"
-      ></agm-marker>
-
-      <!-- User marker-->
-      <agm-marker
-      [latitude]="lat"
-      [longitude]="lng"
-      iconUrl="https://maps.google.com/mapfiles/kml/shapes/library_maps.png"
-      ></agm-marker>
-  </agm-map>
+<div #map id="map" data-tap-disabled="true"></div>
 
   <!-- Position button -->
   <ion-buttons>
-      <button type="button" ion-button full (click)="setCurrentPosition()">
-        <ion-icon name="set-current-position"></ion-icon><!--navigate-->
-        Get my position
+      <button type="button" ion-button full (click)="showMap()">
+        <ion-icon></ion-icon><!--navigate-->
+        Show my current position
       </button>
     </ion-buttons>
 
