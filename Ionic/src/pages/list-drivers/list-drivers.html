@@ -17,7 +17,7 @@
 <ion-content padding>
 
   <!-- Slidebar -->
-  <ion-range [(ngModel)]="zoom" min="8" max="16" snaps="true">
+  <ion-range min="8" max="16" pin="true" (ionChange)="onRangeChange($event)" [(ngModel)]="zoom"><!----> <!--snaps="true"-->
     <ion-icon range-left small name="pin"></ion-icon>
     <ion-icon range-right name="pin"></ion-icon>
   </ion-range>
@@ -26,7 +26,7 @@
   <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
     <!-- Drivers markers-->
     <agm-marker
-      *ngFor="let driver of drivers"
+      *ngFor="let driver of driversInZone"
       [latitude]="driver.location.latitude"
       [longitude]="driver.location.longitude"
       [label]="driver.userID.toString()"
@@ -49,7 +49,7 @@
     </ion-buttons>
 
     <!-- List of drivers -->
-  <ion-card *ngFor="let driver of drivers">
+  <ion-card *ngFor="let driver of driversInZone">
     <ion-card-header>
       {{driver.userID}}
     </ion-card-header>
