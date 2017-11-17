@@ -10,7 +10,7 @@ import { Geolocation } from "@ionic-native/geolocation";
   templateUrl: 'list-drivers.html',
 })
 export class ListDriversPage implements OnInit{
-  zoom: number = 9;
+  zoom: number = 10;
   title: string = 'Uber voor ijskarren';
   //lat: number = 51.2217865;5
   lat: number = 51.221791;

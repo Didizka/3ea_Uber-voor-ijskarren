@@ -12,9 +12,9 @@ using WebApi.Models;
 
 namespace WebApi.Data.Migrations
 {
-    [DbContext(typeof(UserContext))]
-    [Migration("20171108105729_LocationAdded")]
-    partial class LocationAdded
+    [DbContext(typeof(OrderContext))]
+    [Migration("20171117104126_OrdersInitialized")]
+    partial class OrdersInitialized
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -64,10 +64,70 @@ namespace WebApi.Data.Migrations
 
                     b.HasIndex("AddressID");
 
-                    b.HasIndex("Email")
-                        .IsUnique();
-
                     b.ToTable("ContactInformation");
+                });
+
+            modelBuilder.Entity("WebApi.Models.Orders.Flavour", b =>
+                {
+                    b.Property<int>("FlavourID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.Property<double>("Price");
+
+                    b.HasKey("FlavourID");
+
+                    b.ToTable("Flavours");
+                });
+
+            modelBuilder.Entity("WebApi.Models.Orders.Order", b =>
+                {
+                    b.Property<int>("OrderID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("DriverUserID");
+
+                    b.Property<double>("TotalPrice");
+
+                    b.Property<int?>("UserID");
+
+                    b.HasKey("OrderID");
+
+                    b.HasIndex("DriverUserID");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("WebApi.Models.Orders.OrderItem", b =>
+                {
+                    b.Property<int>("OrderItemID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("OrderID");
+
+                    b.Property<double>("TotalPrice");
+
+                    b.HasKey("OrderItemID");
+
+                    b.HasIndex("OrderID");
+
+                    b.ToTable("OrderItems");
+                });
+
+            modelBuilder.Entity("WebApi.Models.Orders.OrderItemFlavour", b =>
+                {
+                    b.Property<int>("OrderItemID");
+
+                    b.Property<int>("FlavourID");
+
+                    b.HasKey("OrderItemID", "FlavourID");
+
+                    b.HasIndex("FlavourID");
+
+                    b.ToTable("OrderItemFlavours");
                 });
 
             modelBuilder.Entity("WebApi.Models.User", b =>
@@ -116,23 +176,13 @@ namespace WebApi.Data.Migrations
                     b.Property<int>("LocationID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<decimal>("latitude");
+                    b.Property<float>("latitude");
 
-                    b.Property<decimal>("longitude");
+                    b.Property<float>("longitude");
 
                     b.HasKey("LocationID");
 
                     b.ToTable("Location");
-                });
-
-            modelBuilder.Entity("WebApi.Models.Customer", b =>
-                {
-                    b.HasBaseType("WebApi.Models.User");
-
-
-                    b.ToTable("Customers");
-
-                    b.HasDiscriminator().HasValue("Customer");
                 });
 
             modelBuilder.Entity("WebApi.Models.Driver", b =>
@@ -151,6 +201,37 @@ namespace WebApi.Data.Migrations
                     b.HasOne("WebApi.Models.Address", "Address")
                         .WithMany()
                         .HasForeignKey("AddressID");
+                });
+
+            modelBuilder.Entity("WebApi.Models.Orders.Order", b =>
+                {
+                    b.HasOne("WebApi.Models.Driver", "Driver")
+                        .WithMany()
+                        .HasForeignKey("DriverUserID");
+
+                    b.HasOne("WebApi.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserID");
+                });
+
+            modelBuilder.Entity("WebApi.Models.Orders.OrderItem", b =>
+                {
+                    b.HasOne("WebApi.Models.Orders.Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderID");
+                });
+
+            modelBuilder.Entity("WebApi.Models.Orders.OrderItemFlavour", b =>
+                {
+                    b.HasOne("WebApi.Models.Orders.Flavour", "Flavour")
+                        .WithMany("OrderItemFlavours")
+                        .HasForeignKey("FlavourID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("WebApi.Models.Orders.OrderItem", "OrderItem")
+                        .WithMany("OrderItemFlavours")
+                        .HasForeignKey("OrderItemID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("WebApi.Models.User", b =>

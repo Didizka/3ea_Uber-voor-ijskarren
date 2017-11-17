@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 using System.Collections.Generic;
 
-namespace WebApi.Migrations
+namespace WebApi.Data.Migrations
 {
-    public partial class UsersInit : Migration
+    public partial class UsersInitialized : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -22,6 +22,20 @@ namespace WebApi.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Addresses", x => x.AddressID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Location",
+                columns: table => new
+                {
+                    LocationID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    latitude = table.Column<float>(type: "real", nullable: false),
+                    longitude = table.Column<float>(type: "real", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Location", x => x.LocationID);
                 });
 
             migrationBuilder.CreateTable(
@@ -56,6 +70,7 @@ namespace WebApi.Migrations
                     Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    LocationID = table.Column<int>(type: "int", nullable: true),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RegistrationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Salt = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
@@ -69,6 +84,12 @@ namespace WebApi.Migrations
                         column: x => x.ContactInformationID,
                         principalTable: "ContactInformation",
                         principalColumn: "ContactInformationID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Users_Location_LocationID",
+                        column: x => x.LocationID,
+                        principalTable: "Location",
+                        principalColumn: "LocationID",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -87,6 +108,11 @@ namespace WebApi.Migrations
                 name: "IX_Users_ContactInformationID",
                 table: "Users",
                 column: "ContactInformationID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_LocationID",
+                table: "Users",
+                column: "LocationID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -96,6 +122,9 @@ namespace WebApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "ContactInformation");
+
+            migrationBuilder.DropTable(
+                name: "Location");
 
             migrationBuilder.DropTable(
                 name: "Addresses");

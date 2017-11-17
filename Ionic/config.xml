@@ -90,4 +90,5 @@
     <plugin name="cordova-plugin-ionic-webview" spec="^1.1.16" />
     <plugin name="cordova-plugin-statusbar" spec="^2.2.3" />
     <plugin name="cordova-plugin-geolocation" spec="^3.0.0" />
+    <allow-navigation href="http://172.16.145.30:8101" />
 </widget>
