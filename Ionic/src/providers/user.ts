@@ -13,10 +13,13 @@ export class UserProvider {
   // change ip address to your local ip address in order to test the app on the mobile and have access to the backend
 
   // Home
-  ip: string = 'http://192.168.0.155:8080/api';
+  // ip: string = 'http://192.168.0.155:8080/api';
 
   // School
   // ip: string = 'http://172.16.235.4:8080/api';
+
+  // Production server
+  ip: string = 'http://cloud-app.ddns.net/api/users/';
   
   constructor(public http: Http) {
 
@@ -25,28 +28,28 @@ export class UserProvider {
     'Accept': 'application/json'
   });
   getAllUsers(){
-    return this.http.get(this.ip+'/users');
+    return this.http.get(this.ip);
   }
   createAccount(user: JSON){
     console.log(user);
-    return this.http.post(this.ip+'/users', user);
+    return this.http.post(this.ip, user);
   }
 
   login(email: string, user: JSON){
     console.log(user);
-    return this.http.post(this.ip+'/users/' + email, user, {headers: this.headers })
+    return this.http.post(this.ip + email, user, {headers: this.headers })
       .map((response: Response) => {
       return response.json();
     });
   }
   getUser(email: string){
-    return this.http.get(this.ip+'/users/' + email)
+    return this.http.get(this.ip + email)
       .map((response: Response) => {
       return response.json();
     });
   }
   getDriversLocation(){
-    return this.http.get(this.ip + '/users/location')
+    return this.http.get(this.ip + 'location')
       .map((response: Response) => {
         return response.json();
       });
