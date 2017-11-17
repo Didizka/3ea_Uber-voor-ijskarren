@@ -30,12 +30,17 @@ namespace WebApi
 
             // Database connection
             services.AddDbContext<UserContext>(options =>
-                options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
+                //options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddDbContext<OrderContext>(options =>
+                 //options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
+                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             // Cross origin 
             services.AddCors(o => o.AddPolicy("AllowClient", builder =>
             {
-                builder.AllowAnyOrigin() //WithOrigins("http://192.168.0.172:8080") //
+                builder.WithOrigins("http://localhost:8100") //
                        .AllowAnyMethod()
                        .AllowAnyHeader();
             }));

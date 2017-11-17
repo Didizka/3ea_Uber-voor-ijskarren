@@ -10,11 +10,11 @@ using System;
 using WebApi.Data;
 using WebApi.Models;
 
-namespace WebApi.Migrations
+namespace WebApi.Data.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20171106194547_UsersInit")]
-    partial class UsersInit
+    [Migration("20171117104105_UsersInitialized")]
+    partial class UsersInitialized
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -88,6 +88,8 @@ namespace WebApi.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
+                    b.Property<int?>("LocationID");
+
                     b.Property<string>("Password");
 
                     b.Property<DateTime>("RegistrationDate");
@@ -102,9 +104,25 @@ namespace WebApi.Migrations
 
                     b.HasIndex("ContactInformationID");
 
+                    b.HasIndex("LocationID");
+
                     b.ToTable("Users");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("User");
+                });
+
+            modelBuilder.Entity("WebApi.Models.Users.Location", b =>
+                {
+                    b.Property<int>("LocationID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<float>("latitude");
+
+                    b.Property<float>("longitude");
+
+                    b.HasKey("LocationID");
+
+                    b.ToTable("Location");
                 });
 
             modelBuilder.Entity("WebApi.Models.Customer", b =>
@@ -140,6 +158,10 @@ namespace WebApi.Migrations
                     b.HasOne("WebApi.Models.ContactInformation", "ContactInformation")
                         .WithMany()
                         .HasForeignKey("ContactInformationID");
+
+                    b.HasOne("WebApi.Models.Users.Location", "Location")
+                        .WithMany()
+                        .HasForeignKey("LocationID");
                 });
 #pragma warning restore 612, 618
         }

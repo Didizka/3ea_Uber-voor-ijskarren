@@ -25,8 +25,11 @@ namespace WebApi
                 var services = scope.ServiceProvider;
                 try
                 {
-                    var context = services.GetRequiredService<UserContext>();
-                    UserDbInitializer.Initialize(context);
+                    var UserContext = services.GetRequiredService<UserContext>();
+                    UserDbInitializer.Initialize(UserContext);
+
+                    var OrderContext = services.GetRequiredService<OrderContext>();
+                    OrderDbInitializer.Initialize(OrderContext);
                 }
                 catch (Exception ex)
                 {
