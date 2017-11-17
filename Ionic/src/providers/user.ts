@@ -20,7 +20,7 @@ export class UserProvider {
 
   // Production server
   ip: string = 'http://cloud-app.ddns.net/api/users/';
-  
+
   constructor(public http: Http) {
 
   }
