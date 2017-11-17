@@ -13,7 +13,7 @@ export class UserProvider {
   // change ip address to your local ip address in order to test the app on the mobile and have access to the backend
 
   // Local DEV
-  ip: string = 'http://localhost:9000/api/users/';
+  // ip: string = 'http://localhost:9000/api/users/';
 
   // Home
   // ip: string = 'http://192.168.0.155:8080/api/users/';
@@ -22,7 +22,7 @@ export class UserProvider {
   // ip: string = 'http://172.16.235.4:8080/api/users/';
 
   // Production server
-  // ip: string = 'http://cloud-app.ddns.net/api/users/';
+  ip: string = 'http://cloud-app.ddns.net/api/users/';
 
   constructor(public http: Http) {
 
