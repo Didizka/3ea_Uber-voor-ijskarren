@@ -85,17 +85,17 @@ namespace WebApi.Data.Migrations
                     b.Property<int>("OrderID")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int?>("CustomerUserID");
+
                     b.Property<int?>("DriverUserID");
 
                     b.Property<double>("TotalPrice");
 
-                    b.Property<int?>("UserID");
-
                     b.HasKey("OrderID");
 
-                    b.HasIndex("DriverUserID");
+                    b.HasIndex("CustomerUserID");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("DriverUserID");
 
                     b.ToTable("Orders");
                 });
@@ -121,6 +121,8 @@ namespace WebApi.Data.Migrations
                     b.Property<int>("OrderItemID");
 
                     b.Property<int>("FlavourID");
+
+                    b.Property<int>("Amount");
 
                     b.HasKey("OrderItemID", "FlavourID");
 
@@ -204,18 +206,18 @@ namespace WebApi.Data.Migrations
 
             modelBuilder.Entity("WebApi.Models.Orders.Order", b =>
                 {
+                    b.HasOne("WebApi.Models.User", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerUserID");
+
                     b.HasOne("WebApi.Models.Driver", "Driver")
                         .WithMany()
                         .HasForeignKey("DriverUserID");
-
-                    b.HasOne("WebApi.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserID");
                 });
 
             modelBuilder.Entity("WebApi.Models.Orders.OrderItem", b =>
                 {
-                    b.HasOne("WebApi.Models.Orders.Order")
+                    b.HasOne("WebApi.Models.Orders.Order", "Order")
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderID");
                 });

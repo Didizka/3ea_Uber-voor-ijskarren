@@ -61,7 +61,9 @@ export class ListDriversPage implements OnInit{
     this.navCtrl.setRoot('SigninPage');
   }
 
-
+  placeOrder(){
+    this.navCtrl.push('OrderPage');
+  }
   // Does not work with live reload
   setCurrentPosition() {
     console.log('geolocation activated');

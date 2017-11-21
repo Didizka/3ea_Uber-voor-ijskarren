@@ -9,6 +9,9 @@ import { MyApp } from './app.component';
 import { UserProvider } from '../providers/user';
 import {HttpModule} from "@angular/http";
 import {ListDriversPage} from "../pages/list-drivers/list-drivers";
+import {OrderProvider} from '../providers/order-provider';
+import {CommonModule} from "@angular/common";
+import {Toast} from "@ionic-native/toast";
 
 @NgModule({
   declarations: [
@@ -17,6 +20,7 @@ import {ListDriversPage} from "../pages/list-drivers/list-drivers";
   imports: [
     BrowserModule,
     HttpModule,
+    CommonModule,
     IonicModule.forRoot(MyApp),
     ListDriversPageModule
   ],
@@ -27,8 +31,10 @@ import {ListDriversPage} from "../pages/list-drivers/list-drivers";
   providers: [
     StatusBar,
     SplashScreen,
+    Toast,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    UserProvider
+    UserProvider,
+    OrderProvider
   ]
 })
 export class AppModule {}

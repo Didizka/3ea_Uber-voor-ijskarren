@@ -113,22 +113,22 @@ namespace WebApi.Data.Migrations
                 {
                     OrderID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CustomerUserID = table.Column<int>(type: "int", nullable: true),
                     DriverUserID = table.Column<int>(type: "int", nullable: true),
-                    TotalPrice = table.Column<double>(type: "float", nullable: false),
-                    UserID = table.Column<int>(type: "int", nullable: true)
+                    TotalPrice = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Orders", x => x.OrderID);
                     table.ForeignKey(
-                        name: "FK_Orders_Users_DriverUserID",
-                        column: x => x.DriverUserID,
+                        name: "FK_Orders_Users_CustomerUserID",
+                        column: x => x.CustomerUserID,
                         principalTable: "Users",
                         principalColumn: "UserID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Orders_Users_UserID",
-                        column: x => x.UserID,
+                        name: "FK_Orders_Users_DriverUserID",
+                        column: x => x.DriverUserID,
                         principalTable: "Users",
                         principalColumn: "UserID",
                         onDelete: ReferentialAction.Restrict);
@@ -159,7 +159,8 @@ namespace WebApi.Data.Migrations
                 columns: table => new
                 {
                     OrderItemID = table.Column<int>(type: "int", nullable: false),
-                    FlavourID = table.Column<int>(type: "int", nullable: false)
+                    FlavourID = table.Column<int>(type: "int", nullable: false),
+                    Amount = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -194,14 +195,14 @@ namespace WebApi.Data.Migrations
                 column: "OrderID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Orders_CustomerUserID",
+                table: "Orders",
+                column: "CustomerUserID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Orders_DriverUserID",
                 table: "Orders",
                 column: "DriverUserID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Orders_UserID",
-                table: "Orders",
-                column: "UserID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_ContactInformationID",
