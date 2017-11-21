@@ -12,7 +12,7 @@ namespace WebApi.Models.Orders
         public int OrderID { get; set; }
         public double TotalPrice { get; set; }
         public ICollection<OrderItem> OrderItems { get; set; }
-        public User User { get; set; }
+        public User Customer { get; set; }
         public Driver Driver { get; set; }
     }
 }

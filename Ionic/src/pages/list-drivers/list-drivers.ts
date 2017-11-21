@@ -156,6 +156,11 @@ export class ListDriversPage implements OnInit {
     this.navCtrl.setRoot('SigninPage');
   }
 
+  placeOrder(){
+    this.navCtrl.push('OrderPage');
+  }
+
+
   checkRangeOfDrivers() {
     // Clear driversInZone array
     while (this.driversInZone.length > 0) {

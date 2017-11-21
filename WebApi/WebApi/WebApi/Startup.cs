@@ -27,6 +27,7 @@ namespace WebApi
 
             //Inject UserRepo interface
             services.AddScoped<IUsersRepository, UsersRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
 
             // Database connection
             services.AddDbContext<UserContext>(options =>
@@ -40,7 +41,7 @@ namespace WebApi
             // Cross origin 
             services.AddCors(o => o.AddPolicy("AllowClient", builder =>
             {
-                builder.WithOrigins("http://localhost:8100") //
+                builder.AllowAnyOrigin()//WithOrigins("http://192.168.0.172:9000", "http://192.168.0.172:80") //
                        .AllowAnyMethod()
                        .AllowAnyHeader();
             }));

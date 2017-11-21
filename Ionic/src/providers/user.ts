@@ -15,6 +15,9 @@ export class UserProvider {
   // Local DEV
   // ip: string = 'http://localhost:9000/api/users/';
 
+  //ip: string = 'http://192.168.0.172:80/api/users/';
+  // ip: string = 'http://172.16.146.5:80/api/users/';
+
   // Home
   // ip: string = 'http://192.168.0.155:8080/api/users/';
 
