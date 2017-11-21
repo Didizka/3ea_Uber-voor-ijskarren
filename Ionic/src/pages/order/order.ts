@@ -83,11 +83,12 @@ export class OrderPage implements OnInit{
         console.log(data);
         if(data == true){
           loading.dismiss();
-          this.toast.showLongBottom("Order Placed success").subscribe(
-            toast => {
-              console.log(toast);
-            }
-          );
+          console.log('Order Placed success');
+          // this.toast.showLongBottom("Order Placed success").subscribe(
+          //   toast => {
+          //     console.log(toast);
+          //   }
+          // );
           this.shoppingCart.cart=[];
           //this.navCtrl.setRoot('ListDriversPage');
         }else{
