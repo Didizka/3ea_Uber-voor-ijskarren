@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 using System.Collections.Generic;
 
-namespace WebApi.Data.Migrations
+namespace WebApi.Migrations
 {
-    public partial class OrdersInitialized : Migration
+    public partial class OrderInit : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

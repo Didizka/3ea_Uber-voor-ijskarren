@@ -11,68 +11,63 @@ declare var google;
   selector: 'page-list-drivers',
   templateUrl: 'list-drivers.html',
 })
-export class ListDriversPage implements OnInit{
+export class ListDriversPage implements OnInit {
   // MAP
   lat: number = 51.22179;
-  lng: number =  4.461666;  
+  lng: number = 4.461666;
   distance: number = 5;
   zoom: number = 11;
   @ViewChild('map') mapElement: ElementRef;
   map: any;
+  driversMarkers: any[] = [];
 
   // APP
   title: string = 'Uber voor ijskarren';
 
   // DRIVERS
-  drivers: Driver[]= [];
-  driversInZone: Driver[]= [];
-
-  
+  drivers: Driver[] = [];
+  driversInZone: Driver[] = [];
 
   constructor(public navCtrl: NavController,
-              public navParams: NavParams,
-              private userProvider: UserProvider,
-              private geolocation: Geolocation) {
+    public navParams: NavParams,
+    private userProvider: UserProvider,
+    private geolocation: Geolocation) {
   }
 
-  ngOnInit(){
-
+  ngOnInit() {
+    this.getUserPosition();
     this.userProvider.getDriversLocation().subscribe(
       data => {
-        this.drivers = data;       
-        this.checkRangeOfDrivers(this.distance); 
-        this.showMap();         
+        this.drivers = data;
+        this.checkRangeOfDrivers();
       },
       err => {
         console.log(err);
       });
   }
 
-  showMap() {
-    this.getUserPosition();
-    
-        let mapOptions = {
-          center: new google.maps.LatLng(this.lat, this.lng),
-          zoom: this.zoom,
-          mapTypeId: google.maps.MapTypeId.ROADMAP,
-          scrollwheel: false,
-          draggable: false
-        }
-    
-        this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
-        this.addUserMarker();
-        this.addDriversMarkers();
+  initMap() {
+    let mapOptions = {
+      center: new google.maps.LatLng(this.lat, this.lng),
+      zoom: this.zoom,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      scrollwheel: false,
+      draggable: false
+    }
+    this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
   }
 
   addUserMarker() {
-      let userMarker = new google.maps.Marker({
-        map: this.map,
-        animation: google.maps.Animation.DROP,
-        position: this.map.getCenter(),
-        label: 'U'
-      });
-  
-      let content = "<p>Dit is jouw huidige locatie!</p>";          
+    let userMarker = new google.maps.Marker({
+      map: this.map,
+      animation: google.maps.Animation.DROP,
+      position: this.map.getCenter(),
+      label: 'U'
+    });
+
+    let geocoder = new google.maps.Geocoder();
+    geocoder.geocode({location: new google.maps.LatLng(this.lat, this.lng)}, function (resp, status) {
+      let content = "<p>" + resp[0].formatted_address + "</p>";
       let infoWindow = new google.maps.InfoWindow({
         content: content
       });
@@ -80,51 +75,65 @@ export class ListDriversPage implements OnInit{
       google.maps.event.addListener(userMarker, 'click', () => {
         infoWindow.open(this.map, userMarker);
       });
+    });
+
+    userMarker.setMap(this.map);    
   }
 
-  addDriversMarkers() {
-    for (let driver of this.driversInZone) {
-      // console.log(driver);
+  addDriversMarkers(driver: Driver) {
+      // Drivers location
       let driversLocation = new google.maps.LatLng(driver.location.latitude, driver.location.longitude)
+
+      // Drivers marker
       let driverMarker = new google.maps.Marker({
         map: this.map,
         animation: google.maps.Animation.DROP,
         position: driversLocation,
         label: driver.userID.toString()
+        // icon: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_QnIIaRF01p59K0GhwiodnX4f20Sc7lWM-RbjYLOqSEQjdIIfNw'
       });
 
-      let content = "<p>Driver ID: <b>" + driver.userID +"</b>, " + driver.firstName + " " + driver.lastName + "</p>";          
-      let infoWindow = new google.maps.InfoWindow({
-        content: content
-      });
-  
-      google.maps.event.addListener(driverMarker, 'click', () => {
-        infoWindow.open(this.map, driverMarker);
-      });
+      // Translate drivers coordinates to address and display it on the infowindow
+        let content =  
+        "<p><b>Chauffeur ID: </b>" + driver.userID + "</p>" +
+        "<p><b>Naam: </b>" + driver.firstName + " " + driver.lastName + 
+        "<p><b>Afstand: </b>" + (driver.distance / 1000).toFixed(2)  + " km</p>" +
+        "<p><b>Duur: </b>" + (driver.duration / 60).toFixed(1) + " min</p>" +
+        "<p><b>Locatie: </b>" + driver.locationAddress + "</p>"
+        let infoWindow = new google.maps.InfoWindow({
+          content: content
+        });
 
-    }
+        this.driversMarkers.push(driverMarker);
+        
+        google.maps.event.addListener(driverMarker, 'click', () => {
+          infoWindow.open(this.map, driverMarker);
+        });
   }
 
-  
+
   // Does not work with live reload
   getUserPosition() {
-    // console.log('geolocation activated');
     let options = {
-      enableHighAccuracy: false
+      enableHighAccuracy: true
     };
     this.geolocation.getCurrentPosition(options).then(position => {
-      // console.log(position);
       this.lat = position.coords.latitude;
       this.lng = position.coords.longitude;
+      this.initMap();
+      this.addUserMarker();
     }).catch(err => {
       console.log('Position error: ' + err.message);
     });
   }
 
-  onRangeChange(event: any){
+  onRangeChange(event: any) {
     this.zoom = event.value;
     this.map.setZoom(this.zoom);
-    switch (event.value){
+    switch (event.value) {
+      case 11:
+        this.distance = 5;
+        break;
       case 12:
         this.distance = 4;
         break;
@@ -134,55 +143,75 @@ export class ListDriversPage implements OnInit{
       case 14:
         this.distance = 2;
         break;
-      case 14:
+      case 15:
         this.distance = 1;
         break;
       default:
-        this.distance = 5;        
+        this.distance = 0;
     }
-
-    this.checkRangeOfDrivers(this.distance);
+    this.checkRangeOfDrivers();
   }
 
-  onLogout(){
+  onLogout() {
     this.navCtrl.setRoot('SigninPage');
   }
 
+  checkRangeOfDrivers() {
+    // Clear driversInZone array
+    while (this.driversInZone.length > 0) {
+      this.driversInZone.pop();   
+    }       
 
-
-  calculateDistance(lat2, lon2){
-    let R = 6371e3; // meters
-    let φ1 = this.toRadians(this.lat);
-    let φ2 = this.toRadians(lat2);
-    let Δφ = this.toRadians((lat2 - this.lat));
-    let Δλ = this.toRadians((lon2 - this.lng));
-
-    let a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-      Math.cos(φ1) * Math.cos(φ2) *
-      Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-    let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-    // in meter
-    let d = R * c;
-    //in km
-    return d / 1000;
-    //console.log("Distance is: "+d/1000 + "km")
-  }
-
-  checkRangeOfDrivers(range: number){
-    this.driversInZone.splice(0);
-    console.log("Range: " + range + "km");
-    for(let driver of this.drivers){
-      // console.log(driver.location);
-      let distance = this.calculateDistance(driver.location.latitude, driver.location.longitude);
-      if(distance <= range){
-        this.driversInZone.push(driver);
-      }
+    // Clear driver markers
+    for (let driverMarker of this.driversMarkers) {
+      driverMarker.setMap(null);
     }
-    console.log(this.driversInZone);
-  }
+    this.driversMarkers = [];
 
-  toRadians(angle) {
-    return angle * (Math.PI / 180);
+    // calculate distance between origin and destination
+    let origin = new google.maps.LatLng(this.lat, this.lng); 
+    let distanceCalculator: any = new google.maps.DistanceMatrixService(); 
+    console.log("Range: " + this.distance + "km");
+
+    for (let driver of this.drivers) {
+      distanceCalculator.getDistanceMatrix({
+        origins: [ origin ],
+        destinations: [new google.maps.LatLng(driver.location.latitude, driver.location.longitude)],
+        travelMode: google.maps.TravelMode.DRIVING,
+        drivingOptions: {
+          departureTime: new Date(Date.now())
+        }
+    //     // Callback function
+      }, function (resp, status) {   
+        driver.locationAddress = resp.destinationAddresses;
+        driver.distance = resp.rows[0].elements[0].distance.value;
+        driver.duration = resp.rows[0].elements[0].duration.value;        
+
+        // console.log('------------ALL DRIVERS-----------------------');  
+        // console.log('Driver ID: ' + driver.userID);   
+        // console.log('Range: ' + this.distance);
+        // console.log('Km: ' + (driver.distance / 1000));
+        // console.log('Rounded: ' + Math.round((driver.distance / 1000)));
+        
+
+        if ((driver.distance / 1000) < this.distance) {
+          // console.log('------------DRIVERS IN ZONE-----------------------------');    
+          // console.log('Driver ID: ' + driver.userID);   
+          // console.log('Driver Name: ' + driver.firstName + ' ' + driver.lastName);   
+          // console.log('From: ' + resp.originAddresses);
+          // console.log('To: ' + resp.destinationAddresses);
+  
+          // if (driver.distance > 1000) {
+          //   console.log('Distance: ' + driver.distance / 1000 + ' km'); // distance in meters => / 1000 to get km's
+          // } else {
+          //   console.log('Distance: ' + driver.distance + ' m'); // distance in meters    
+          // }          
+          // console.log('Duration: ' + driver.duration / 60 + ' min'); //value = in seconds => / 60 to get minutes
+
+          this.driversInZone.push(driver);
+          this.addDriversMarkers(driver);
+        }        
+      }.bind(this)); // Access this scope in callback
+    }       
   }
 }

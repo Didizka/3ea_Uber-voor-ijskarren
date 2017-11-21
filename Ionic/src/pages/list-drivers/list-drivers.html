@@ -17,6 +17,7 @@
 <ion-content padding>
 
   <!-- Slidebar -->
+  <p text-center>Zoek in een straal van <b>{{distance}}</b> km</p>
   <ion-range min="11" max="15" pin="true" [(ngModel)]="zoom" (ionChange)="onRangeChange($event)">  <!-- (ionChange)="onRangeChange($event)" -->
     <ion-icon range-left small name="pin"></ion-icon>
     <ion-icon range-right name="pin"></ion-icon>
@@ -26,20 +27,25 @@
 
   <!-- Position button -->
   <ion-buttons>
-      <button type="button" ion-button full (click)="showMap()">
+      <button type="button" ion-button full (click)="ngOnInit()">
         <ion-icon></ion-icon><!--navigate-->
         Show my current position
       </button>
     </ion-buttons>
 
     <!-- List of drivers -->
-  <ion-card *ngFor="let driver of driversInZone">
-    <ion-card-header>
-      {{driver.userID}}
-    </ion-card-header>
-    <ion-card-content>
-      {{driver.firstName }} {{ driver.lastName}}
-    </ion-card-content>
-  </ion-card>
+  <div *ngIf="driversInZone">
+    <ion-card *ngFor="let driver of driversInZone">
+      <ion-card-header>
+        <b>Chauffeur ID: </b>{{driver?.userID}}
+      </ion-card-header>
+      <ion-card-content>
+       <p><b>Naam: </b> {{driver?.firstName }} {{ driver?.lastName}}</p>
+       <p><b>Afstand: </b>{{driver?.distance / 1000 | number: '1.2-2'}} km</p>
+       <p><b>Duur: </b>{{driver?.duration / 60 | number: '1.1-1'}} min</p>
+       <p><b>Locatie: </b>{{driver?.locationAddress}}</p>
+      </ion-card-content>
+    </ion-card>
+  </div>
 
 </ion-content>

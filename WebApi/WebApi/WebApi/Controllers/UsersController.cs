@@ -53,9 +53,10 @@ namespace WebApi.Controllers
                 return Ok(user);
             return BadRequest(id);
         }
-        
-        // Get Location
 
+        ///////////////////////////////////////////////
+        ///     GET: api/users/location           /////
+        ///////////////////////////////////////////////
         [HttpGet("location")]
         public async Task<IActionResult> GetDriversLocation()
         {

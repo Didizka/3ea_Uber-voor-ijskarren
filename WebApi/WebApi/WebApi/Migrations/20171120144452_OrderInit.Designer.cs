@@ -10,11 +10,11 @@ using System;
 using WebApi.Data;
 using WebApi.Models;
 
-namespace WebApi.Data.Migrations
+namespace WebApi.Migrations
 {
     [DbContext(typeof(OrderContext))]
-    [Migration("20171117104126_OrdersInitialized")]
-    partial class OrdersInitialized
+    [Migration("20171120144452_OrderInit")]
+    partial class OrderInit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
