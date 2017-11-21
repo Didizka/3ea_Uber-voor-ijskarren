@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AlertController, IonicPage, LoadingController, NavController, NavParams} from 'ionic-angular';
+import {AlertController, IonicPage, LoadingController, NavController, NavParams, ViewController} from 'ionic-angular';
 import {OrderProvider} from "../../providers/order-provider";
 import {Toast} from "@ionic-native/toast";
 import {Flavour} from "../../Models/flavour.model";
