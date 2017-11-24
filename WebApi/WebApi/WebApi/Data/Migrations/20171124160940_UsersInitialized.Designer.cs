@@ -12,9 +12,9 @@ using WebApi.Models;
 
 namespace WebApi.Data.Migrations
 {
-    [DbContext(typeof(OrderContext))]
-    [Migration("20171118192346_OrdersInitialized")]
-    partial class OrdersInitialized
+    [DbContext(typeof(UserContext))]
+    [Migration("20171124160940_UsersInitialized")]
+    partial class UsersInitialized
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -64,7 +64,25 @@ namespace WebApi.Data.Migrations
 
                     b.HasIndex("AddressID");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.ToTable("ContactInformation");
+                });
+
+            modelBuilder.Entity("WebApi.Models.Orders.DriverFlavour", b =>
+                {
+                    b.Property<int>("FlavourID");
+
+                    b.Property<int>("UserID");
+
+                    b.Property<double>("Price");
+
+                    b.HasKey("FlavourID", "UserID");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("DriverFlavours");
                 });
 
             modelBuilder.Entity("WebApi.Models.Orders.Flavour", b =>
@@ -90,6 +108,8 @@ namespace WebApi.Data.Migrations
 
                     b.Property<int?>("DriverUserID");
 
+                    b.Property<int?>("LocationID");
+
                     b.Property<double>("TotalPrice");
 
                     b.HasKey("OrderID");
@@ -97,6 +117,8 @@ namespace WebApi.Data.Migrations
                     b.HasIndex("CustomerUserID");
 
                     b.HasIndex("DriverUserID");
+
+                    b.HasIndex("LocationID");
 
                     b.ToTable("Orders");
                 });
@@ -187,6 +209,16 @@ namespace WebApi.Data.Migrations
                     b.ToTable("Location");
                 });
 
+            modelBuilder.Entity("WebApi.Models.Customer", b =>
+                {
+                    b.HasBaseType("WebApi.Models.User");
+
+
+                    b.ToTable("Customers");
+
+                    b.HasDiscriminator().HasValue("Customer");
+                });
+
             modelBuilder.Entity("WebApi.Models.Driver", b =>
                 {
                     b.HasBaseType("WebApi.Models.User");
@@ -205,15 +237,32 @@ namespace WebApi.Data.Migrations
                         .HasForeignKey("AddressID");
                 });
 
+            modelBuilder.Entity("WebApi.Models.Orders.DriverFlavour", b =>
+                {
+                    b.HasOne("WebApi.Models.Orders.Flavour", "Flavour")
+                        .WithMany("DriverFlavours")
+                        .HasForeignKey("FlavourID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("WebApi.Models.Driver", "Driver")
+                        .WithMany("DriverFlavours")
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("WebApi.Models.Orders.Order", b =>
                 {
                     b.HasOne("WebApi.Models.User", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerUserID");
 
-                    b.HasOne("WebApi.Models.Driver", "Driver")
+                    b.HasOne("WebApi.Models.User", "Driver")
                         .WithMany()
                         .HasForeignKey("DriverUserID");
+
+                    b.HasOne("WebApi.Models.Users.Location", "Location")
+                        .WithMany()
+                        .HasForeignKey("LocationID");
                 });
 
             modelBuilder.Entity("WebApi.Models.Orders.OrderItem", b =>

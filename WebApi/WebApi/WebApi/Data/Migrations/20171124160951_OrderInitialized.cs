@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace WebApi.Data.Migrations
 {
-    public partial class OrdersInitialized : Migration
+    public partial class OrderInitialized : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -108,6 +108,31 @@ namespace WebApi.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DriverFlavours",
+                columns: table => new
+                {
+                    FlavourID = table.Column<int>(type: "int", nullable: false),
+                    UserID = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<double>(type: "float", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DriverFlavours", x => new { x.FlavourID, x.UserID });
+                    table.ForeignKey(
+                        name: "FK_DriverFlavours_Flavours_FlavourID",
+                        column: x => x.FlavourID,
+                        principalTable: "Flavours",
+                        principalColumn: "FlavourID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DriverFlavours_Users_UserID",
+                        column: x => x.UserID,
+                        principalTable: "Users",
+                        principalColumn: "UserID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Orders",
                 columns: table => new
                 {
@@ -115,6 +140,7 @@ namespace WebApi.Data.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CustomerUserID = table.Column<int>(type: "int", nullable: true),
                     DriverUserID = table.Column<int>(type: "int", nullable: true),
+                    LocationID = table.Column<int>(type: "int", nullable: true),
                     TotalPrice = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
@@ -131,6 +157,12 @@ namespace WebApi.Data.Migrations
                         column: x => x.DriverUserID,
                         principalTable: "Users",
                         principalColumn: "UserID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Orders_Location_LocationID",
+                        column: x => x.LocationID,
+                        principalTable: "Location",
+                        principalColumn: "LocationID",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -185,6 +217,11 @@ namespace WebApi.Data.Migrations
                 column: "AddressID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DriverFlavours_UserID",
+                table: "DriverFlavours",
+                column: "UserID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrderItemFlavours_FlavourID",
                 table: "OrderItemFlavours",
                 column: "FlavourID");
@@ -205,6 +242,11 @@ namespace WebApi.Data.Migrations
                 column: "DriverUserID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Orders_LocationID",
+                table: "Orders",
+                column: "LocationID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_ContactInformationID",
                 table: "Users",
                 column: "ContactInformationID");
@@ -217,6 +259,9 @@ namespace WebApi.Data.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "DriverFlavours");
+
             migrationBuilder.DropTable(
                 name: "OrderItemFlavours");
 

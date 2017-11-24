@@ -10,6 +10,7 @@ namespace WebApi.Models.Orders
     [Table("OrderItemFlavours")]
     public class OrderItemFlavour
     {
+        //public int OrderItemFlavourID { get; set; }
         public int OrderItemID { get; set; }
         public int FlavourID { get; set; }
 

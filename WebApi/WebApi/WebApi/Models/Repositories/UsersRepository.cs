@@ -36,6 +36,16 @@ namespace WebApi.Models.Repositories
             //user.Password = null;
             return user;
         }
+        public async Task<Driver> GetDriverByEmail(string email)
+        {
+            var driver = await context.Drivers
+                            .Include(c => c.ContactInformation)
+                                   .ThenInclude(a => a.Address)
+                            .SingleOrDefaultAsync(u => u.ContactInformation.Email == email);
+            //user.Salt = null;
+            //user.Password = null;
+            return driver;
+        }
         public async Task<User> GetUserById(int id)
         {
             var user = await context.Users

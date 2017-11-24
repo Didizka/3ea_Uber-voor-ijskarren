@@ -6,7 +6,7 @@ import 'rxjs/add/operator/map';
 export class OrderProvider {
 
   //ip: string = 'http://localhost:9000/api/order/';
-  ip: string = 'http://172.16.146.5:80/api/order/';
+  ip: string = 'http://172.16.235.156:80/api/order/';
   //ip: string = 'http://192.168.0.172:80/api/order/';
 
   constructor(public http: Http) {
@@ -21,9 +21,9 @@ export class OrderProvider {
       return response.json();
     });
   }
-  placeOrder(shoppingCart: JSON){
+  placeOrder(shoppingCart: JSON, currentUser: string){
     console.log(shoppingCart);
-    return this.http.post(this.ip, shoppingCart, {headers: this.headers})
+    return this.http.post(this.ip + currentUser, shoppingCart, {headers: this.headers})
       .map((response: Response) => {
       return response.json();
     });

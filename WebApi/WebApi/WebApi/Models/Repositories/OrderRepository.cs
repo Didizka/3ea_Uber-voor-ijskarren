@@ -22,9 +22,6 @@ namespace WebApi.Models.Repositories
             return await context.Flavours.ToListAsync();
         }
 
-        public async void PlaceOrder()
-        {
-            
-        }
+        
     }
 }

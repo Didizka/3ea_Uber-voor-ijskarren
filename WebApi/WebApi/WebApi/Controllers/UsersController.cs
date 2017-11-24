@@ -204,6 +204,8 @@ namespace WebApi.Controllers
                 return Ok("You have to register first");
 
             bool canAccess = usersRepo.CanUserLogin(user, loginUser);
+            if (canAccess)
+                return Ok(user.UserRoleType.ToString());
 
             return Ok(canAccess);
 

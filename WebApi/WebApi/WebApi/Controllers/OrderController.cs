@@ -17,12 +17,14 @@ namespace WebApi.Controllers
     public class OrderController : Controller
     {
         private readonly IOrderRepository orderRepo;
+        private readonly IUsersRepository userReop;
         private readonly OrderContext context;
         private readonly UserContext userContext;
 
-        public OrderController(IOrderRepository orderRepo, OrderContext context, UserContext userContext)
+        public OrderController(IOrderRepository orderRepo, IUsersRepository userReop, OrderContext context, UserContext userContext)
         {
             this.orderRepo = orderRepo;
+            this.userReop = userReop;
             this.context = context;
             this.userContext = userContext;
         }
@@ -43,25 +45,25 @@ namespace WebApi.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody]ShoppingCart shoppingcart)
+        [HttpPost("{email}")]
+        public async Task<IActionResult> Post(string email, [FromBody]ShoppingCart shoppingcart)
         {
-            if (shoppingcart == null)
+            var customer = await userReop.GetUserByEmail(email);
+            if (shoppingcart == null || customer == null)
             {
                 return BadRequest();
             }
             Order currentOrder = new Order
             {
-
-                Driver = await userContext.Drivers.SingleOrDefaultAsync(d => d.UserID == 4),
-                Customer = await userContext.Customers.SingleOrDefaultAsync(d => d.UserID == 1),
+                //Customer = customer,
                 TotalPrice = 14
             };
-            //await context.Orders.AddAsync(currentOrder);
-            //await context.SaveChangesAsync();
+            await context.Orders.AddAsync(currentOrder);
+            await context.SaveChangesAsync();
             foreach (var order in shoppingcart.Cart)
             {
-                OrderItem orderItem = new OrderItem { Order = await context.Orders.SingleOrDefaultAsync(d => d.OrderID == 1) };
+                //OrderItem orderItem = new OrderItem { Order = await context.Orders.SingleOrDefaultAsync(d => d.OrderID == 1) };
+                OrderItem orderItem = new OrderItem { Order = currentOrder };
                 context.OrderItems.Add(orderItem);
                 List<OrderItemFlavour> orderItemFlavour = new List<OrderItemFlavour>();
                 foreach (var item in order.IceCream)

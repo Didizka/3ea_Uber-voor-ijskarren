@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 import 'rxjs/add/operator/map';
-import {Customer} from "../Models/customer";
+import { Storage } from '@ionic/storage';
 
 @Injectable()
 export class UserProvider {
@@ -14,7 +14,7 @@ export class UserProvider {
 
   // Local DEV
   //ip: string = 'http://192.168.0.172:80/api/users/';
-  ip: string = 'http://172.16.146.5:80/api/users/';
+  ip: string = 'http://172.16.235.156:80/api/users/';
 
   // Home
   // ip: string = 'http://192.168.0.155:8080/api/users/';
@@ -24,8 +24,8 @@ export class UserProvider {
 
   // Production server
   // ip: string = 'http://cloud-app.ddns.net/api/users/';
-
-  constructor(public http: Http) {
+  currentUser: string;
+  constructor(public http: Http, private storage: Storage) {
 
   }
   private headers: Headers = new  Headers({
@@ -40,9 +40,14 @@ export class UserProvider {
   }
 
   login(email: string, user: JSON){
-    console.log(user);
+
     return this.http.post(this.ip + email, user, {headers: this.headers })
       .map((response: Response) => {
+      if(response.json() == "CUSTOMER" || response.json() == "DRIVER"){
+        this.storage.ready().then(()=>{
+          this.storage.set('currentUser', email);
+        });
+      }
       return response.json();
     });
   }
@@ -52,11 +57,15 @@ export class UserProvider {
       return response.json();
     });
   }
+  getCurrentUser(){
+    return this.storage.get("currentUser").then();
+  }
   getDriversLocation(){
     return this.http.get(this.ip + 'location')
       .map((response: Response) => {
         return response.json();
       });
   }
+
 
 }
