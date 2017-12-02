@@ -9,7 +9,7 @@ namespace WebApi.Models.Orders
     [Table("DriverFlavours")]
     public class DriverFlavour
     {
-        public int UserID { get; set; }
+        public int DriverID { get; set; }
         public int FlavourID { get; set; }
         public double Price { get; set; }
 

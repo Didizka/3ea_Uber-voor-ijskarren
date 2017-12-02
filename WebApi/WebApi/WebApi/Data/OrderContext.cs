@@ -19,6 +19,18 @@ namespace WebApi.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // For Order
+            modelBuilder.Entity<Order>()
+                .HasOne(p => p.Customer)
+                .WithMany(b => b.Orders)
+                .HasForeignKey(p => p.CustomerrID);
+
+            modelBuilder.Entity<Order>()
+               .HasOne(p => p.Driver)
+               .WithMany(b => b.Orders)
+               .HasForeignKey(p => p.CustomerrID);
+
+
             // For OrderItemFlavour
             modelBuilder.Entity<OrderItemFlavour>()
                 .HasKey(k => new { k.OrderItemID, k.FlavourID });
@@ -36,12 +48,12 @@ namespace WebApi.Data
             //for DriverFlavour
 
             modelBuilder.Entity<DriverFlavour>()
-                .HasKey(k => new { k.FlavourID, k.UserID });
+                .HasKey(k => new { k.FlavourID, k.DriverID });
 
             modelBuilder.Entity<DriverFlavour>()
                 .HasOne(m => m.Driver)
                 .WithMany(mr => mr.DriverFlavours)
-                .HasForeignKey(pt => pt.UserID);
+                .HasForeignKey(pt => pt.DriverID);
 
             modelBuilder.Entity<DriverFlavour>()
                 .HasOne(m => m.Flavour)

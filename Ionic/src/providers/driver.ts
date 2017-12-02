@@ -6,8 +6,8 @@ import {FlavourUpdate, FlavourUpdateJson} from "../Models/flavour.model";
 
 @Injectable()
 export class DriverProvider {
-  ip: string = 'http://172.16.235.156:80/api/driver/';
-  //ip: string = 'http://192.168.0.172:80/api/driver/';
+  //ip: string = 'http://172.16.212.115:80/api/driver/';
+  ip: string = 'http://192.168.0.172:80/api/driver/';
   private headers: Headers = new  Headers({
     'Accept': 'application/json'
   });

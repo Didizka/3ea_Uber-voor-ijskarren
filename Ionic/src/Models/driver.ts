@@ -1,7 +1,7 @@
 export interface Driver{
   firstName: string,
   lastName: string,
-  userID: number,
+  driverID: number,
   phoneNumber: string,
   email: string,
   location: Location

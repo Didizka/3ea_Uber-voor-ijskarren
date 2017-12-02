@@ -5,16 +5,15 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
-using Microsoft.EntityFrameworkCore.ValueGeneration;
 using System;
 using WebApi.Data;
 using WebApi.Models;
 
 namespace WebApi.Data.Migrations
 {
-    [DbContext(typeof(OrderContext))]
-    [Migration("20171124160951_OrderInitialized")]
-    partial class OrderInitialized
+    [DbContext(typeof(UserContext))]
+    [Migration("20171201230055_UsersInitialized")]
+    partial class UsersInitialized
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -64,20 +63,93 @@ namespace WebApi.Data.Migrations
 
                     b.HasIndex("AddressID");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.ToTable("ContactInformation");
+                });
+
+            modelBuilder.Entity("WebApi.Models.Customer", b =>
+                {
+                    b.Property<int>("CustomerID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("ContactInformationID");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<int?>("LocationID");
+
+                    b.Property<string>("Password");
+
+                    b.Property<DateTime>("RegistrationDate");
+
+                    b.Property<string>("Salt")
+                        .IsRequired()
+                        .HasMaxLength(64);
+
+                    b.HasKey("CustomerID");
+
+                    b.HasIndex("ContactInformationID");
+
+                    b.HasIndex("LocationID");
+
+                    b.ToTable("Customers");
+                });
+
+            modelBuilder.Entity("WebApi.Models.Driver", b =>
+                {
+                    b.Property<int>("DriverID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("ContactInformationID");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<bool>("IsApproved");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<int?>("LocationID");
+
+                    b.Property<string>("Password");
+
+                    b.Property<DateTime>("RegistrationDate");
+
+                    b.Property<string>("Salt")
+                        .IsRequired()
+                        .HasMaxLength(64);
+
+                    b.HasKey("DriverID");
+
+                    b.HasIndex("ContactInformationID");
+
+                    b.HasIndex("LocationID");
+
+                    b.ToTable("Drivers");
                 });
 
             modelBuilder.Entity("WebApi.Models.Orders.DriverFlavour", b =>
                 {
                     b.Property<int>("FlavourID");
 
-                    b.Property<int>("UserID");
+                    b.Property<int>("DriverID");
 
                     b.Property<double>("Price");
 
-                    b.HasKey("FlavourID", "UserID");
+                    b.HasKey("FlavourID", "DriverID");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("DriverID");
 
                     b.ToTable("DriverFlavours");
                 });
@@ -101,9 +173,11 @@ namespace WebApi.Data.Migrations
                     b.Property<int>("OrderID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("CustomerUserID");
+                    b.Property<int?>("CustomerID");
 
-                    b.Property<int?>("DriverUserID");
+                    b.Property<int>("CustomerrID");
+
+                    b.Property<int>("DriverID");
 
                     b.Property<int?>("LocationID");
 
@@ -111,9 +185,9 @@ namespace WebApi.Data.Migrations
 
                     b.HasKey("OrderID");
 
-                    b.HasIndex("CustomerUserID");
+                    b.HasIndex("CustomerID");
 
-                    b.HasIndex("DriverUserID");
+                    b.HasIndex("DriverID");
 
                     b.HasIndex("LocationID");
 
@@ -158,9 +232,6 @@ namespace WebApi.Data.Migrations
 
                     b.Property<int?>("ContactInformationID");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired();
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(50);
@@ -188,8 +259,6 @@ namespace WebApi.Data.Migrations
                     b.HasIndex("LocationID");
 
                     b.ToTable("Users");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("User");
                 });
 
             modelBuilder.Entity("WebApi.Models.Users.Location", b =>
@@ -206,17 +275,6 @@ namespace WebApi.Data.Migrations
                     b.ToTable("Location");
                 });
 
-            modelBuilder.Entity("WebApi.Models.Driver", b =>
-                {
-                    b.HasBaseType("WebApi.Models.User");
-
-                    b.Property<bool>("IsApproved");
-
-                    b.ToTable("Drivers");
-
-                    b.HasDiscriminator().HasValue("Driver");
-                });
-
             modelBuilder.Entity("WebApi.Models.ContactInformation", b =>
                 {
                     b.HasOne("WebApi.Models.Address", "Address")
@@ -224,28 +282,51 @@ namespace WebApi.Data.Migrations
                         .HasForeignKey("AddressID");
                 });
 
+            modelBuilder.Entity("WebApi.Models.Customer", b =>
+                {
+                    b.HasOne("WebApi.Models.ContactInformation", "ContactInformation")
+                        .WithMany()
+                        .HasForeignKey("ContactInformationID");
+
+                    b.HasOne("WebApi.Models.Users.Location", "Location")
+                        .WithMany()
+                        .HasForeignKey("LocationID");
+                });
+
+            modelBuilder.Entity("WebApi.Models.Driver", b =>
+                {
+                    b.HasOne("WebApi.Models.ContactInformation", "ContactInformation")
+                        .WithMany()
+                        .HasForeignKey("ContactInformationID");
+
+                    b.HasOne("WebApi.Models.Users.Location", "Location")
+                        .WithMany()
+                        .HasForeignKey("LocationID");
+                });
+
             modelBuilder.Entity("WebApi.Models.Orders.DriverFlavour", b =>
                 {
+                    b.HasOne("WebApi.Models.Driver", "Driver")
+                        .WithMany("DriverFlavours")
+                        .HasForeignKey("DriverID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("WebApi.Models.Orders.Flavour", "Flavour")
                         .WithMany("DriverFlavours")
                         .HasForeignKey("FlavourID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("WebApi.Models.Driver", "Driver")
-                        .WithMany("DriverFlavours")
-                        .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("WebApi.Models.Orders.Order", b =>
                 {
-                    b.HasOne("WebApi.Models.User", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerUserID");
+                    b.HasOne("WebApi.Models.Customer", "Customer")
+                        .WithMany("Orders")
+                        .HasForeignKey("CustomerID");
 
-                    b.HasOne("WebApi.Models.User", "Driver")
-                        .WithMany()
-                        .HasForeignKey("DriverUserID");
+                    b.HasOne("WebApi.Models.Driver", "Driver")
+                        .WithMany("Orders")
+                        .HasForeignKey("DriverID")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("WebApi.Models.Users.Location", "Location")
                         .WithMany()

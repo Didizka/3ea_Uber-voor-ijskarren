@@ -33,6 +33,7 @@ export class ListDriversPage implements OnInit{
     this.userProvider.getDriversLocation().subscribe(
       data => {
         this.drivers = data;
+        console.log(this.drivers[1].driverID);
         this.checkRangeOfDrivers(5);
       },
       err => {

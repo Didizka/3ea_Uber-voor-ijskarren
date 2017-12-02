@@ -48,14 +48,15 @@ namespace WebApi.Controllers
         [HttpPost("{email}")]
         public async Task<IActionResult> Post(string email, [FromBody]ShoppingCart shoppingcart)
         {
-            var customer = await userReop.GetUserByEmail(email);
+            var customer = await userReop.GetCustomerByEmail(email);
             if (shoppingcart == null || customer == null)
             {
                 return BadRequest();
             }
             Order currentOrder = new Order
             {
-                //Customer = customer,
+                CustomerrID = customer.CustomerID,
+                //Customer = await userContext.Customers.SingleOrDefaultAsync(c => c.CustomerID == customer.CustomerID),
                 TotalPrice = 14
             };
             await context.Orders.AddAsync(currentOrder);

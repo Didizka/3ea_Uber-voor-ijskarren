@@ -86,11 +86,11 @@ export class OrderPage implements OnInit{
           console.log(data);
           if(data == true){
             loading.dismiss();
-            this.toast.showLongBottom("Order Placed success").subscribe(
+            /*this.toast.showLongBottom("Order Placed success").subscribe(
               toast => {
                 console.log(toast);
               }
-            );
+            );*/
             this.shoppingCart.cart=[];
           }else{
             loading.dismiss();

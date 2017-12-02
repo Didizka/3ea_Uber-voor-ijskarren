@@ -74,33 +74,62 @@ namespace WebApi.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "Customers",
                 columns: table => new
                 {
-                    IsApproved = table.Column<bool>(type: "bit", nullable: true),
-                    UserID = table.Column<int>(type: "int", nullable: false)
+                    CustomerID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     ContactInformationID = table.Column<int>(type: "int", nullable: true),
-                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LocationID = table.Column<int>(type: "int", nullable: true),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RegistrationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Salt = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
-                    UserRoleType = table.Column<int>(type: "int", nullable: false)
+                    Salt = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.UserID);
+                    table.PrimaryKey("PK_Customers", x => x.CustomerID);
                     table.ForeignKey(
-                        name: "FK_Users_ContactInformation_ContactInformationID",
+                        name: "FK_Customers_ContactInformation_ContactInformationID",
                         column: x => x.ContactInformationID,
                         principalTable: "ContactInformation",
                         principalColumn: "ContactInformationID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Users_Location_LocationID",
+                        name: "FK_Customers_Location_LocationID",
+                        column: x => x.LocationID,
+                        principalTable: "Location",
+                        principalColumn: "LocationID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Drivers",
+                columns: table => new
+                {
+                    DriverID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ContactInformationID = table.Column<int>(type: "int", nullable: true),
+                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    IsApproved = table.Column<bool>(type: "bit", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    LocationID = table.Column<int>(type: "int", nullable: true),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RegistrationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Salt = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Drivers", x => x.DriverID);
+                    table.ForeignKey(
+                        name: "FK_Drivers_ContactInformation_ContactInformationID",
+                        column: x => x.ContactInformationID,
+                        principalTable: "ContactInformation",
+                        principalColumn: "ContactInformationID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Drivers_Location_LocationID",
                         column: x => x.LocationID,
                         principalTable: "Location",
                         principalColumn: "LocationID",
@@ -112,23 +141,23 @@ namespace WebApi.Data.Migrations
                 columns: table => new
                 {
                     FlavourID = table.Column<int>(type: "int", nullable: false),
-                    UserID = table.Column<int>(type: "int", nullable: false),
+                    DriverID = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DriverFlavours", x => new { x.FlavourID, x.UserID });
+                    table.PrimaryKey("PK_DriverFlavours", x => new { x.FlavourID, x.DriverID });
+                    table.ForeignKey(
+                        name: "FK_DriverFlavours_Drivers_DriverID",
+                        column: x => x.DriverID,
+                        principalTable: "Drivers",
+                        principalColumn: "DriverID",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_DriverFlavours_Flavours_FlavourID",
                         column: x => x.FlavourID,
                         principalTable: "Flavours",
                         principalColumn: "FlavourID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_DriverFlavours_Users_UserID",
-                        column: x => x.UserID,
-                        principalTable: "Users",
-                        principalColumn: "UserID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -138,8 +167,8 @@ namespace WebApi.Data.Migrations
                 {
                     OrderID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CustomerUserID = table.Column<int>(type: "int", nullable: true),
-                    DriverUserID = table.Column<int>(type: "int", nullable: true),
+                    CustomerrID = table.Column<int>(type: "int", nullable: false),
+                    DriverID = table.Column<int>(type: "int", nullable: false),
                     LocationID = table.Column<int>(type: "int", nullable: true),
                     TotalPrice = table.Column<double>(type: "float", nullable: false)
                 },
@@ -147,17 +176,17 @@ namespace WebApi.Data.Migrations
                 {
                     table.PrimaryKey("PK_Orders", x => x.OrderID);
                     table.ForeignKey(
-                        name: "FK_Orders_Users_CustomerUserID",
-                        column: x => x.CustomerUserID,
-                        principalTable: "Users",
-                        principalColumn: "UserID",
-                        onDelete: ReferentialAction.Restrict);
+                        name: "FK_Orders_Customers_CustomerrID",
+                        column: x => x.CustomerrID,
+                        principalTable: "Customers",
+                        principalColumn: "CustomerID",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Orders_Users_DriverUserID",
-                        column: x => x.DriverUserID,
-                        principalTable: "Users",
-                        principalColumn: "UserID",
-                        onDelete: ReferentialAction.Restrict);
+                        name: "FK_Orders_Drivers_CustomerrID",
+                        column: x => x.CustomerrID,
+                        principalTable: "Drivers",
+                        principalColumn: "DriverID",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Orders_Location_LocationID",
                         column: x => x.LocationID,
@@ -217,9 +246,29 @@ namespace WebApi.Data.Migrations
                 column: "AddressID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DriverFlavours_UserID",
+                name: "IX_Customers_ContactInformationID",
+                table: "Customers",
+                column: "ContactInformationID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Customers_LocationID",
+                table: "Customers",
+                column: "LocationID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DriverFlavours_DriverID",
                 table: "DriverFlavours",
-                column: "UserID");
+                column: "DriverID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Drivers_ContactInformationID",
+                table: "Drivers",
+                column: "ContactInformationID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Drivers_LocationID",
+                table: "Drivers",
+                column: "LocationID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderItemFlavours_FlavourID",
@@ -232,28 +281,13 @@ namespace WebApi.Data.Migrations
                 column: "OrderID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_CustomerUserID",
+                name: "IX_Orders_CustomerrID",
                 table: "Orders",
-                column: "CustomerUserID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Orders_DriverUserID",
-                table: "Orders",
-                column: "DriverUserID");
+                column: "CustomerrID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_LocationID",
                 table: "Orders",
-                column: "LocationID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_ContactInformationID",
-                table: "Users",
-                column: "ContactInformationID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_LocationID",
-                table: "Users",
                 column: "LocationID");
         }
 
@@ -275,7 +309,10 @@ namespace WebApi.Data.Migrations
                 name: "Orders");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Customers");
+
+            migrationBuilder.DropTable(
+                name: "Drivers");
 
             migrationBuilder.DropTable(
                 name: "ContactInformation");
