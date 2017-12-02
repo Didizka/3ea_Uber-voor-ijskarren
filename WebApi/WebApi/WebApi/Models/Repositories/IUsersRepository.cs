@@ -18,5 +18,7 @@ namespace WebApi.Models.Repositories
         Task<IEnumerable<Driver>> GetDrivers();
         Task<IEnumerable<Driver>> GetDriversLocations();
         Task<List<DriverFlavour>> GetDriversFlavours(string email);
+        void RemovePasswordOfCustomer(Customer customer);
+        void RemovePasswordOfDriver(Driver customer);
     }
 }

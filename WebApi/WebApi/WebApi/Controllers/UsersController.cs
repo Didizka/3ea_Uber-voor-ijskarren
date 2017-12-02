@@ -60,9 +60,11 @@ namespace WebApi.Controllers
         public async Task<IActionResult> GetUserById(int id)
         {
             var customer = await usersRepo.GetCustomerById(id);
+            usersRepo.RemovePasswordOfCustomer(customer);
             if (customer != null)
                 return Ok(customer);
             var driver = await usersRepo.GetDriverById(id);
+            usersRepo.RemovePasswordOfDriver(driver);
             if (driver != null)
                 return Ok(driver);
             return NotFound(id);

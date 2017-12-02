@@ -21,17 +21,27 @@ namespace WebApi.Models.Repositories
         }
         public async Task<IEnumerable<Customer>> GetCustomers()
         {
-            return await context.Customers
-                            .Include(c => c.ContactInformation)
-                                   .ThenInclude(a => a.Address)
-                            .ToListAsync();             
-        }
-        public async Task<IEnumerable<Driver>> GetDrivers()
-        {
-            return await context.Drivers
+            var result =  await context.Customers
                             .Include(c => c.ContactInformation)
                                    .ThenInclude(a => a.Address)
                             .ToListAsync();
+            foreach (var customer in result)
+            {
+                RemovePasswordOfCustomer(customer);
+            }
+            return result;
+        }
+        public async Task<IEnumerable<Driver>> GetDrivers()
+        {
+            var result = await context.Drivers
+                            .Include(c => c.ContactInformation)
+                                   .ThenInclude(a => a.Address)
+                            .ToListAsync();
+            foreach (var driver in result)
+            {
+                RemovePasswordOfDriver(driver);
+            }
+            return result;
         }
 
         public async Task<Customer> GetCustomerByEmail(string email)
@@ -119,6 +129,22 @@ namespace WebApi.Models.Repositories
                 return UserRoleTypes.DRIVER;
             return UserRoleTypes.NOTFOUND;
 
+        }
+        public void RemovePasswordOfCustomer(Customer customer)
+        {
+            if(customer != null)
+            {
+                customer.Password = null;
+                customer.Salt = null;
+            }
+        }
+        public void RemovePasswordOfDriver(Driver driver)
+        {
+            if (driver != null)
+            {
+                driver.Password = null;
+                driver.Salt = null;
+            }
         }
     }
 }
