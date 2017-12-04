@@ -21,6 +21,23 @@ namespace WebApi.Models.Repositories
             this.usersRepo = usersRepo;
             this.userContext = userContext;
         }
+
+        public async Task<Driver> GetFlavoursPrice(string email)
+        {
+            var driver = await usersRepo.GetDriverByEmail(email);
+            if(driver != null)
+            {
+                return await userContext.Drivers
+                    .Include(r => r.DriverFlavours)
+                        .ThenInclude(df => df.Flavour)
+                    .Include(r => r.ContactInformation)
+                    .Include(r => r.Location)
+                    .SingleOrDefaultAsync(d => d.DriverID == driver.DriverID);
+
+            }
+            return null;
+        }
+
         public async Task<bool> UpdateFlavoursPrice(string email, FlavourFrountend[] flavours)
         {
             var driver = await usersRepo.GetDriverByEmail(email);

@@ -13,15 +13,17 @@ namespace WebApi.Models.Repositories
 {
     public class UsersRepository : IUsersRepository
     {
-        private readonly UserContext context;
+        private readonly UserContext userContext;
+        private readonly OrderContext orderContext;
 
-        public UsersRepository(UserContext context)
+        public UsersRepository(UserContext userContext, OrderContext orderContext)
         {
-            this.context = context;
+            this.userContext = userContext;
+            this.orderContext = orderContext;
         }
         public async Task<IEnumerable<Customer>> GetCustomers()
         {
-            var result =  await context.Customers
+            var result =  await userContext.Customers
                             .Include(c => c.ContactInformation)
                                    .ThenInclude(a => a.Address)
                             .ToListAsync();
@@ -33,7 +35,7 @@ namespace WebApi.Models.Repositories
         }
         public async Task<IEnumerable<Driver>> GetDrivers()
         {
-            var result = await context.Drivers
+            var result = await userContext.Drivers
                             .Include(c => c.ContactInformation)
                                    .ThenInclude(a => a.Address)
                             .ToListAsync();
@@ -46,7 +48,7 @@ namespace WebApi.Models.Repositories
 
         public async Task<Customer> GetCustomerByEmail(string email)
         {
-            var customer = await context.Customers
+            var customer = await userContext.Customers
                             .Include(c => c.ContactInformation)
                                    .ThenInclude(a => a.Address)
                             .SingleOrDefaultAsync(u => u.ContactInformation.Email == email);
@@ -56,7 +58,7 @@ namespace WebApi.Models.Repositories
         }
         public async Task<Driver> GetDriverByEmail(string email)
         {
-            var driver = await context.Drivers
+            var driver = await userContext.Drivers
                             .Include(c => c.ContactInformation)
                                    .ThenInclude(a => a.Address)
                             .SingleOrDefaultAsync(u => u.ContactInformation.Email == email);
@@ -66,7 +68,7 @@ namespace WebApi.Models.Repositories
         }
         public async Task<Customer> GetCustomerById(int id)
         {
-            var customer = await context.Customers
+            var customer = await userContext.Customers
                             .Include(c => c.ContactInformation)
                                    .ThenInclude(a => a.Address)
                             .SingleOrDefaultAsync(u => u.CustomerID == id);
@@ -75,7 +77,7 @@ namespace WebApi.Models.Repositories
         }
         public async Task<Driver> GetDriverById(int id)
         {
-            var driver = await context.Drivers
+            var driver = await userContext.Drivers
                             .Include(c => c.ContactInformation)
                                    .ThenInclude(a => a.Address)
                             .SingleOrDefaultAsync(u => u.DriverID == id);
@@ -85,7 +87,7 @@ namespace WebApi.Models.Repositories
 
         public async Task<IEnumerable<Driver>> GetDriversLocations()
         {
-            var users = await context.Drivers
+            var users = await userContext.Drivers
                                 .Include(d => d.Location)
                                 .ToListAsync();
             return users;
@@ -113,8 +115,8 @@ namespace WebApi.Models.Repositories
         public async Task<List<DriverFlavour>> GetDriversFlavours(string email)
         {
             Driver driver = await GetDriverByEmail(email);
-            List<DriverFlavour> driverFlavours = await context.DriverFlavours.Where(sl => sl.DriverID == driver.DriverID).ToListAsync();
-            var users = await context.Drivers
+            List<DriverFlavour> driverFlavours = await userContext.DriverFlavours.Where(sl => sl.DriverID == driver.DriverID).ToListAsync();
+            var users = await userContext.Drivers
                                 .Include(d => d.Location)
                                 .ToListAsync();
             return driverFlavours;
@@ -145,6 +147,21 @@ namespace WebApi.Models.Repositories
                 driver.Password = null;
                 driver.Salt = null;
             }
+        }
+        public async Task<bool> CreateDriverFlavourTable(Driver driver)
+        {
+            var flavours = await orderContext.Flavours.ToListAsync();
+            foreach (var flavour in flavours)
+            {
+                await userContext.DriverFlavours.AddAsync(new DriverFlavour
+                {
+                    DriverID = driver.DriverID,
+                    FlavourID = flavour.FlavourID,
+                    Price = flavour.Price
+                });
+            }
+            await userContext.SaveChangesAsync();
+            return true;
         }
     }
 }

@@ -69,6 +69,7 @@ namespace WebApi.Models
         public Driver()
         {
             DriverFlavours = new Collection<DriverFlavour>();
+            Orders = new Collection<Order>();
         }
     }
     

@@ -9,6 +9,7 @@ using AutoMapper;
 using Newtonsoft.Json.Linq;
 using System;
 using WebApi.Models.Repositories;
+using WebApi.Models.Orders;
 
 namespace WebApi.Controllers
 {
@@ -19,11 +20,13 @@ namespace WebApi.Controllers
         private readonly UserContext context;
         private readonly IMapper mapper;
         private readonly IUsersRepository usersRepo;
+        private readonly IOrderRepository orderRepository;
 
-        public UsersController(UserContext _context, IMapper _mapper, IUsersRepository usersRepo) {
+        public UsersController(UserContext _context, IMapper _mapper, IUsersRepository usersRepo, IOrderRepository orderRepository) {
             context = _context;
             mapper = _mapper;
             this.usersRepo = usersRepo;
+            this.orderRepository = orderRepository;
         }
 
         //////////////////////////////////// 
@@ -118,14 +121,17 @@ namespace WebApi.Controllers
             var customerOrDriver = await usersRepo.CustomerOrDriver(newUser.Email);
             if (customerOrDriver == UserRoleTypes.CUSTOMER || customerOrDriver == UserRoleTypes.DRIVER)
                 return BadRequest("Email must be unique");
-                
+
             // Check users role and create customer or driver object accordingly
             // Create new customer object
             if (newUser.UserRoleType == (int)UserRoleTypes.CUSTOMER)
             {
-                Customer user = new Customer { RegistrationDate = DateTime.Now,
+                Customer user = new Customer
+                {
+                    RegistrationDate = DateTime.Now,
                     Location = new Location { latitude = (float)(51.2001783), longitude = (float)4.4327702 },
-                    ContactInformation = new ContactInformation {Address = new Address () } };
+                    ContactInformation = new ContactInformation { Address = new Address() }
+                };
                 var customer = mapper.Map<RegistrationForm, Customer>(newUser, user);
 
                 try
@@ -138,23 +144,39 @@ namespace WebApi.Controllers
                 {
                     return BadRequest(ex);
                 }
-                
-                
+
+
             }
 
             // Create new driver object
             else if (newUser.UserRoleType == (int)UserRoleTypes.DRIVER)
             {
-                Driver user = new Driver { RegistrationDate = DateTime.Now,
+                Driver user = new Driver
+                {
+                    RegistrationDate = DateTime.Now,
                     Location = new Location { latitude = (float)(51.2301299), longitude = (float)(4.4161723) },
-                    ContactInformation = new ContactInformation { Address = new Address() } };
+                    ContactInformation = new ContactInformation { Address = new Address() }
+                };
                 var driver = mapper.Map<RegistrationForm, Driver>(newUser, user);
+                var flavours = await orderRepository.GetFlavoursAsync();
+                
 
                 try
                 {
                     await context.Drivers.AddAsync(driver);
                     await context.SaveChangesAsync();
                     newUserSavedToDatabase = true;
+
+                    foreach (var flavour in flavours)
+                    {
+                        await context.DriverFlavours.AddAsync(new DriverFlavour
+                        {
+                            DriverID = driver.DriverID,
+                            FlavourID = flavours.Single(f => f.Name == flavour.Name).FlavourID,
+                            Price = flavour.Price
+                        });
+                    }
+                    await context.SaveChangesAsync();
                 }
                 catch (Exception ex)
                 {

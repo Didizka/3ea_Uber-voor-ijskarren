@@ -16,14 +16,20 @@ export class DriverProvider {
   postFlavours: FlavourUpdateJson = new FlavourUpdateJson([new FlavourUpdate("", 0)]);
 
   updateFlavours(flavours: FlavourUpdate[], currentDriver: string){
-    console.log(flavours);
       return this.http.post(this.ip + currentDriver, flavours, {headers: this.headers })
         .map((response: Response) => {
           return response.json();
         });
   }
+  getDriverFlavourPrice(user: string){
+    return this.http.get(this.ip + user)
+      .map((response: Response) => {
+        return response.json();
+      });
+  }
   getCurrentUser(){
     return this.storage.get("currentUser").then();
   }
+
 
 }

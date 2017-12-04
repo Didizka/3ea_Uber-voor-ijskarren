@@ -20,5 +20,6 @@ namespace WebApi.Models.Repositories
         Task<List<DriverFlavour>> GetDriversFlavours(string email);
         void RemovePasswordOfCustomer(Customer customer);
         void RemovePasswordOfDriver(Driver customer);
+        Task<bool> CreateDriverFlavourTable(Driver driver);
     }
 }

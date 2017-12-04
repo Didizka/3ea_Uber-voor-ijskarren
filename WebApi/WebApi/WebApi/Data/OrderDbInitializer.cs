@@ -8,7 +8,7 @@ namespace WebApi.Data
 {
     public class OrderDbInitializer
     {
-        public static void Initialize(OrderContext context)
+        public static void Initialize(OrderContext context, UserContext userContext)
         {
             context.Database.EnsureCreated();
 
@@ -33,7 +33,22 @@ namespace WebApi.Data
             }
 
             context.SaveChanges();
-            
+
+            var drivers = userContext.Drivers.ToList();
+            foreach (var driver in drivers)
+            {
+                foreach (var flavour in flavours)
+                {
+                    userContext.DriverFlavours.Add(new DriverFlavour
+                    {
+                        DriverID = driver.DriverID,
+                        FlavourID = flavours.Single(f => f.Name == flavour.Name).FlavourID,
+                        Price = flavour.Price
+                    });
+                }
+            }
+            userContext.SaveChanges();
+
         }
     }
 }
