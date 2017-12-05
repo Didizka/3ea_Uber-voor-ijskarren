@@ -168,7 +168,7 @@ namespace WebApi.Data.Migrations
                     b.Property<int>("OrderID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("CustomerrID");
+                    b.Property<int>("CustomerID");
 
                     b.Property<int>("DriverID");
 
@@ -178,7 +178,7 @@ namespace WebApi.Data.Migrations
 
                     b.HasKey("OrderID");
 
-                    b.HasIndex("CustomerrID");
+                    b.HasIndex("CustomerID");
 
                     b.HasIndex("LocationID");
 
@@ -276,12 +276,12 @@ namespace WebApi.Data.Migrations
                 {
                     b.HasOne("WebApi.Models.Customer", "Customer")
                         .WithMany("Orders")
-                        .HasForeignKey("CustomerrID")
+                        .HasForeignKey("CustomerID")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("WebApi.Models.Driver", "Driver")
                         .WithMany("Orders")
-                        .HasForeignKey("CustomerrID")
+                        .HasForeignKey("CustomerID")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("WebApi.Models.Users.Location", "Location")

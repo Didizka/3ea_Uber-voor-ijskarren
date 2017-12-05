@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace WebApi.Data.Migrations
 {
-    public partial class OrderInitialized : Migration
+    public partial class UserInit : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -167,7 +167,7 @@ namespace WebApi.Data.Migrations
                 {
                     OrderID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CustomerrID = table.Column<int>(type: "int", nullable: false),
+                    CustomerID = table.Column<int>(type: "int", nullable: false),
                     DriverID = table.Column<int>(type: "int", nullable: false),
                     LocationID = table.Column<int>(type: "int", nullable: true),
                     TotalPrice = table.Column<double>(type: "float", nullable: false)
@@ -176,14 +176,14 @@ namespace WebApi.Data.Migrations
                 {
                     table.PrimaryKey("PK_Orders", x => x.OrderID);
                     table.ForeignKey(
-                        name: "FK_Orders_Customers_CustomerrID",
-                        column: x => x.CustomerrID,
+                        name: "FK_Orders_Customers_CustomerID",
+                        column: x => x.CustomerID,
                         principalTable: "Customers",
                         principalColumn: "CustomerID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Orders_Drivers_CustomerrID",
-                        column: x => x.CustomerrID,
+                        name: "FK_Orders_Drivers_DriverID",
+                        column: x => x.DriverID,
                         principalTable: "Drivers",
                         principalColumn: "DriverID",
                         onDelete: ReferentialAction.Cascade);
@@ -246,6 +246,12 @@ namespace WebApi.Data.Migrations
                 column: "AddressID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ContactInformation_Email",
+                table: "ContactInformation",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Customers_ContactInformationID",
                 table: "Customers",
                 column: "ContactInformationID");
@@ -281,9 +287,14 @@ namespace WebApi.Data.Migrations
                 column: "OrderID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_CustomerrID",
+                name: "IX_Orders_CustomerID",
                 table: "Orders",
-                column: "CustomerrID");
+                column: "CustomerID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_DriverID",
+                table: "Orders",
+                column: "DriverID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_LocationID",

@@ -36,6 +36,7 @@ namespace WebApi.Models.Repositories
         public async Task<IEnumerable<Driver>> GetDrivers()
         {
             var result = await userContext.Drivers
+                            .Include(l => l.Location)
                             .Include(c => c.ContactInformation)
                                    .ThenInclude(a => a.Address)
                             .Include(d => d.Location)
@@ -145,7 +146,7 @@ namespace WebApi.Models.Repositories
         {
             if (driver != null)
             {
-                driver.Password = null;
+                driver.Password = "";
                 driver.Salt = null;
             }
         }

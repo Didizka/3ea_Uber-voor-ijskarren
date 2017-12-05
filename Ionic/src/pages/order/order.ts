@@ -81,6 +81,24 @@ export class OrderPage implements OnInit{
     });
     console.log(JSON.stringify(this.shoppingCart));
     loading.present();
+<<<<<<< HEAD
+    this.orderProvider.placeOrder(JSON.parse(JSON.stringify(this.shoppingCart))).subscribe(
+      data => {
+        console.log(data);
+        if(data == true){
+          loading.dismiss();
+          console.log('Order Placed success');
+          // this.toast.showLongBottom("Order Placed success").subscribe(
+          //   toast => {
+          //     console.log(toast);
+          //   }
+          // );
+          this.shoppingCart.cart=[];
+          //this.navCtrl.setRoot('ListDriversPage');
+        }else{
+          loading.dismiss();
+          this.errorMessage();
+=======
     this.userProvider.getCurrentUser().then(user => {
       this.orderProvider.placeOrder(JSON.parse(JSON.stringify(this.shoppingCart)), user).subscribe(
         data => {
@@ -100,6 +118,7 @@ export class OrderPage implements OnInit{
         },
         err => {
           console.log(err);
+>>>>>>> cce0448dfdd5d1473b2b8d7ce0a75ba8c7f9edbe
         }
       );
     });

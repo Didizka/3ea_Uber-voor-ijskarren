@@ -7,13 +7,12 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
 using WebApi.Data;
-using WebApi.Models;
 
 namespace WebApi.Data.Migrations
 {
-    [DbContext(typeof(UserContext))]
-    [Migration("20171201230055_UsersInitialized")]
-    partial class UsersInitialized
+    [DbContext(typeof(OrderContext))]
+    [Migration("20171205125711_OrderInit")]
+    partial class OrderInit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -62,9 +61,6 @@ namespace WebApi.Data.Migrations
                     b.HasKey("ContactInformationID");
 
                     b.HasIndex("AddressID");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
 
                     b.ToTable("ContactInformation");
                 });
@@ -173,9 +169,7 @@ namespace WebApi.Data.Migrations
                     b.Property<int>("OrderID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("CustomerID");
-
-                    b.Property<int>("CustomerrID");
+                    b.Property<int>("CustomerID");
 
                     b.Property<int>("DriverID");
 
@@ -186,8 +180,6 @@ namespace WebApi.Data.Migrations
                     b.HasKey("OrderID");
 
                     b.HasIndex("CustomerID");
-
-                    b.HasIndex("DriverID");
 
                     b.HasIndex("LocationID");
 
@@ -223,42 +215,6 @@ namespace WebApi.Data.Migrations
                     b.HasIndex("FlavourID");
 
                     b.ToTable("OrderItemFlavours");
-                });
-
-            modelBuilder.Entity("WebApi.Models.User", b =>
-                {
-                    b.Property<int>("UserID")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int?>("ContactInformationID");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<int?>("LocationID");
-
-                    b.Property<string>("Password");
-
-                    b.Property<DateTime>("RegistrationDate");
-
-                    b.Property<string>("Salt")
-                        .IsRequired()
-                        .HasMaxLength(64);
-
-                    b.Property<int>("UserRoleType");
-
-                    b.HasKey("UserID");
-
-                    b.HasIndex("ContactInformationID");
-
-                    b.HasIndex("LocationID");
-
-                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("WebApi.Models.Users.Location", b =>
@@ -321,11 +277,12 @@ namespace WebApi.Data.Migrations
                 {
                     b.HasOne("WebApi.Models.Customer", "Customer")
                         .WithMany("Orders")
-                        .HasForeignKey("CustomerID");
+                        .HasForeignKey("CustomerID")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("WebApi.Models.Driver", "Driver")
                         .WithMany("Orders")
-                        .HasForeignKey("DriverID")
+                        .HasForeignKey("CustomerID")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("WebApi.Models.Users.Location", "Location")
@@ -351,17 +308,6 @@ namespace WebApi.Data.Migrations
                         .WithMany("OrderItemFlavours")
                         .HasForeignKey("OrderItemID")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("WebApi.Models.User", b =>
-                {
-                    b.HasOne("WebApi.Models.ContactInformation", "ContactInformation")
-                        .WithMany()
-                        .HasForeignKey("ContactInformationID");
-
-                    b.HasOne("WebApi.Models.Users.Location", "Location")
-                        .WithMany()
-                        .HasForeignKey("LocationID");
                 });
 #pragma warning restore 612, 618
         }

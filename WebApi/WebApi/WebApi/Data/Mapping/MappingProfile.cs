@@ -1,8 +1,5 @@
 ﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using WebApi.Models;
 using WebApi.Models.Orders.Repo;
 using WebApi.Models.Users;

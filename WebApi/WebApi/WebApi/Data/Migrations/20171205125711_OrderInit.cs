@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace WebApi.Data.Migrations
 {
-    public partial class UsersInitialized : Migration
+    public partial class OrderInit : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -137,38 +137,6 @@ namespace WebApi.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
-                {
-                    UserID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ContactInformationID = table.Column<int>(type: "int", nullable: true),
-                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    LocationID = table.Column<int>(type: "int", nullable: true),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RegistrationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Salt = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
-                    UserRoleType = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.UserID);
-                    table.ForeignKey(
-                        name: "FK_Users_ContactInformation_ContactInformationID",
-                        column: x => x.ContactInformationID,
-                        principalTable: "ContactInformation",
-                        principalColumn: "ContactInformationID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Users_Location_LocationID",
-                        column: x => x.LocationID,
-                        principalTable: "Location",
-                        principalColumn: "LocationID",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "DriverFlavours",
                 columns: table => new
                 {
@@ -199,8 +167,7 @@ namespace WebApi.Data.Migrations
                 {
                     OrderID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CustomerID = table.Column<int>(type: "int", nullable: true),
-                    CustomerrID = table.Column<int>(type: "int", nullable: false),
+                    CustomerID = table.Column<int>(type: "int", nullable: false),
                     DriverID = table.Column<int>(type: "int", nullable: false),
                     LocationID = table.Column<int>(type: "int", nullable: true),
                     TotalPrice = table.Column<double>(type: "float", nullable: false)
@@ -213,10 +180,10 @@ namespace WebApi.Data.Migrations
                         column: x => x.CustomerID,
                         principalTable: "Customers",
                         principalColumn: "CustomerID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Orders_Drivers_DriverID",
-                        column: x => x.DriverID,
+                        name: "FK_Orders_Drivers_CustomerID",
+                        column: x => x.CustomerID,
                         principalTable: "Drivers",
                         principalColumn: "DriverID",
                         onDelete: ReferentialAction.Cascade);
@@ -279,12 +246,6 @@ namespace WebApi.Data.Migrations
                 column: "AddressID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ContactInformation_Email",
-                table: "ContactInformation",
-                column: "Email",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Customers_ContactInformationID",
                 table: "Customers",
                 column: "ContactInformationID");
@@ -325,23 +286,8 @@ namespace WebApi.Data.Migrations
                 column: "CustomerID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_DriverID",
-                table: "Orders",
-                column: "DriverID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Orders_LocationID",
                 table: "Orders",
-                column: "LocationID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_ContactInformationID",
-                table: "Users",
-                column: "ContactInformationID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_LocationID",
-                table: "Users",
                 column: "LocationID");
         }
 
@@ -352,9 +298,6 @@ namespace WebApi.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "OrderItemFlavours");
-
-            migrationBuilder.DropTable(
-                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Flavours");

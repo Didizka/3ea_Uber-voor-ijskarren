@@ -6,8 +6,11 @@ import 'rxjs/add/operator/map';
 export class OrderProvider {
 
   //ip: string = 'http://localhost:9000/api/order/';
+
   ip: string = 'http://172.16.229.9:80/api/order/';
   //ip: string = 'http://192.168.0.172:80/api/order/';
+
+  //ip: string = 'http://172.16.212.115:80/api/order/';
 
   constructor(public http: Http) {
     //console.log('Hello ProvidersOrderProvider Provider');

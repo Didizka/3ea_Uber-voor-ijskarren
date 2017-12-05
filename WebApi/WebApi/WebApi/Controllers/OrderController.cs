@@ -36,7 +36,7 @@ namespace WebApi.Controllers
         }
 
         //////////////////////////////////// 
-        ///     GET: api/Orders      ////////
+        ///     GET: api/Orders     ////////
         //////////////////////////////////// 
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
@@ -61,12 +61,12 @@ namespace WebApi.Controllers
             }
             Order currentOrder = new Order
             {
-                CustomerrID = customer.CustomerID,
+                CustomerID = customer.CustomerID,
                 //Customer = await userContext.Customers.SingleOrDefaultAsync(c => c.CustomerID == customer.CustomerID),
                 TotalPrice = 14
             };
             await context.Orders.AddAsync(currentOrder);
-            //await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
             foreach (var order in shoppingcart.Cart)
             {
                 //OrderItem orderItem = new OrderItem { Order = await context.Orders.SingleOrDefaultAsync(d => d.OrderID == 1) };
@@ -81,7 +81,7 @@ namespace WebApi.Controllers
 
                 orderItem.OrderItemFlavours = orderItemFlavour;
                 await context.OrderItems.AddAsync(orderItem);
-                //await context.SaveChangesAsync();
+                await context.SaveChangesAsync();
             }
             var result = await driverRepo.CalculatePriceForAllDrivers(shoppingcart);
             //throw new Exception();

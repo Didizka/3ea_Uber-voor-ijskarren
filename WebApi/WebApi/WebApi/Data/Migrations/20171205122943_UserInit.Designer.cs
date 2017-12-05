@@ -10,9 +10,9 @@ using WebApi.Data;
 
 namespace WebApi.Data.Migrations
 {
-    [DbContext(typeof(OrderContext))]
-    [Migration("20171201230105_OrderInitialized")]
-    partial class OrderInitialized
+    [DbContext(typeof(UserContext))]
+    [Migration("20171205122943_UserInit")]
+    partial class UserInit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -61,6 +61,9 @@ namespace WebApi.Data.Migrations
                     b.HasKey("ContactInformationID");
 
                     b.HasIndex("AddressID");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("ContactInformation");
                 });
@@ -169,7 +172,7 @@ namespace WebApi.Data.Migrations
                     b.Property<int>("OrderID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("CustomerrID");
+                    b.Property<int>("CustomerID");
 
                     b.Property<int>("DriverID");
 
@@ -179,7 +182,9 @@ namespace WebApi.Data.Migrations
 
                     b.HasKey("OrderID");
 
-                    b.HasIndex("CustomerrID");
+                    b.HasIndex("CustomerID");
+
+                    b.HasIndex("DriverID");
 
                     b.HasIndex("LocationID");
 
@@ -277,12 +282,12 @@ namespace WebApi.Data.Migrations
                 {
                     b.HasOne("WebApi.Models.Customer", "Customer")
                         .WithMany("Orders")
-                        .HasForeignKey("CustomerrID")
+                        .HasForeignKey("CustomerID")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("WebApi.Models.Driver", "Driver")
                         .WithMany("Orders")
-                        .HasForeignKey("CustomerrID")
+                        .HasForeignKey("DriverID")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("WebApi.Models.Users.Location", "Location")
