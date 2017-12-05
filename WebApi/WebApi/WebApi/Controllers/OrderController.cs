@@ -58,6 +58,7 @@ namespace WebApi.Controllers
                 //Customer = customer,
                 TotalPrice = 14
             };
+            //used to save code to database
             await context.Orders.AddAsync(currentOrder);
             await context.SaveChangesAsync();
             foreach (var order in shoppingcart.Cart)

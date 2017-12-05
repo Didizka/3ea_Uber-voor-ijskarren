@@ -7,6 +7,7 @@ using WebApi.Data;
 using AutoMapper;
 using WebApi.Models.Repositories;
 using WebApi.Controllers;
+using WebApi.Models.Reviews;
 
 namespace WebApi
 {
@@ -30,6 +31,7 @@ namespace WebApi
             services.AddScoped<IUsersRepository, UsersRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IDriverRepository, DriverRepository>();
+            services.AddScoped<IDriverReviewRepository, DriverReviewRepository>();
 
             // Database connection
             services.AddDbContext<UserContext>(options =>
@@ -39,6 +41,11 @@ namespace WebApi
             services.AddDbContext<OrderContext>(options =>
                  //options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
                  options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddDbContext<ReviewContext>(options =>
+                 //options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
+                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
 
             // Cross origin 
             services.AddCors(o => o.AddPolicy("AllowClient", builder =>

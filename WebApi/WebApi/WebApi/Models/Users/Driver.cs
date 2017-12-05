@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApi.Models.Orders;
+using WebApi.Models.Reviews;
 
 namespace WebApi.Models
 {
@@ -16,6 +17,8 @@ namespace WebApi.Models
         public bool IsApproved { get; set; }
 
         public ICollection<DriverFlavour> DriverFlavours { get; set; }
+        //Driver can have multiple reviews (1 on many relation)
+        public ICollection<DriverReview> DriverReviews { get; set; }
 
         public Driver()
         {
