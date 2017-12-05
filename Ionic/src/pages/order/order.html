@@ -3,6 +3,12 @@
 
   <ion-navbar>
     <ion-title>Place Order</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only>
+        <ion-icon name="cart"></ion-icon>
+        <ion-badge item-end>{{shoppingCart.cart.length}}</ion-badge>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>

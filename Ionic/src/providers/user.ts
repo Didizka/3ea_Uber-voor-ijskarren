@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 import 'rxjs/add/operator/map';
-import {Customer} from "../Models/customer";
+import { Storage } from '@ionic/storage';
 
 @Injectable()
 export class UserProvider {
@@ -13,10 +13,15 @@ export class UserProvider {
   // change ip address to your local ip address in order to test the app on the mobile and have access to the backend
 
   // Local DEV
+<<<<<<< HEAD
   // ip: string = 'http://localhost:9000/api/users/';
 
   //ip: string = 'http://192.168.0.172:80/api/users/';
   // ip: string = 'http://172.16.146.5:80/api/users/';
+=======
+  ip: string = 'http://192.168.0.172:80/api/users/';
+  //ip: string = 'http://172.16.212.115:80/api/users/';
+>>>>>>> cce0448dfdd5d1473b2b8d7ce0a75ba8c7f9edbe
 
   // Home
   // ip: string = 'http://192.168.0.155:8080/api/users/';
@@ -25,9 +30,15 @@ export class UserProvider {
   // ip: string = 'http://172.16.235.4:8080/api/users/';
 
   // Production server
+<<<<<<< HEAD
   ip: string = 'http://cloud-app.ddns.net/api/users/';
 
   constructor(public http: Http) {
+=======
+  // ip: string = 'http://cloud-app.ddns.net/api/users/';
+  currentUser: string;
+  constructor(public http: Http, private storage: Storage) {
+>>>>>>> cce0448dfdd5d1473b2b8d7ce0a75ba8c7f9edbe
 
   }
   private headers: Headers = new  Headers({
@@ -42,9 +53,14 @@ export class UserProvider {
   }
 
   login(email: string, user: JSON){
-    console.log(user);
+
     return this.http.post(this.ip + email, user, {headers: this.headers })
       .map((response: Response) => {
+      if(response.json() == "CUSTOMER" || response.json() == "DRIVER"){
+        this.storage.ready().then(()=>{
+          this.storage.set('currentUser', email);
+        });
+      }
       return response.json();
     });
   }
@@ -54,6 +70,9 @@ export class UserProvider {
       return response.json();
     });
   }
+  getCurrentUser(){
+    return this.storage.get("currentUser").then();
+  }
   getDriversLocation(){
     return this.http.get(this.ip + 'location')
       .map((response: Response) => {
@@ -61,4 +80,9 @@ export class UserProvider {
       });
   }
 
+<<<<<<< HEAD
 }
+=======
+
+}
+>>>>>>> cce0448dfdd5d1473b2b8d7ce0a75ba8c7f9edbe

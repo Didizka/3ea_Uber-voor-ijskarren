@@ -29,10 +29,14 @@ export class SigninPage {
     this.userProvider.login(form.value.email, form.value).subscribe(
       data => {
         console.log(data);
-        if(data == true){
+        if(data == "CUSTOMER"){
           loading.dismiss();
           this.navCtrl.setRoot(ListDriversPage);
-        } else if(data == false) {
+        } else if(data == "DRIVER") {
+          loading.dismiss();
+          this.navCtrl.setRoot('DriverDashboardPage');
+        }
+        else if(data == false) {
           loading.dismiss();
           this.passwordIncorrectError();
         }else{

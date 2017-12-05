@@ -4,6 +4,7 @@ import {OrderProvider} from "../../providers/order-provider";
 import {Toast} from "@ionic-native/toast";
 import {Flavour} from "../../Models/flavour.model";
 import {ListDriversPage} from "../list-drivers/list-drivers";
+import {UserProvider} from "../../providers/user";
 
 @IonicPage()
 @Component({
@@ -21,6 +22,7 @@ export class OrderPage implements OnInit{
   constructor(public navCtrl: NavController,
               private loadingCtrl: LoadingController,
               private orderProvider: OrderProvider,
+              private userProvider: UserProvider,
               private toast: Toast,
               private alertCtrl: AlertController) {
     this.selectAlertOpts = {
@@ -78,6 +80,7 @@ export class OrderPage implements OnInit{
       content: 'Please wait...'
     });
     loading.present();
+<<<<<<< HEAD
     this.orderProvider.placeOrder(JSON.parse(JSON.stringify(this.shoppingCart))).subscribe(
       data => {
         console.log(data);
@@ -94,12 +97,31 @@ export class OrderPage implements OnInit{
         }else{
           loading.dismiss();
           this.errorMessage();
+=======
+    this.userProvider.getCurrentUser().then(user => {
+      this.orderProvider.placeOrder(JSON.parse(JSON.stringify(this.shoppingCart)), user).subscribe(
+        data => {
+          console.log(data);
+          if(data == true){
+            loading.dismiss();
+            /*this.toast.showLongBottom("Order Placed success").subscribe(
+              toast => {
+                console.log(toast);
+              }
+            );*/
+            this.shoppingCart.cart=[];
+          }else{
+            loading.dismiss();
+            this.errorMessage();
+          }
+        },
+        err => {
+          console.log(err);
+>>>>>>> cce0448dfdd5d1473b2b8d7ce0a75ba8c7f9edbe
         }
-      },
-      err => {
-        console.log(err);
-      }
-    );
+      );
+    });
+
   }
   private errorMessage(){
     const alert = this.alertCtrl.create({

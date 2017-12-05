@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using WebApi.Data;
 using AutoMapper;
 using WebApi.Models.Repositories;
+using WebApi.Controllers;
 
 namespace WebApi
 {
@@ -28,6 +29,7 @@ namespace WebApi
             //Inject UserRepo interface
             services.AddScoped<IUsersRepository, UsersRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IDriverRepository, DriverRepository>();
 
             // Database connection
             services.AddDbContext<UserContext>(options =>

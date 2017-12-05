@@ -34,6 +34,7 @@
     </ion-buttons>
 
     <!-- List of drivers -->
+<<<<<<< HEAD
   <div *ngIf="areDriversProcessed">
     <ion-card *ngFor="let driver of driversInZone">
       <ion-card-header>
@@ -47,6 +48,16 @@
       </ion-card-content>
     </ion-card>
   </div>
+=======
+  <ion-card *ngFor="let driver of driversInZone">
+    <ion-card-header>
+      {{driver.driverID}}
+    </ion-card-header>
+    <ion-card-content>
+      {{driver.firstName }} {{ driver.lastName}}
+    </ion-card-content>
+  </ion-card>
+>>>>>>> cce0448dfdd5d1473b2b8d7ce0a75ba8c7f9edbe
   <ion-fab right bottom>
     <button ion-fab color="primary" (click)="placeOrder()"><ion-icon name="add"></ion-icon></button>
   </ion-fab>

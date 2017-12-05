@@ -12,7 +12,8 @@ namespace WebApi.Models
     {
         CUSTOMER = 0,
         DRIVER = 1,
-        ADMIN = 2
+        ADMIN = 2,
+        NOTFOUND=3
     }
 
 
@@ -54,9 +55,7 @@ namespace WebApi.Models
                 this._password = HashedPasswordWithSalt.getHash(value, Salt);                
             }
         }
-
-       
-
+        
 
         // Navigation Properties
         [Required(ErrorMessage = "De user rol is verplicht")]

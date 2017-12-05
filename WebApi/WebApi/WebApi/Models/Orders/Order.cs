@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApi.Models.Users;
 
 namespace WebApi.Models.Orders
 {
@@ -12,7 +14,12 @@ namespace WebApi.Models.Orders
         public int OrderID { get; set; }
         public double TotalPrice { get; set; }
         public ICollection<OrderItem> OrderItems { get; set; }
-        public User Customer { get; set; }
+        public Location Location { get; set; }
+
+
+        public int CustomerrID { get; set; }
+        public Customer Customer { get; set; }
+        public int DriverID { get; set; }
         public Driver Driver { get; set; }
     }
 }

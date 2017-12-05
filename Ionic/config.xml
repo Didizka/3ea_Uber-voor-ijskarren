@@ -3,7 +3,7 @@
     <name>MyApp</name>
     <description>An awesome Ionic/Cordova app.</description>
     <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
-    <content src="index.html" />
+    <content original-src="index.html" src="http://192.168.0.172:8100" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -84,7 +84,8 @@
     <allow-navigation href="http://192.168.0.155:8102" />
     <allow-navigation href="http://172.16.146.5:8100" />
     <allow-navigation href="http://172.16.145.30:8101" />
-    <engine name="android" spec="6.3.0" />
+    <allow-navigation href="http://172.16.212.115:8100" />
+    <engine name="android" spec="~6.3.0" />
     <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
     <plugin name="cordova-plugin-whitelist" spec="^1.3.2" />
     <plugin name="cordova-plugin-device" spec="^1.1.6" />
@@ -93,4 +94,5 @@
     <plugin name="cordova-plugin-statusbar" spec="^2.2.3" />
     <plugin name="cordova-plugin-geolocation" spec="^3.0.0" />
     <plugin name="cordova-plugin-x-toast" spec="^2.6.0" />
+    <plugin name="cordova-sqlite-storage" spec="^2.1.2" />
 </widget>

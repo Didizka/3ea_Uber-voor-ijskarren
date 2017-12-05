@@ -41,11 +41,16 @@ export class ListDriversPage implements OnInit {
     this.userProvider.getDriversLocation().subscribe(
       data => {
         this.drivers = data;
+<<<<<<< HEAD
         // this.checkRangeOfDrivers();
         this.checkRangeOfDrivers().then(data => {
           this.driversInZone = data as Driver[];
           this.areDriversProcessed = true;
           console.log(data)})
+=======
+        console.log(this.drivers[1].driverID);
+        this.checkRangeOfDrivers(5);
+>>>>>>> cce0448dfdd5d1473b2b8d7ce0a75ba8c7f9edbe
       },
       err => {
         console.log(err);

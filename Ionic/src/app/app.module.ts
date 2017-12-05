@@ -12,6 +12,8 @@ import {ListDriversPage} from "../pages/list-drivers/list-drivers";
 import {OrderProvider} from '../providers/order-provider';
 import {CommonModule} from "@angular/common";
 import {Toast} from "@ionic-native/toast";
+import { DriverProvider } from '../providers/driver';
+import {IonicStorageModule} from "@ionic/storage";
 
 @NgModule({
   declarations: [
@@ -22,6 +24,7 @@ import {Toast} from "@ionic-native/toast";
     HttpModule,
     CommonModule,
     IonicModule.forRoot(MyApp),
+    IonicStorageModule.forRoot(),
     ListDriversPageModule
   ],
   bootstrap: [IonicApp],
@@ -34,7 +37,8 @@ import {Toast} from "@ionic-native/toast";
     Toast,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     UserProvider,
-    OrderProvider
+    OrderProvider,
+    DriverProvider
   ]
 })
 export class AppModule {}

@@ -9,6 +9,7 @@ using AutoMapper;
 using Newtonsoft.Json.Linq;
 using System;
 using WebApi.Models.Repositories;
+using WebApi.Models.Orders;
 
 namespace WebApi.Controllers
 {
@@ -19,20 +20,22 @@ namespace WebApi.Controllers
         private readonly UserContext context;
         private readonly IMapper mapper;
         private readonly IUsersRepository usersRepo;
+        private readonly IOrderRepository orderRepository;
 
-        public UsersController(UserContext _context, IMapper _mapper, IUsersRepository usersRepo) {
+        public UsersController(UserContext _context, IMapper _mapper, IUsersRepository usersRepo, IOrderRepository orderRepository) {
             context = _context;
             mapper = _mapper;
             this.usersRepo = usersRepo;
+            this.orderRepository = orderRepository;
         }
 
         //////////////////////////////////// 
         ///     GET: api/Users      ////////
         //////////////////////////////////// 
-        [HttpGet]
+        [HttpGet("customers")]
         public async Task<IActionResult> GetAllUsers()
         {
-            var result = await usersRepo.GetUsers();
+            var result = await usersRepo.GetCustomers();
                     
             if (result == null)
             {
@@ -41,17 +44,33 @@ namespace WebApi.Controllers
 
             return Ok(result);
         }
+        [HttpGet("drivers")]
+        public async Task<IActionResult> GetAllDrivers()
+        {
+            var result = await usersRepo.GetDrivers();
 
+            if (result == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(result);
+        }
         ///////////////////////////////// 
         ///     GET: api/Users/5    /////
         /////////////////////////////////
         [HttpGet("{id:int}"), ActionName("GetUserById/{id}")]
         public async Task<IActionResult> GetUserById(int id)
         {
-            var user = await usersRepo.GetUserById(id);
-            if (user != null)
-                return Ok(user);
-            return BadRequest(id);
+            var customer = await usersRepo.GetCustomerById(id);
+            usersRepo.RemovePasswordOfCustomer(customer);
+            if (customer != null)
+                return Ok(customer);
+            var driver = await usersRepo.GetDriverById(id);
+            usersRepo.RemovePasswordOfDriver(driver);
+            if (driver != null)
+                return Ok(driver);
+            return NotFound(id);
         }
 
         ///////////////////////////////////////////////
@@ -72,10 +91,16 @@ namespace WebApi.Controllers
         [HttpGet("{email}"), ActionName("GetUserByEmail/{email}")]
         public async Task<IActionResult> GetUserByEmail(string email)
         {
-            var user = await usersRepo.GetUserByEmail(email);
-            if (user != null)
-                return Ok(user);
-            return BadRequest(email);
+            var customerOrDriver = await usersRepo.CustomerOrDriver(email);
+            if (customerOrDriver == UserRoleTypes.NOTFOUND)
+                return NotFound(email);
+            if(customerOrDriver == UserRoleTypes.CUSTOMER)
+                return Ok(await usersRepo.GetCustomerByEmail(email));
+            else if(customerOrDriver == UserRoleTypes.DRIVER)
+                return Ok(await usersRepo.GetDriverByEmail(email));
+
+            return BadRequest();
+            
         }
 
 
@@ -85,112 +110,79 @@ namespace WebApi.Controllers
         [HttpPost, ActionName("CreateNewUser")]
         public async Task<IActionResult> CreateNewUserAsync([FromBody] RegistrationForm newUser)
         {
-            // placeholder for new user object
-            var user = new User();
 
             // placeholder for feedback
             var newUserSavedToDatabase = false;
-
-            // placeholder to check the uniqueness of the new users email address
-            var newUserHasUniqueEmail = true;
 
             // check if form was filled in correctly
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+            var customerOrDriver = await usersRepo.CustomerOrDriver(newUser.Email);
+            if (customerOrDriver == UserRoleTypes.CUSTOMER || customerOrDriver == UserRoleTypes.DRIVER)
+                return BadRequest("Email must be unique");
 
             // Check users role and create customer or driver object accordingly
             // Create new customer object
-            if (newUser.UserRoleType == 0)
+            if (newUser.UserRoleType == (int)UserRoleTypes.CUSTOMER)
             {
-                //return Json("customer");
-                user = new Customer
+                Customer user = new Customer
                 {
-                    FirstName = newUser.FirstName,
-                    LastName = newUser.LastName,
-                    Password = newUser.Password,
-                    UserRoleType = UserRoleTypes.CUSTOMER,
-                    RegistrationDate = System.DateTime.Now,
-                    ContactInformation = new ContactInformation
-                    {
-                        PhoneNumber = newUser.PhoneNumber,
-                        Email = newUser.Email,
-                        Address = new Address
-                        {
-                            StreetName = newUser.StreetName,
-                            StreetNumber = newUser.StreetNumber,
-                            ZipCode = newUser.ZipCode
-                        }
-                    }
-                };
-            }
-
-            // Create new driver object
-            else if (newUser.UserRoleType == 1)
-            {
-                //return Json("driver");
-                user = new Driver
-                {
-                    FirstName = newUser.FirstName,
-                    LastName = newUser.LastName,
-                    Password = newUser.Password,
-                    UserRoleType = UserRoleTypes.DRIVER,
                     RegistrationDate = DateTime.Now,
-                    IsApproved = false,
-                    ContactInformation = new ContactInformation
-                    {
-                        PhoneNumber = newUser.PhoneNumber,
-                        Email = newUser.Email,
-                        Address = new Address
-                        {
-                            StreetName = newUser.StreetName,
-                            StreetNumber = newUser.StreetNumber,
-                            ZipCode = newUser.ZipCode
-                        }
-                    }
+                    Location = new Location { latitude = (float)(51.2001783), longitude = (float)4.4327702 },
+                    ContactInformation = new ContactInformation { Address = new Address() }
                 };
-            }
+                var customer = mapper.Map<RegistrationForm, Customer>(newUser, user);
 
-            // Get all existing users and check if new users email hasn't been used yet
-            var existingUsers = await context.Users
-                            .Include(c => c.ContactInformation)
-                                   .ThenInclude(a => a.Address)
-                            .ToListAsync();
-
-            foreach (var u in existingUsers)
-            {
-                if (u.ContactInformation.Email == user.ContactInformation.Email)
-                {
-                    newUserHasUniqueEmail = false;
-                }
-            }
-
-            // Add new user to the database only if his email is unique
-            if (newUserHasUniqueEmail)
-            {
                 try
                 {
-                    // Check if user is Customer or Driver
-                    if (user.GetType() == typeof(Customer))
-                    {
-                        context.Users.Add(user);
-                    }
-                    else if (user.GetType() == typeof(Driver))
-                    {
-                        context.Users.Add(user);
-                    }
-
-                    context.SaveChanges();
+                    await context.Customers.AddAsync(customer);
+                    await context.SaveChangesAsync();
                     newUserSavedToDatabase = true;
                 }
-                catch (DbUpdateException ex)
+                catch (Exception ex)
                 {
                     return BadRequest(ex);
                 }
-            } else
+
+
+            }
+
+            // Create new driver object
+            else if (newUser.UserRoleType == (int)UserRoleTypes.DRIVER)
             {
-                return BadRequest("Email must be unique");
+                Driver user = new Driver
+                {
+                    RegistrationDate = DateTime.Now,
+                    Location = new Location { latitude = (float)(51.2301299), longitude = (float)(4.4161723) },
+                    ContactInformation = new ContactInformation { Address = new Address() }
+                };
+                var driver = mapper.Map<RegistrationForm, Driver>(newUser, user);
+                var flavours = await orderRepository.GetFlavoursAsync();
+                
+
+                try
+                {
+                    await context.Drivers.AddAsync(driver);
+                    await context.SaveChangesAsync();
+                    newUserSavedToDatabase = true;
+
+                    foreach (var flavour in flavours)
+                    {
+                        await context.DriverFlavours.AddAsync(new DriverFlavour
+                        {
+                            DriverID = driver.DriverID,
+                            FlavourID = flavours.Single(f => f.Name == flavour.Name).FlavourID,
+                            Price = flavour.Price
+                        });
+                    }
+                    await context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex);
+                }
             }
 
             return Ok(newUserSavedToDatabase);
@@ -200,15 +192,17 @@ namespace WebApi.Controllers
         [HttpPost("{email}")]
         public async Task<IActionResult> UserLogin(string email, [FromBody]LoginForm loginUser)
         {
-            User user = await usersRepo.GetUserByEmail(email);
-            if (user == null)
+            var customerOrDriver = await usersRepo.CustomerOrDriver(loginUser.Email);
+            if (customerOrDriver == UserRoleTypes.NOTFOUND)
                 return Ok("You have to register first");
+            bool canAccess = false;
+            if (customerOrDriver != UserRoleTypes.NOTFOUND)
+            {
+                canAccess = await usersRepo.CanUserLogin(loginUser, customerOrDriver);
+                return Ok(customerOrDriver.ToString());
 
-            bool canAccess = usersRepo.CanUserLogin(user, loginUser);
-
+            }
             return Ok(canAccess);
-
-
         }
 
         // PUT: api/Users/sanjy-driver@uber.be
@@ -217,27 +211,26 @@ namespace WebApi.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-
-            var user = await usersRepo.GetUserByEmail(email);
-
-            if (user == null)
-                return NotFound(false);
-
-            // Update Customer object
-            if (user.UserRoleType == UserRoleTypes.CUSTOMER)
+            if (newUser.UserRoleType == (int)UserRoleTypes.CUSTOMER)
             {
-                var customer = mapper.Map<RegistrationForm, Customer>(newUser, (Customer) user);
-                context.Users.Update(customer);
+                var user = await usersRepo.GetCustomerByEmail(email);
+                if (user == null)
+                    return NotFound(false);
+                var customer = mapper.Map<RegistrationForm, Customer>(newUser, user);
+                context.Customers.Update(customer);
                 await context.SaveChangesAsync();
                 return Ok(true);
 
             }
 
             // Update driver object
-            else if (user.UserRoleType == UserRoleTypes.DRIVER)
+            else if (newUser.UserRoleType == (int)UserRoleTypes.DRIVER)
             {
-                var driver = mapper.Map<RegistrationForm, Driver>(newUser, (Driver) user);
-                context.Users.Update(driver);
+                var user = await usersRepo.GetDriverByEmail(email);
+                if (user == null)
+                    return NotFound(false);
+                var driver = mapper.Map<RegistrationForm, Driver>(newUser, (Driver)user);
+                context.Drivers.Update(driver);
                 await context.SaveChangesAsync();
                 return Ok(true);
             }
@@ -249,13 +242,23 @@ namespace WebApi.Controllers
         [HttpDelete("{email}")]
         public async Task<IActionResult> DeleteUserByEmail(string email)
         {
-            var user = await usersRepo.GetUserByEmail(email);
-            if (user != null)
+            var customer = await usersRepo.GetCustomerByEmail(email);
+            if (customer != null)
             {
                 //context.Remove(user);
-                context.RemoveRange(user.ContactInformation.Address);
-                context.RemoveRange(user.ContactInformation);
-                context.RemoveRange(user);
+                context.RemoveRange(customer.ContactInformation.Address);
+                context.RemoveRange(customer.ContactInformation);
+                context.RemoveRange(customer);
+                context.SaveChanges();
+                return Ok(true);
+            }
+            var driver = await usersRepo.GetDriverByEmail(email);
+            if (driver != null)
+            {
+                //context.Remove(user);
+                context.RemoveRange(driver.ContactInformation.Address);
+                context.RemoveRange(driver.ContactInformation);
+                context.RemoveRange(driver);
                 context.SaveChanges();
                 return Ok(true);
             }

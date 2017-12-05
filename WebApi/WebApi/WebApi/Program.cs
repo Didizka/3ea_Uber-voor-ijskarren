@@ -24,7 +24,7 @@ namespace WebApi
                     UserDbInitializer.Initialize(UserContext);
 
                     var OrderContext = services.GetRequiredService<OrderContext>();
-                    OrderDbInitializer.Initialize(OrderContext);
+                    OrderDbInitializer.Initialize(OrderContext, UserContext);
                 }
                 catch (Exception ex)
                 {
