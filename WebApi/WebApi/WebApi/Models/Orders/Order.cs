@@ -17,7 +17,7 @@ namespace WebApi.Models.Orders
         public Location Location { get; set; }
 
 
-        public int CustomerrID { get; set; }
+        public int CustomerID { get; set; }
         public Customer Customer { get; set; }
         public int DriverID { get; set; }
         public Driver Driver { get; set; }

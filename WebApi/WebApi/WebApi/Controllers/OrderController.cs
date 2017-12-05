@@ -55,7 +55,7 @@ namespace WebApi.Controllers
             }
             Order currentOrder = new Order
             {
-                CustomerrID = customer.CustomerID,
+                CustomerID = customer.CustomerID,
                 //Customer = await userContext.Customers.SingleOrDefaultAsync(c => c.CustomerID == customer.CustomerID),
                 TotalPrice = 14
             };

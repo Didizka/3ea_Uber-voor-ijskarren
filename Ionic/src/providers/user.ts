@@ -12,33 +12,16 @@ export class UserProvider {
   // run iisexpress-proxy 9000 to 8080
   // change ip address to your local ip address in order to test the app on the mobile and have access to the backend
 
-  // Local DEV
-<<<<<<< HEAD
-  // ip: string = 'http://localhost:9000/api/users/';
-
-  //ip: string = 'http://192.168.0.172:80/api/users/';
-  // ip: string = 'http://172.16.146.5:80/api/users/';
-=======
-  ip: string = 'http://192.168.0.172:80/api/users/';
-  //ip: string = 'http://172.16.212.115:80/api/users/';
->>>>>>> cce0448dfdd5d1473b2b8d7ce0a75ba8c7f9edbe
-
   // Home
   // ip: string = 'http://192.168.0.155:8080/api/users/';
 
   // School
-  // ip: string = 'http://172.16.235.4:8080/api/users/';
+  ip: string = 'http://172.16.229.91:80/api/users/';
 
   // Production server
-<<<<<<< HEAD
-  ip: string = 'http://cloud-app.ddns.net/api/users/';
-
-  constructor(public http: Http) {
-=======
   // ip: string = 'http://cloud-app.ddns.net/api/users/';
-  currentUser: string;
+
   constructor(public http: Http, private storage: Storage) {
->>>>>>> cce0448dfdd5d1473b2b8d7ce0a75ba8c7f9edbe
 
   }
   private headers: Headers = new  Headers({
@@ -79,10 +62,4 @@ export class UserProvider {
         return response.json();
       });
   }
-
-<<<<<<< HEAD
 }
-=======
-
-}
->>>>>>> cce0448dfdd5d1473b2b8d7ce0a75ba8c7f9edbe

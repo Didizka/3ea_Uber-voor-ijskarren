@@ -30,49 +30,30 @@ namespace WebApi.Controllers
         }
 
         //////////////////////////////////// 
-        ///     GET: api/Users      ////////
+        ///     GET: api/drivers    ////////
+        ///     GET: api/customers  ////////
         //////////////////////////////////// 
         [HttpGet("customers")]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<IActionResult> GetAllCustomers()
         {
             var result = await usersRepo.GetCustomers();
                     
-            if (result == null)
-            {
-                return NotFound();
-            }
+            if (result == null) return NotFound("No customers found");
 
             return Ok(result);
         }
+
         [HttpGet("drivers")]
         public async Task<IActionResult> GetAllDrivers()
         {
             var result = await usersRepo.GetDrivers();
 
-            if (result == null)
-            {
-                return BadRequest();
-            }
+            if (result == null) return NotFound("No drivers found");
 
             return Ok(result);
         }
-        ///////////////////////////////// 
-        ///     GET: api/Users/5    /////
-        /////////////////////////////////
-        [HttpGet("{id:int}"), ActionName("GetUserById/{id}")]
-        public async Task<IActionResult> GetUserById(int id)
-        {
-            var customer = await usersRepo.GetCustomerById(id);
-            usersRepo.RemovePasswordOfCustomer(customer);
-            if (customer != null)
-                return Ok(customer);
-            var driver = await usersRepo.GetDriverById(id);
-            usersRepo.RemovePasswordOfDriver(driver);
-            if (driver != null)
-                return Ok(driver);
-            return NotFound(id);
-        }
 
+        
         ///////////////////////////////////////////////
         ///     GET: api/users/location           /////
         ///////////////////////////////////////////////
@@ -92,10 +73,13 @@ namespace WebApi.Controllers
         public async Task<IActionResult> GetUserByEmail(string email)
         {
             var customerOrDriver = await usersRepo.CustomerOrDriver(email);
+
             if (customerOrDriver == UserRoleTypes.NOTFOUND)
-                return NotFound(email);
-            if(customerOrDriver == UserRoleTypes.CUSTOMER)
+                return NotFound("Email " + email + " not found");
+
+            if (customerOrDriver == UserRoleTypes.CUSTOMER)
                 return Ok(await usersRepo.GetCustomerByEmail(email));
+
             else if(customerOrDriver == UserRoleTypes.DRIVER)
                 return Ok(await usersRepo.GetDriverByEmail(email));
 

@@ -41,10 +41,10 @@ namespace WebApi.Models.Repositories
                                    .ThenInclude(a => a.Address)
                             
                             .ToListAsync();
-            //foreach (var driver in result)
-            //{
-            //    RemovePasswordOfDriver(driver);
-            //}
+            foreach (var driver in result)
+            {
+                RemovePasswordOfDriver(driver);
+            }
             return result;
         }
 
@@ -146,7 +146,7 @@ namespace WebApi.Models.Repositories
         {
             if (driver != null)
             {
-                driver.Password = null;
+                driver.Password = "";
                 driver.Salt = null;
             }
         }

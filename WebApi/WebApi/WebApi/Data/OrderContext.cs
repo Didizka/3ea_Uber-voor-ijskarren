@@ -1,9 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using WebApi.Models;
 using WebApi.Models.Orders;
 
 namespace WebApi.Data
@@ -23,12 +18,12 @@ namespace WebApi.Data
             modelBuilder.Entity<Order>()
                 .HasOne(p => p.Customer)
                 .WithMany(b => b.Orders)
-                .HasForeignKey(p => p.CustomerrID);
+                .HasForeignKey(p => p.CustomerID);
 
             modelBuilder.Entity<Order>()
                .HasOne(p => p.Driver)
                .WithMany(b => b.Orders)
-               .HasForeignKey(p => p.CustomerrID);
+               .HasForeignKey(p => p.CustomerID);
 
 
             // For OrderItemFlavour

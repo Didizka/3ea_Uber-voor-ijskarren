@@ -41,16 +41,11 @@ export class ListDriversPage implements OnInit {
     this.userProvider.getDriversLocation().subscribe(
       data => {
         this.drivers = data;
-<<<<<<< HEAD
         // this.checkRangeOfDrivers();
         this.checkRangeOfDrivers().then(data => {
           this.driversInZone = data as Driver[];
           this.areDriversProcessed = true;
           console.log(data)})
-=======
-        console.log(this.drivers[1].driverID);
-        this.checkRangeOfDrivers(5);
->>>>>>> cce0448dfdd5d1473b2b8d7ce0a75ba8c7f9edbe
       },
       err => {
         console.log(err);
@@ -100,13 +95,13 @@ export class ListDriversPage implements OnInit {
       map: this.map,
       animation: google.maps.Animation.DROP,
       position: driversLocation,
-      label: driver.userID.toString()
+      label: driver.driverID.toString()
       // icon: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_QnIIaRF01p59K0GhwiodnX4f20Sc7lWM-RbjYLOqSEQjdIIfNw'
     });
 
     // Translate drivers coordinates to address and display it on the infowindow
     let content =
-      "<p><b>Chauffeur ID: </b>" + driver.userID + "</p>" +
+      "<p><b>Chauffeur ID: </b>" + driver.driverID + "</p>" +
       "<p><b>Naam: </b>" + driver.firstName + " " + driver.lastName +
       "<p><b>Afstand: </b>" + (driver.distance / 1000).toFixed(2) + " km</p>" +
       "<p><b>Duur: </b>" + (driver.duration / 60).toFixed(1) + " min</p>" +

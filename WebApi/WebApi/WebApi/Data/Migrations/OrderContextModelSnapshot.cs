@@ -2,16 +2,20 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
 using WebApi.Data;
 
-namespace WebApi.Migrations
+namespace WebApi.Data.Migrations
 {
     [DbContext(typeof(OrderContext))]
     partial class OrderContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
+#pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.0.0-rtm-26452")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -164,7 +168,7 @@ namespace WebApi.Migrations
                     b.Property<int>("OrderID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("CustomerrID");
+                    b.Property<int>("CustomerID");
 
                     b.Property<int>("DriverID");
 
@@ -174,7 +178,7 @@ namespace WebApi.Migrations
 
                     b.HasKey("OrderID");
 
-                    b.HasIndex("CustomerrID");
+                    b.HasIndex("CustomerID");
 
                     b.HasIndex("LocationID");
 
@@ -272,12 +276,12 @@ namespace WebApi.Migrations
                 {
                     b.HasOne("WebApi.Models.Customer", "Customer")
                         .WithMany("Orders")
-                        .HasForeignKey("CustomerrID")
+                        .HasForeignKey("CustomerID")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("WebApi.Models.Driver", "Driver")
                         .WithMany("Orders")
-                        .HasForeignKey("CustomerrID")
+                        .HasForeignKey("CustomerID")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("WebApi.Models.Users.Location", "Location")
@@ -304,6 +308,7 @@ namespace WebApi.Migrations
                         .HasForeignKey("OrderItemID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
+#pragma warning restore 612, 618
         }
     }
 }
