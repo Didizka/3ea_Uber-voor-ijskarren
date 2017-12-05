@@ -23,27 +23,10 @@
     <ion-icon range-right name="pin"></ion-icon>
   </ion-range>
 
-<<<<<<< HEAD
-  <!-- Map -->
-  <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
-    <!-- Drivers markers-->
-    <agm-marker
-      *ngFor="let driver of driversInZone"
-      [latitude]="driver?.location.latitude"
-      [longitude]="driver?.location.longitude"
-      [label]="driver?.userID.toString()"
-      ></agm-marker>
 
-      <!-- User marker-->
-      <agm-marker
-      [latitude]="lat"
-      [longitude]="lng"
-      iconUrl="https://maps.google.com/mapfiles/kml/shapes/library_maps.png"
-      ></agm-marker>
-  </agm-map>
-=======
+  <!-- Map -->
+
 <div #map id="map" data-tap-disabled="true"></div>
->>>>>>> 296706ab75a3a2a41daa740f8fb04b69f552dc90
 
   <!-- Position button -->
   <ion-buttons>
