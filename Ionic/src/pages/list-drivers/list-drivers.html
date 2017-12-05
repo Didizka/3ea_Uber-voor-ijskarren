@@ -34,7 +34,7 @@
     </ion-buttons>
 
     <!-- List of drivers -->
-  <div *ngIf="driversInZone">
+  <div *ngIf="areDriversProcessed">
     <ion-card *ngFor="let driver of driversInZone">
       <ion-card-header>
         <b>Chauffeur ID: </b>{{driver?.userID}}

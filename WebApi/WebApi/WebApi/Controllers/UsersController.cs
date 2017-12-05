@@ -36,7 +36,7 @@ namespace WebApi.Controllers
                     
             if (result == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
             return Ok(result);

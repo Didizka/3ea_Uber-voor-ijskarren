@@ -1,6 +1,6 @@
+import { Driver } from './../../Models/driver';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { Driver } from "../../Models/driver";
 import { UserProvider } from "../../providers/user";
 import { Geolocation } from "@ionic-native/geolocation";
 
@@ -27,6 +27,7 @@ export class ListDriversPage implements OnInit {
   // DRIVERS
   drivers: Driver[] = [];
   driversInZone: Driver[] = [];
+  areDriversProcessed: boolean = false;
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
@@ -36,10 +37,15 @@ export class ListDriversPage implements OnInit {
 
   ngOnInit() {
     this.getUserPosition();
+
     this.userProvider.getDriversLocation().subscribe(
       data => {
         this.drivers = data;
-        this.checkRangeOfDrivers();
+        // this.checkRangeOfDrivers();
+        this.checkRangeOfDrivers().then(data => {
+          this.driversInZone = data as Driver[];
+          this.areDriversProcessed = true;
+          console.log(data)})
       },
       err => {
         console.log(err);
@@ -149,7 +155,11 @@ export class ListDriversPage implements OnInit {
       default:
         this.distance = 0;
     }
-    this.checkRangeOfDrivers();
+    this.checkRangeOfDrivers().then(data => {
+      this.driversInZone = data as Driver[];
+      this.areDriversProcessed = true;
+      console.log(data);
+    });
   }
 
   onLogout() {
@@ -161,7 +171,10 @@ export class ListDriversPage implements OnInit {
   }
 
 
-  checkRangeOfDrivers() {
+  checkRangeOfDrivers()  {    
+    // Hide the list with drivers untill the distance has been calculated
+    this.areDriversProcessed = false;
+
     // Clear driversInZone array
     while (this.driversInZone.length > 0) {
       this.driversInZone.pop();
@@ -173,12 +186,20 @@ export class ListDriversPage implements OnInit {
     }
     this.driversMarkers = [];
 
+    // Return promise to use with then in ngOnInit
+    var promise = new Promise((resolve, reject) => {
+
+    // local placeholder for drivers in range
+    let driversInZone: Driver[] = [];    
+
+    // Wait until the users position has been determined
     if (this.lat != null && this.lng != null) {
-      // calculate distance between origin and destination
+      // Distance calculator      
       let origin = new google.maps.LatLng(this.lat, this.lng);
       let distanceCalculator: any = new google.maps.DistanceMatrixService();
       console.log("Range: " + this.distance + "km");
 
+      // calculate distance between origin and destination for each driver
       for (let driver of this.drivers) {
         distanceCalculator.getDistanceMatrix({
           origins: [origin],
@@ -187,8 +208,9 @@ export class ListDriversPage implements OnInit {
           drivingOptions: {
             departureTime: new Date(Date.now())
           }
-          //     // Callback function
+        // Callback function when the calculation has been finished
         }, function (resp, status) {
+          // Save driver's info to drivers object
           driver.locationAddress = resp.destinationAddresses;
           driver.distance = resp.rows[0].elements[0].distance.value;
           driver.duration = resp.rows[0].elements[0].duration.value;
@@ -200,6 +222,7 @@ export class ListDriversPage implements OnInit {
           // console.log('Rounded: ' + Math.round((driver.distance / 1000)));
 
 
+          // If the driver is in the range zone, add him to the temporary array and create a marker
           if ((driver.distance / 1000) < this.distance) {
             // console.log('------------DRIVERS IN ZONE-----------------------------');    
             // console.log('Driver ID: ' + driver.userID);   
@@ -213,18 +236,21 @@ export class ListDriversPage implements OnInit {
             //   console.log('Distance: ' + driver.distance + ' m'); // distance in meters    
             // }          
             // console.log('Duration: ' + driver.duration / 60 + ' min'); //value = in seconds => / 60 to get minutes
-
-            this.driversInZone.push(driver);
+            // console.log(driver);
+            driversInZone.push(driver);
             this.addDriversMarkers(driver);
           }
         }.bind(this)); // Access this scope in callback
       }
     }
     else {
-
       setTimeout(() => {
         this.checkRangeOfDrivers();
       }, 500);
     }
-  }
+    resolve(driversInZone);
+  });
+return promise;
+    
+  };
 }
