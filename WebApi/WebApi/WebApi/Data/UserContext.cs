@@ -37,8 +37,6 @@ namespace WebApi.Data
                 .Entity<ContactInformation>()
                  .HasIndex(e => e.Email)
                  .IsUnique(true);
-            modelBuilder.Entity<User>()
-                .HasKey(h => h.UserID);
 
             // For OrderItemFlavour
             modelBuilder.Entity<OrderItemFlavour>()

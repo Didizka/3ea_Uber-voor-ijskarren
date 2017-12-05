@@ -79,6 +79,7 @@ export class OrderPage implements OnInit{
     const loading = this.loadingCtrl.create({
       content: 'Please wait...'
     });
+    console.log(JSON.stringify(this.shoppingCart));
     loading.present();
     this.userProvider.getCurrentUser().then(user => {
       this.orderProvider.placeOrder(JSON.parse(JSON.stringify(this.shoppingCart)), user).subscribe(

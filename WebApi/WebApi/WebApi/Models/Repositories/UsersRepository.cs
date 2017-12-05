@@ -38,6 +38,7 @@ namespace WebApi.Models.Repositories
             var result = await userContext.Drivers
                             .Include(c => c.ContactInformation)
                                    .ThenInclude(a => a.Address)
+                            .Include(d => d.Location)
                             .ToListAsync();
             foreach (var driver in result)
             {

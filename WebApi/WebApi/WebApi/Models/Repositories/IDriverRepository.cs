@@ -11,5 +11,6 @@ namespace WebApi.Models.Repositories
     {
         Task<bool> UpdateFlavoursPrice(string email, FlavourFrountend[] flavours);
         Task<Driver> GetFlavoursPrice(string email);
+        Task<List<OrderTotalPriceResource>> CalculatePriceForAllDrivers(ShoppingCart shoppingcart);
     }
 }

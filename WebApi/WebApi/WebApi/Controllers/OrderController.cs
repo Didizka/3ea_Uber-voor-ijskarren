@@ -18,13 +18,19 @@ namespace WebApi.Controllers
     {
         private readonly IOrderRepository orderRepo;
         private readonly IUsersRepository userReop;
+        private readonly IDriverRepository driverRepo;
         private readonly OrderContext context;
         private readonly UserContext userContext;
 
-        public OrderController(IOrderRepository orderRepo, IUsersRepository userReop, OrderContext context, UserContext userContext)
+        public OrderController(IOrderRepository orderRepo, 
+                                IUsersRepository userReop,
+                                IDriverRepository driverRepo,
+                                OrderContext context, 
+                                UserContext userContext)
         {
             this.orderRepo = orderRepo;
             this.userReop = userReop;
+            this.driverRepo = driverRepo;
             this.context = context;
             this.userContext = userContext;
         }
@@ -60,7 +66,7 @@ namespace WebApi.Controllers
                 TotalPrice = 14
             };
             await context.Orders.AddAsync(currentOrder);
-            await context.SaveChangesAsync();
+            //await context.SaveChangesAsync();
             foreach (var order in shoppingcart.Cart)
             {
                 //OrderItem orderItem = new OrderItem { Order = await context.Orders.SingleOrDefaultAsync(d => d.OrderID == 1) };
@@ -75,10 +81,11 @@ namespace WebApi.Controllers
 
                 orderItem.OrderItemFlavours = orderItemFlavour;
                 await context.OrderItems.AddAsync(orderItem);
-                await context.SaveChangesAsync();
+                //await context.SaveChangesAsync();
             }
+            var result = await driverRepo.CalculatePriceForAllDrivers(shoppingcart);
             //throw new Exception();
-            return Ok(true);
+            return Ok(result);
         }
 
         [HttpPut("{id}")]

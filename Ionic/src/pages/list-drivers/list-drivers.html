@@ -27,9 +27,9 @@
     <!-- Drivers markers-->
     <agm-marker
       *ngFor="let driver of driversInZone"
-      [latitude]="driver.location.latitude"
-      [longitude]="driver.location.longitude"
-      [label]="driver.userID.toString()"
+      [latitude]="driver?.location.latitude"
+      [longitude]="driver?.location.longitude"
+      [label]="driver?.userID.toString()"
       ></agm-marker>
 
       <!-- User marker-->

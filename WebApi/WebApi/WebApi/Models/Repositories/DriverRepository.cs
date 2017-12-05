@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,23 +10,26 @@ using WebApi.Models.Orders.Repo;
 
 namespace WebApi.Models.Repositories
 {
-    public class DriverRepository: IDriverRepository
+    public class DriverRepository : IDriverRepository
     {
         private readonly OrderContext orderContext;
         private readonly IUsersRepository usersRepo;
         private readonly UserContext userContext;
+        private readonly IMapper mapper;
 
-        public DriverRepository(OrderContext orderContext, IUsersRepository usersRepo, UserContext userContext)
+        public DriverRepository(OrderContext orderContext, IUsersRepository usersRepo, 
+            UserContext userContext, IMapper mapper)
         {
             this.orderContext = orderContext;
             this.usersRepo = usersRepo;
             this.userContext = userContext;
+            this.mapper = mapper;
         }
 
         public async Task<Driver> GetFlavoursPrice(string email)
         {
             var driver = await usersRepo.GetDriverByEmail(email);
-            if(driver != null)
+            if (driver != null)
             {
                 return await userContext.Drivers
                     .Include(r => r.DriverFlavours)
@@ -36,6 +40,42 @@ namespace WebApi.Models.Repositories
 
             }
             return null;
+        }
+
+        public async Task<List<OrderTotalPriceResource>> CalculatePriceForAllDrivers(ShoppingCart shoppingcart)
+        {
+            var drivers = await usersRepo.GetDrivers();
+            List<OrderTotalPriceResource> listPriceResources = new List<OrderTotalPriceResource>();
+            
+
+            foreach (var driver in drivers)
+            {
+                double totPrice = 0;
+                var driverWithFlavours = await GetFlavoursPrice(driver.ContactInformation.Email);
+                var resultDriver = mapper.Map<Driver, DriverFlavourResource>(driverWithFlavours);
+                foreach (var order in shoppingcart.Cart)
+                {
+                    double subPrice = 0;
+                    foreach (var item in order.IceCream)
+                    {
+                        subPrice += 5;
+                        foreach (var driverFlavour in resultDriver.Flavours)
+                        {
+                            if (driverFlavour.Name == item.Name)
+                                subPrice += driverFlavour.Price * item.Amount;
+                        }
+                    }
+                    totPrice += subPrice;
+                }
+                listPriceResources.Add(new OrderTotalPriceResource
+                {
+                    Email = resultDriver.Email,
+                    FirstName = resultDriver.FirstName,
+                    LastName = resultDriver.LastName,
+                    TotalPrice = totPrice
+                });
+            }
+            return listPriceResources;
         }
 
         public async Task<bool> UpdateFlavoursPrice(string email, FlavourFrountend[] flavours)
