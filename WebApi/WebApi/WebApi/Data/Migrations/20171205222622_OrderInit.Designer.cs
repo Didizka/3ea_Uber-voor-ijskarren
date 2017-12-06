@@ -10,9 +10,9 @@ using WebApi.Data;
 
 namespace WebApi.Data.Migrations
 {
-    [DbContext(typeof(UserContext))]
-    [Migration("20171205122943_UserInit")]
-    partial class UserInit
+    [DbContext(typeof(OrderContext))]
+    [Migration("20171205222622_OrderInit")]
+    partial class OrderInit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -61,9 +61,6 @@ namespace WebApi.Data.Migrations
                     b.HasKey("ContactInformationID");
 
                     b.HasIndex("AddressID");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
 
                     b.ToTable("ContactInformation");
                 });
@@ -184,8 +181,6 @@ namespace WebApi.Data.Migrations
 
                     b.HasIndex("CustomerID");
 
-                    b.HasIndex("DriverID");
-
                     b.HasIndex("LocationID");
 
                     b.ToTable("Orders");
@@ -196,7 +191,7 @@ namespace WebApi.Data.Migrations
                     b.Property<int>("OrderItemID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("OrderID");
+                    b.Property<int>("OrderID");
 
                     b.Property<double>("TotalPrice");
 
@@ -287,7 +282,7 @@ namespace WebApi.Data.Migrations
 
                     b.HasOne("WebApi.Models.Driver", "Driver")
                         .WithMany("Orders")
-                        .HasForeignKey("DriverID")
+                        .HasForeignKey("CustomerID")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("WebApi.Models.Users.Location", "Location")
@@ -299,7 +294,8 @@ namespace WebApi.Data.Migrations
                 {
                     b.HasOne("WebApi.Models.Orders.Order", "Order")
                         .WithMany("OrderItems")
-                        .HasForeignKey("OrderID");
+                        .HasForeignKey("OrderID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("WebApi.Models.Orders.OrderItemFlavour", b =>

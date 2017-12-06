@@ -1,0 +1,79 @@
+<!--
+  Generated template for the OrderConfirmPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Confirm Order</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <table style="width:100%" >
+    <tr>
+      <th style="width:50%">Flavour</th>
+      <th style="width:25%" text-center>Amount</th>
+      <th style="width:25%" text-center>Price</th>
+    </tr>
+  </table>
+  <table style="width:100%" *ngFor="let item of shoppingCart?.cart">
+    <!--<div *ngFor="let item of shoppingCart?.cart">-->
+      <tr *ngFor="let ice of item?.iceCream" >
+        <td style="width:50%">{{ice.name}}</td>
+        <td style="width:25%" text-center="">{{ice.amount}}</td>
+        <td style="width:25%" text-center class="addEuro">{{ice.price| number: '1.2-2'}}</td>
+      </tr>
+  </table>
+  <table style="width:100%">
+    <tr  >
+      <td style="width:50%">Total</td>
+      <td style="width:25%" text-center=""></td>
+      <td style="width:25%" text-center class="addEuro">{{chosenDiver?.totalPrice | number: '1.2-2'}}</td>
+    </tr>
+  </table>
+  <ion-row>
+    <ion-col col-6="">
+      <button ion-button color="danger" type="button"
+              round="" outline (click)="onCancelOrder()">
+        Cancel Order
+      </button>
+    </ion-col>
+    <ion-col col-6="">
+      <button ion-button color="primary" type="button"
+               round="" outline (click)="placeOrder()">
+
+        Confirm Order
+      </button>
+    </ion-col>
+  </ion-row>
+  <ion-card>
+    <ion-card-header text-center>
+      Driver details
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-icon name="contact" icon-only large="" icon-start=""></ion-icon>
+          {{chosenDiver?.firstName }} {{ chosenDiver?.lastName}}
+        </ion-item>
+        <ion-item>
+          <ion-icon name="time" icon-only large="" icon-start=""></ion-icon>
+          {{chosenDiver?.duration / 60 | number: '1.1-1'}} min
+        </ion-item>
+        <ion-item>
+          <ion-icon name="navigate" icon-only large="" icon-start=""></ion-icon>
+          {{chosenDiver?.distance / 1000 | number: '1.2-2'}} km
+        </ion-item>
+        <ion-item >
+          <ion-icon name="locate" icon-only large="" icon-start=""></ion-icon>
+          <div class="itemTest">{{chosenDiver?.locationAddress}}</div>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

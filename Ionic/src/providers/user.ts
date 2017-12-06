@@ -14,8 +14,8 @@ export class UserProvider {
 
 
   // Local DEV
-  //ip: string = 'http://192.168.0.172:80/api/users/';
-  ip: string = 'http://172.16.229.9:80/api/users/';
+  ip: string = 'http://192.168.0.172:80/api/users/';
+  //ip: string = 'http://172.16.229.9:80/api/users/';
 
   // ip: string = 'http://192.168.0.155:8080/api/users/';
 
@@ -60,8 +60,8 @@ export class UserProvider {
   getCurrentUser(){
     return this.storage.get("currentUser").then();
   }
-  getDriversLocation(){
-    return this.http.get(this.ip + 'location')
+  getDrivers(){
+    return this.http.get(this.ip + 'drivers')
       .map((response: Response) => {
         return response.json();
       });

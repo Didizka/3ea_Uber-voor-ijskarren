@@ -1,22 +1,27 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AlertController, IonicPage, Loading, LoadingController, NavController, NavParams} from 'ionic-angular';
 import {NgForm} from "@angular/forms";
 import {UserProvider} from "../../providers/user";
 import {ListDriversPage} from "../list-drivers/list-drivers";
+import {OrderProvider} from "../../providers/order";
 
 @IonicPage()
 @Component({
   selector: 'page-signin',
   templateUrl: 'signin.html',
 })
-export class SigninPage {
+export class SigninPage implements OnInit{
 
 
   constructor(private navCtrl: NavController,
               private alertCtrl: AlertController,
               private loadingCtrl: LoadingController,
-              private userProvider: UserProvider) { }
-
+              private userProvider: UserProvider,
+              private orderProvider: OrderProvider,
+              ) { }
+  ngOnInit(){
+    this.orderProvider.setOrderIdToNull();
+  }
   onCreateAccount(){
     this.navCtrl.push('SignupPage');
   }

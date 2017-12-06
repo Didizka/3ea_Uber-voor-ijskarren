@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Models.Orders.Repo;
+using WebApi.Models.Orders.Resources;
 using WebApi.Models.Repositories;
 using AutoMapper;
 using WebApi.Models;
@@ -32,7 +32,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> GetFlavoursPrice(string email)
         {
             var driver = await driverRepo.GetFlavoursPrice(email);
-            var result  = mapper.Map<Driver, DriverFlavourResource>(driver);
+            var result  = mapper.Map<Driver, DriverResource>(driver);
 
             if (result !=null)
                 return Ok(result);

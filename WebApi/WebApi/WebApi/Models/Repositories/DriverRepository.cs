@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApi.Data;
 using WebApi.Models.Orders;
-using WebApi.Models.Orders.Repo;
+using WebApi.Models.Orders.Resources;
 
 namespace WebApi.Models.Repositories
 {
@@ -42,7 +42,7 @@ namespace WebApi.Models.Repositories
             return null;
         }
 
-        public async Task<List<OrderTotalPriceResource>> CalculatePriceForAllDrivers(ShoppingCart shoppingcart)
+        public async Task<List<OrderTotalPriceResource>> CalculatePriceForAllDrivers(ShoppingCart shoppingcart, Order currentOrder)
         {
             var drivers = await usersRepo.GetDrivers();
             List<OrderTotalPriceResource> listPriceResources = new List<OrderTotalPriceResource>();
@@ -52,13 +52,12 @@ namespace WebApi.Models.Repositories
             {
                 double totPrice = 0;
                 var driverWithFlavours = await GetFlavoursPrice(driver.ContactInformation.Email);
-                var resultDriver = mapper.Map<Driver, DriverFlavourResource>(driverWithFlavours);
+                var resultDriver = mapper.Map<Driver, DriverResource>(driverWithFlavours);
                 foreach (var order in shoppingcart.Cart)
                 {
                     double subPrice = 0;
                     foreach (var item in order.IceCream)
                     {
-                        subPrice += 5;
                         foreach (var driverFlavour in resultDriver.Flavours)
                         {
                             if (driverFlavour.Name == item.Name)
@@ -67,13 +66,10 @@ namespace WebApi.Models.Repositories
                     }
                     totPrice += subPrice;
                 }
-                listPriceResources.Add(new OrderTotalPriceResource
-                {
-                    Email = resultDriver.Email,
-                    FirstName = resultDriver.FirstName,
-                    LastName = resultDriver.LastName,
-                    TotalPrice = totPrice
-                });
+                var orderTotalPriceResource = mapper.Map<DriverResource, OrderTotalPriceResource>(resultDriver);
+                orderTotalPriceResource.TotalPrice = totPrice;
+                orderTotalPriceResource.OrderID = currentOrder.OrderID;
+                listPriceResources.Add(orderTotalPriceResource);
             }
             return listPriceResources;
         }
