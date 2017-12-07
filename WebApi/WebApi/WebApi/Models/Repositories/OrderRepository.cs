@@ -13,11 +13,13 @@ namespace WebApi.Models.Repositories
     {
         private readonly OrderContext context;
         private readonly IDriverRepository driverRepo;
+        private readonly IUsersRepository userRepo;
 
-        public OrderRepository(OrderContext context, IDriverRepository driverRepo)
+        public OrderRepository(OrderContext context, IDriverRepository driverRepo, IUsersRepository userRepo)
         {
             this.context = context;
             this.driverRepo = driverRepo;
+            this.userRepo = userRepo;
         }
 
         public async Task<IEnumerable<Flavour>> GetFlavoursAsync()
@@ -30,7 +32,8 @@ namespace WebApi.Models.Repositories
 
             Order currentOrder = new Order
             {
-                CustomerID = customer.CustomerID
+                CustomerID = customer.CustomerID,
+                Location = shoppingcart.Location
             };
             await context.Orders.AddAsync(currentOrder);
             await context.SaveChangesAsync();
@@ -50,6 +53,18 @@ namespace WebApi.Models.Repositories
                 await context.SaveChangesAsync();
             }
             return await driverRepo.CalculatePriceForAllDrivers(shoppingcart, currentOrder); ;
+        }
+        public async Task<bool> ConfirmOrder(Order order, ConfirmOrderResource confirmOrder)
+        {
+            var driver = await userRepo.GetDriverByEmail(confirmOrder.DriverEmail);
+            if(driver != null)
+            {
+                order.DriverID = driver.DriverID;
+                order.TotalPrice = confirmOrder.TotalPrice;
+                await context.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
         public async Task<Order> GetOrder(int orderId)
         {

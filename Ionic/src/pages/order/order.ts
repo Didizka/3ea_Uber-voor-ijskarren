@@ -7,6 +7,7 @@ import {ListDriversPage} from "../list-drivers/list-drivers";
 import {UserProvider} from "../../providers/user";
 import {isNumber} from "ionic-angular/util/util";
 import { Storage } from '@ionic/storage';
+import { Location } from '../../Models/driver';
 
 @IonicPage()
 @Component({
@@ -19,7 +20,11 @@ export class OrderPage implements OnInit{
   amount: number = 1;
   addFlavour: number = 1;
   selectAlertOpts:any;
-  shoppingCart: ShoppingCart = new ShoppingCart([new Icecream([new Flavour("", 1, 0)])]);
+  currentLocation: Location =  new Location(JSON.parse(localStorage.getItem('coords')).lat, JSON.parse(localStorage.getItem('coords')).lng);
+
+
+  // location: Location = new Location(0, 0);
+  shoppingCart: ShoppingCart = new ShoppingCart([new Icecream([new Flavour("", 1, 0)])], this.currentLocation);
   addFlavours: Flavour[] = [new Flavour("", 1, 0)];
   constructor(public navCtrl: NavController,
               private loadingCtrl: LoadingController,
@@ -35,6 +40,7 @@ export class OrderPage implements OnInit{
   }
 
   ngOnInit(){
+    console.log(this.currentLocation);
     this.orderProvider.getFlavours().subscribe(
       data => {
         for(let i = 0; i < data.length; i++){
@@ -92,7 +98,7 @@ export class OrderPage implements OnInit{
           if(isNumber(data)){
             this.storage.set("orderId", data);
             loading.dismiss();
-            /*this.toast.showLongBottom("Order Placed success").subscribe(
+            /*this.toast.showLongBottom("Order Placed success, Choose a Driver").subscribe(
               toast => {
                 console.log(toast);
               }
@@ -114,7 +120,7 @@ export class OrderPage implements OnInit{
   private errorMessage(){
     const alert = this.alertCtrl.create({
       title: 'Error',
-      message: 'Dry Again!',
+      message: 'Try Again!',
       buttons: ['Ok']
     });
     alert.present();

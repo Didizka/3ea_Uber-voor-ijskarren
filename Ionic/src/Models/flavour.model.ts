@@ -1,3 +1,4 @@
+import { Location } from './driver';
 
 export class Flavour{
   constructor(public name: string, public amount: number, public price: number){}
@@ -12,5 +13,5 @@ export class Icecream{
   constructor(public iceCream: Flavour[]){}
 }
 export class ShoppingCart{
-  constructor(public cart: Icecream[]){}
+  constructor(public cart: Icecream[], public location: Location){}
 }

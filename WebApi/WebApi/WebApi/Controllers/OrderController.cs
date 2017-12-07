@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Data;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +8,6 @@ using WebApi.Models.Repositories;
 using WebApi.Models.Orders;
 using WebApi.Models.Orders.Resources;
 using AutoMapper;
-using WebApi.Models;
 
 namespace WebApi.Controllers
 {
@@ -41,7 +38,7 @@ namespace WebApi.Controllers
         ///     GET: api/Orders     ////////
         //////////////////////////////////// 
         [HttpGet]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<IActionResult> GetAllFlavours()
         {
             var result = await orderRepo.GetFlavoursAsync();
 
@@ -59,28 +56,43 @@ namespace WebApi.Controllers
             var customer = await userReop.GetCustomerByEmail(email);
             if (shoppingcart == null || customer == null)
             {
-                if(shoppingcart==null)
-                 return BadRequest(shoppingcart);
+                if (shoppingcart == null)
+                    return BadRequest(shoppingcart);
                 else
-                 return BadRequest(customer);
+                    return BadRequest(customer);
             }
 
             var result = await orderRepo.PlaceOrder(shoppingcart, customer);
             return Ok(result.First().OrderID);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetOrderByOrderId(int id)
+        //Calculate tatal price for all drivers and send back.
+        [HttpGet("{orderId}")]
+        public async Task<IActionResult> GetOrderByOrderId(int orderId)
         {
-            var order = await orderRepo.GetOrder(id);
+            var order = await orderRepo.GetOrder(orderId);
             if(order != null)
             {
                 var shoppingCart = mapper.Map<Order, ShoppingCart>(order);
                 return Ok(await driverRepo.CalculatePriceForAllDrivers(shoppingCart, order));
             }
                 
-            return BadRequest("No order with id: " + id);
+            return BadRequest("No order with id: " + orderId);
         }
+
+        //Confirm Order 
+        [HttpPost("confirm")]
+        public async Task<IActionResult> ConfirmOrder( [FromBody]ConfirmOrderResource confirmOrder)
+        {
+            var order = await orderRepo.GetOrder(confirmOrder.OrderID);
+            if (order != null)
+            {
+                return Ok(await orderRepo.ConfirmOrder(order, confirmOrder));
+            }
+
+            return BadRequest("No order with id: " + confirmOrder.OrderID);
+        }
+
         [HttpGet("{id}/{driverEmail}")]
         public async Task<IActionResult> GetOrderBackWithPrice(int id, string driverEmail)
         {

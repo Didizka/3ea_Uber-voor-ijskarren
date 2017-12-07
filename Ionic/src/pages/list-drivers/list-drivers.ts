@@ -4,8 +4,8 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { UserProvider } from "../../providers/user";
 import { Geolocation } from "@ionic-native/geolocation";
 import { Storage } from "@ionic/storage"
-import {OrderProvider} from "../../providers/order";
-import {isNumber} from "ionic-angular/util/util";
+import { OrderProvider } from "../../providers/order";
+import { isNumber } from "ionic-angular/util/util";
 
 declare var google;
 
@@ -46,24 +46,49 @@ export class ListDriversPage implements OnInit {
   }
 
   ngOnInit() {
-    if(this.isOrderCanceled){
+    // Remove price label from drivers list if order has been cancelled
+    if (this.isOrderCanceled) {
       this.removeOrder();
     }
 
-    this.getUserPosition();
-    this.storage.ready().then(()=>{
-      this.storage.get('orderId').then( orderId => {
-        if(isNumber(orderId)){
+    // Check if current position has been saved in the localstorage
+    if (JSON.parse(localStorage.getItem('coords')) != null) {
+      // if it has, check if lat and lng are not zero's
+      this.lat = JSON.parse(localStorage.getItem('coords')).lat;
+      this.lng = JSON.parse(localStorage.getItem('coords')).lng;
+      // If they are zero's, get users current position
+      if (this.lat == 0 || this.lng == 0) {
+        this.getUserPosition();
+        // if they have been set, display the map and get drivers info
+      } else {
+        this.initMap();
+        this.getDriversInfo();
+      }
+      // if current position does not exist in the localstorage, get users current location
+    } else {
+      this.getUserPosition();
+    }
+  }
+
+
+  getDriversInfo() {
+    // Check if an order has been placed
+    // if it has, display the list of drivers with their prices
+    this.storage.ready().then(() => {
+      this.storage.get('orderId').then(orderId => {
+        if (isNumber(orderId)) {
           this.loadDriversWithTotalPrice(orderId);
-        }else {
+        } else {
+          // if no order has been placed, display the list of drivers without their prices
           this.userProvider.getDrivers().subscribe(
             data => {
               //console.log(data);
               this.drivers = data;
               this.checkRangeOfDrivers().then(data => {
                 this.driversInZone = data as Driver[];
-                this.areDriversProcessed = true;
-                console.log(data)})
+                // console.log(data)
+              });
+              this.areDriversProcessed = true;
             },
             err => {
               console.log(err);
@@ -72,7 +97,6 @@ export class ListDriversPage implements OnInit {
 
       });
     });
-
   }
 
   initMap() {
@@ -84,16 +108,20 @@ export class ListDriversPage implements OnInit {
       draggable: false
     };
     this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+    this.addUserMarker();
   }
-  onChooseDriver(driver: Driver){
-    if(!driver.totalPrice){
+
+
+  onChooseDriver(driver: Driver) {
+    if (!driver.totalPrice) {
       console.log("You have to place order first!");
-    }else{
-      this.navCtrl.push("OrderConfirmPage", {driver: driver});
+    } else {
+      this.navCtrl.push("OrderConfirmPage", { driver: driver });
     }
   }
 
   addUserMarker() {
+    // Define user marker
     let userMarker = new google.maps.Marker({
       map: this.map,
       animation: google.maps.Animation.DROP,
@@ -101,6 +129,7 @@ export class ListDriversPage implements OnInit {
       label: 'U'
     });
 
+    // Get users address based on his coordinates and put it into the infowindow
     let geocoder = new google.maps.Geocoder();
     geocoder.geocode({ location: new google.maps.LatLng(this.lat, this.lng) }, function (resp, status) {
       let content = "<p>" + resp[0].formatted_address + "</p>";
@@ -108,11 +137,13 @@ export class ListDriversPage implements OnInit {
         content: content
       });
 
+      // display the infowindow when clicking on the marker
       google.maps.event.addListener(userMarker, 'click', () => {
         infoWindow.open(this.map, userMarker);
       });
     });
 
+    // display the marker on the map
     userMarker.setMap(this.map);
   }
 
@@ -138,10 +169,12 @@ export class ListDriversPage implements OnInit {
       content: content
     });
 
+    // display the infowindow when clicking on the marker
     google.maps.event.addListener(driverMarker, 'click', () => {
       infoWindow.open(this.map, driverMarker);
     });
 
+    // display the driver marker on the map
     this.driversMarkers.push(driverMarker);
   }
 
@@ -151,16 +184,41 @@ export class ListDriversPage implements OnInit {
     let options = {
       enableHighAccuracy: true
     };
+
+    // Try to get users location using geolocator
     this.geolocation.getCurrentPosition(options).then(position => {
-      this.lat = position.coords.latitude;
-      this.lng = position.coords.longitude;
-      this.initMap();
-      this.addUserMarker();
+      let geocoder = new google.maps.Geocoder();
+      // Translate current coordinates to the address and ask the user whether the address is correct
+      geocoder.geocode({ location: new google.maps.LatLng(position.coords.latitude, position.coords.longitude) }, function (resp, status) {
+        let isAddressCorrect = confirm('Uw locatie is: ' + resp[0].formatted_address + '. Is deze correct bepaald?');
+        // if the address is correct, save the coordinates and show the map and drivers in range
+        if (isAddressCorrect) {
+          this.lat = position.coords.latitude;
+          this.lng = position.coords.longitude;
+          localStorage.setItem("coords", JSON.stringify(new google.maps.LatLng(this.lat, this.lng)));
+          this.initMap();
+          this.getDriversInfo();
+          // if the address is not correct, ask the user to provide his address and translate it to coordinates, then show the map with drivers in range
+        } else {
+          let address = prompt('Geef hier uw adres in');
+          geocoder.geocode({ address: address }, function (resp, status) {
+            this.lat = resp[0].geometry.location.lat();
+            this.lng = resp[0].geometry.location.lng();
+            localStorage.setItem("coords", JSON.stringify(new google.maps.LatLng(this.lat, this.lng)));
+            console.log(this.lat);
+            console.log(this.lng);
+            this.initMap();
+            this.getDriversInfo();
+            // this.initMap();
+          }.bind(this));
+        }
+      }.bind(this));
     }).catch(err => {
       console.log('Position error: ' + err.message);
     });
   }
-  loadDriversWithTotalPrice(orderId: number){
+
+  loadDriversWithTotalPrice(orderId: number) {
     this.orderProvider.getDriversWithTotalPrice(orderId).subscribe(
       data => {
         //console.log(data);
@@ -168,12 +226,15 @@ export class ListDriversPage implements OnInit {
         this.checkRangeOfDrivers().then(data => {
           this.driversInZone = data as Driver[];
           this.areDriversProcessed = true;
-          console.log(data)})
+          console.log(data)
+        })
       },
       err => {
         console.log(err);
       });
   }
+
+  // if the user changes the range, recalculate the drivers whithin that range
   onRangeChange(event: any) {
     this.zoom = event.value;
     this.map.setZoom(this.zoom);
@@ -212,7 +273,7 @@ export class ListDriversPage implements OnInit {
   }
 
 
-  checkRangeOfDrivers()  {
+  checkRangeOfDrivers() {
     // Hide the list with drivers untill the distance has been calculated
     this.areDriversProcessed = false;
 
@@ -230,73 +291,70 @@ export class ListDriversPage implements OnInit {
     // Return promise to use with then in ngOnInit
     var promise = new Promise((resolve, reject) => {
 
-    // local placeholder for drivers in range
-    let driversInZone: Driver[] = [];
+      // local placeholder for drivers in range
+      let driversInZone: Driver[] = [];
 
-    // Wait until the users position has been determined
-    if (this.lat != null && this.lng != null) {
-      // Distance calculator
-      let origin = new google.maps.LatLng(this.lat, this.lng);
-      let distanceCalculator: any = new google.maps.DistanceMatrixService();
-      console.log("Range: " + this.distance + "km");
+      // Wait until the users position has been determined
+      if (this.lat != null && this.lng != null) {
+        // Distance calculator
+        let origin = new google.maps.LatLng(this.lat, this.lng);
+        let distanceCalculator: any = new google.maps.DistanceMatrixService();
+        console.log("Range: " + this.distance + "km");
 
-      // calculate distance between origin and destination for each driver
-      for (let driver of this.drivers) {
-        distanceCalculator.getDistanceMatrix({
-          origins: [origin],
-          destinations: [new google.maps.LatLng(driver.location.latitude, driver.location.longitude)],
-          travelMode: google.maps.TravelMode.DRIVING,
-          drivingOptions: {
-            departureTime: new Date(Date.now())
-          }
-        // Callback function when the calculation has been finished
-        }, function (resp, status) {
-          // Save driver's info to drivers object
-          driver.locationAddress = resp.destinationAddresses;
-          driver.distance = resp.rows[0].elements[0].distance.value;
-          driver.duration = resp.rows[0].elements[0].duration.value;
+        // calculate distance between origin and destination for each driver
+        for (let driver of this.drivers) {
+          distanceCalculator.getDistanceMatrix({
+            origins: [origin],
+            destinations: [new google.maps.LatLng(driver.location.latitude, driver.location.longitude)],
+            travelMode: google.maps.TravelMode.DRIVING,
+            drivingOptions: {
+              departureTime: new Date(Date.now())
+            }
+            // Callback function when the calculation has been finished
+          }, function (resp, status) {
+            // Save driver's info to drivers object
+            driver.locationAddress = resp.destinationAddresses;
+            driver.distance = resp.rows[0].elements[0].distance.value;
+            driver.duration = resp.rows[0].elements[0].duration.value;
 
-          // console.log('------------ALL DRIVERS-----------------------');
-          // console.log('Driver ID: ' + driver.userID);
-          // console.log('Range: ' + this.distance);
-          // console.log('Km: ' + (driver.distance / 1000));
-          // console.log('Rounded: ' + Math.round((driver.distance / 1000)));
-
-
-          // If the driver is in the range zone, add him to the temporary array and create a marker
-          if ((driver.distance / 1000) < this.distance) {
-            // console.log('------------DRIVERS IN ZONE-----------------------------');
+            // console.log('------------ALL DRIVERS-----------------------');
             // console.log('Driver ID: ' + driver.userID);
-            // console.log('Driver Name: ' + driver.firstName + ' ' + driver.lastName);
-            // console.log('From: ' + resp.originAddresses);
-            // console.log('To: ' + resp.destinationAddresses);
-
-            // if (driver.distance > 1000) {
-            //   console.log('Distance: ' + driver.distance / 1000 + ' km'); // distance in meters => / 1000 to get km's
-            // } else {
-            //   console.log('Distance: ' + driver.distance + ' m'); // distance in meters
-            // }
-            // console.log('Duration: ' + driver.duration / 60 + ' min'); //value = in seconds => / 60 to get minutes
-            // console.log(driver);
-            driversInZone.push(driver);
-            this.addDriversMarkers(driver);
-          }
-        }.bind(this)); // Access this scope in callback
+            // console.log('Range: ' + this.distance);
+            // console.log('Km: ' + (driver.distance / 1000));
+            // console.log('Rounded: ' + Math.round((driver.distance / 1000)));
+            // If the driver is in the range zone, add him to the temporary array and create a marker
+            if ((driver.distance / 1000) < this.distance) {
+              // console.log('------------DRIVERS IN ZONE-----------------------------');
+              // console.log('Driver ID: ' + driver.userID);
+              // console.log('Driver Name: ' + driver.firstName + ' ' + driver.lastName);
+              // console.log('From: ' + resp.originAddresses);
+              // console.log('To: ' + resp.destinationAddresses);
+              // if (driver.distance > 1000) {
+              //   console.log('Distance: ' + driver.distance / 1000 + ' km'); // distance in meters => / 1000 to get km's
+              // } else {
+              //   console.log('Distance: ' + driver.distance + ' m'); // distance in meters
+              // }
+              // console.log('Duration: ' + driver.duration / 60 + ' min'); //value = in seconds => / 60 to get minutes
+              // console.log(driver);
+              driversInZone.push(driver);
+              this.addDriversMarkers(driver);
+            }
+          }.bind(this)); // Access this scope in callback
+        }
       }
-    }
-    else {
-      setTimeout(() => {
-        this.checkRangeOfDrivers();
-      }, 500);
-    }
-    resolve(driversInZone);
-  });
-return promise;
-
+      else {
+        setTimeout(() => {
+          this.checkRangeOfDrivers();
+        }, 500);
+      }
+      resolve(driversInZone);
+    });
+    return promise;
   };
-  removeOrder(){
+
+  removeOrder() {
     this.storage.set('orderId', null);
-    for(let driver of this.drivers){
+    for (let driver of this.drivers) {
       driver.totalPrice = null;
     }
   }
