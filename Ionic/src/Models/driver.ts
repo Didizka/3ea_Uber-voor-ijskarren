@@ -13,9 +13,9 @@ export class Driver{
 
 
 export class Location{
-  latitude: any;
-  longitude: any;
+  constructor(public latitude: number, public longitude: number) {}
 }
+
 export interface FlavourPrice{
   name: string,
   price: number

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace WebApi.Data.Migrations
 {
-    public partial class UserInit : Migration
+    public partial class initorders : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -182,8 +182,8 @@ namespace WebApi.Data.Migrations
                         principalColumn: "CustomerID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Orders_Drivers_DriverID",
-                        column: x => x.DriverID,
+                        name: "FK_Orders_Drivers_CustomerID",
+                        column: x => x.CustomerID,
                         principalTable: "Drivers",
                         principalColumn: "DriverID",
                         onDelete: ReferentialAction.Cascade);
@@ -246,12 +246,6 @@ namespace WebApi.Data.Migrations
                 column: "AddressID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ContactInformation_Email",
-                table: "ContactInformation",
-                column: "Email",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Customers_ContactInformationID",
                 table: "Customers",
                 column: "ContactInformationID");
@@ -290,11 +284,6 @@ namespace WebApi.Data.Migrations
                 name: "IX_Orders_CustomerID",
                 table: "Orders",
                 column: "CustomerID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Orders_DriverID",
-                table: "Orders",
-                column: "DriverID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_LocationID",

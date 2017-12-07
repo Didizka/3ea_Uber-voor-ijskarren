@@ -30,7 +30,8 @@ namespace WebApi.Models.Repositories
 
             Order currentOrder = new Order
             {
-                CustomerID = customer.CustomerID
+                CustomerID = customer.CustomerID,
+                Location = shoppingcart.Location
             };
             await context.Orders.AddAsync(currentOrder);
             await context.SaveChangesAsync();

@@ -56,37 +56,14 @@ namespace WebApi.Controllers
             var customer = await userReop.GetCustomerByEmail(email);
             if (shoppingcart == null || customer == null)
             {
-                if(shoppingcart==null)
-                 return BadRequest(shoppingcart);
+                if (shoppingcart == null)
+                    return BadRequest(shoppingcart);
                 else
-                 return BadRequest(customer);
+                    return BadRequest(customer);
             }
 
-            Order currentOrder = new Order
-            {
-                CustomerID = customer.CustomerID,
-                //Customer = await userContext.Customers.SingleOrDefaultAsync(c => c.CustomerID == customer.CustomerID),
-                TotalPrice = 14,
-                Location = shoppingcart.Location
-            };
-
-            await orderContext.Orders.AddAsync(currentOrder);
-            await orderContext.SaveChangesAsync();
-            foreach (var order in shoppingcart.Cart)
-            {
-                //OrderItem orderItem = new OrderItem { Order = await context.Orders.SingleOrDefaultAsync(d => d.OrderID == 1) };
-                OrderItem orderItem = new OrderItem { Order = currentOrder };
-                orderContext.OrderItems.Add(orderItem);
-                List<OrderItemFlavour> orderItemFlavour = new List<OrderItemFlavour>();
-                foreach (var item in order.IceCream)
-                {
-                    var flavour = await orderContext.Flavours.SingleOrDefaultAsync(f => f.Name == item.Name);
-                    orderItemFlavour.Add(new OrderItemFlavour { FlavourID = flavour.FlavourID, OrderItem = orderItem, Amount = item.Amount });
-                }
-                var result = await orderRepo.PlaceOrder(shoppingcart, customer);
-                return Ok(result.First().OrderID);
-            }
-            return NotFound();
+            var result = await orderRepo.PlaceOrder(shoppingcart, customer);
+            return Ok(result.First().OrderID);
         }
 
         [HttpGet("{id}")]

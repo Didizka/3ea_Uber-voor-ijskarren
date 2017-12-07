@@ -43,6 +43,7 @@ export class OrderProvider {
     console.log(shoppingCart);
     return this.http.post(this.ip + currentUser, shoppingCart, {headers: this.headers})
       .map((response: Response) => {
+        console.log(response);
       return response.json();
     });
   }

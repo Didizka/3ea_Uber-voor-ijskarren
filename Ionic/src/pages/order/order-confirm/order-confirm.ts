@@ -64,4 +64,10 @@ export class OrderConfirmPage implements OnInit{
     confirm.present();
   }
 
+  placeOrder() {
+    console.log('order confirmed');
+    console.log(this.chosenDiver);
+    console.log(this.driverWithPrice);
+  }
+
 }
