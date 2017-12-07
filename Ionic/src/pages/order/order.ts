@@ -1,10 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {AlertController, IonicPage, LoadingController, NavController, NavParams, ViewController} from 'ionic-angular';
-import {OrderProvider} from "../../providers/order-provider";
+import {OrderProvider} from "../../providers/order";
 import {Toast} from "@ionic-native/toast";
-import {Flavour} from "../../Models/flavour.model";
+import {Flavour, Icecream, ShoppingCart} from "../../Models/flavour.model";
 import {ListDriversPage} from "../list-drivers/list-drivers";
 import {UserProvider} from "../../providers/user";
+import {isNumber} from "ionic-angular/util/util";
+import { Storage } from '@ionic/storage';
 
 @IonicPage()
 @Component({
@@ -17,12 +19,13 @@ export class OrderPage implements OnInit{
   amount: number = 1;
   addFlavour: number = 1;
   selectAlertOpts:any;
-  shoppingCart: ShoppingCart = new ShoppingCart([new Icecream([new Flavour("", 1)])]);
-  addFlavours: Flavour[] = [new Flavour("", 1)];
+  shoppingCart: ShoppingCart = new ShoppingCart([new Icecream([new Flavour("", 1, 0)])]);
+  addFlavours: Flavour[] = [new Flavour("", 1, 0)];
   constructor(public navCtrl: NavController,
               private loadingCtrl: LoadingController,
               private orderProvider: OrderProvider,
               private userProvider: UserProvider,
+              private storage: Storage,
               private toast: Toast,
               private alertCtrl: AlertController) {
     this.selectAlertOpts = {
@@ -59,14 +62,14 @@ export class OrderPage implements OnInit{
     if(this.addFlavours.length>=4)
       return;
     else
-      this.addFlavours.push(new Flavour("", 1));
+      this.addFlavours.push(new Flavour("", 1, 0));
   }
   onRemoveFlavour(){
     this.addFlavours.splice(this.addFlavours.length-1, 1)
   }
   onAddToCart(){
     this.shoppingCart.cart.push(new Icecream(this.addFlavours));
-    this.addFlavours = [new Flavour("", 1)];
+    this.addFlavours = [new Flavour("", 1, 0)];
   }
   onRemoveFromList(ice:Icecream){
     let index = this.shoppingCart.cart.indexOf(ice);
@@ -79,30 +82,15 @@ export class OrderPage implements OnInit{
     const loading = this.loadingCtrl.create({
       content: 'Please wait...'
     });
+    console.log(JSON.stringify(this.shoppingCart));
     loading.present();
-<<<<<<< HEAD
-    this.orderProvider.placeOrder(JSON.parse(JSON.stringify(this.shoppingCart))).subscribe(
-      data => {
-        console.log(data);
-        if(data == true){
-          loading.dismiss();
-          console.log('Order Placed success');
-          // this.toast.showLongBottom("Order Placed success").subscribe(
-          //   toast => {
-          //     console.log(toast);
-          //   }
-          // );
-          this.shoppingCart.cart=[];
-          //this.navCtrl.setRoot('ListDriversPage');
-        }else{
-          loading.dismiss();
-          this.errorMessage();
-=======
+
     this.userProvider.getCurrentUser().then(user => {
       this.orderProvider.placeOrder(JSON.parse(JSON.stringify(this.shoppingCart)), user).subscribe(
         data => {
           console.log(data);
-          if(data == true){
+          if(isNumber(data)){
+            this.storage.set("orderId", data);
             loading.dismiss();
             /*this.toast.showLongBottom("Order Placed success").subscribe(
               toast => {
@@ -110,6 +98,7 @@ export class OrderPage implements OnInit{
               }
             );*/
             this.shoppingCart.cart=[];
+            this.backToMap();
           }else{
             loading.dismiss();
             this.errorMessage();
@@ -117,7 +106,6 @@ export class OrderPage implements OnInit{
         },
         err => {
           console.log(err);
->>>>>>> cce0448dfdd5d1473b2b8d7ce0a75ba8c7f9edbe
         }
       );
     });
@@ -126,7 +114,7 @@ export class OrderPage implements OnInit{
   private errorMessage(){
     const alert = this.alertCtrl.create({
       title: 'Error',
-      message: 'Dry Again!',
+      message: 'Try Again!',
       buttons: ['Ok']
     });
     alert.present();
@@ -143,9 +131,5 @@ export class OrderPage implements OnInit{
     }
   }
 }
-export class Icecream{
-  constructor(public iceCream: Flavour[]){}
-}
-export class ShoppingCart{
-  constructor(public cart: Icecream[]){}
-}
+
+

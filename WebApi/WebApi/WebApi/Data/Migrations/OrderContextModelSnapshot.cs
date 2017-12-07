@@ -190,7 +190,7 @@ namespace WebApi.Data.Migrations
                     b.Property<int>("OrderItemID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("OrderID");
+                    b.Property<int>("OrderID");
 
                     b.Property<double>("TotalPrice");
 
@@ -293,7 +293,8 @@ namespace WebApi.Data.Migrations
                 {
                     b.HasOne("WebApi.Models.Orders.Order", "Order")
                         .WithMany("OrderItems")
-                        .HasForeignKey("OrderID");
+                        .HasForeignKey("OrderID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("WebApi.Models.Orders.OrderItemFlavour", b =>

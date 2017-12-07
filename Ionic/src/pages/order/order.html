@@ -97,16 +97,16 @@
   </ion-card>
   <ion-row>
     <ion-col col-6="">
+      <button ion-button full="" color="danger" type="submit"
+              [disabled]="false" round (click)="backToMap()">
+        Back to map
+      </button>
+    </ion-col>
+    <ion-col col-6="">
       <button ion-button  full color="primary" type="submit"
               [disabled]="shoppingCart.cart.length == 0" round="" (click)="placeOrder()">
 
         Place Order
-      </button>
-    </ion-col>
-    <ion-col col-6="">
-      <button ion-button full="" color="danger" type="submit"
-              [disabled]="false" round (click)="backToMap()">
-        Back to map
       </button>
     </ion-col>
   </ion-row>

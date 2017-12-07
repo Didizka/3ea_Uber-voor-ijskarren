@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 using WebApi.Data;
 using WebApi.HelperClasses;
 using WebApi.Models.Orders;
+using WebApi.Models.Orders.Resources;
 using WebApi.Models.Users;
 
 namespace WebApi.Models.Repositories
@@ -15,37 +17,60 @@ namespace WebApi.Models.Repositories
     {
         private readonly UserContext userContext;
         private readonly OrderContext orderContext;
+        private readonly IMapper mapper;
 
-        public UsersRepository(UserContext userContext, OrderContext orderContext)
+        public UsersRepository(UserContext userContext, OrderContext orderContext, IMapper mapper)
         {
             this.userContext = userContext;
             this.orderContext = orderContext;
+            this.mapper = mapper;
         }
         public async Task<IEnumerable<Customer>> GetCustomers()
         {
             var result =  await userContext.Customers
                             .Include(c => c.ContactInformation)
                                    .ThenInclude(a => a.Address)
+                            .Include( c => c.Location)
                             .ToListAsync();
-            foreach (var customer in result)
-            {
-                RemovePasswordOfCustomer(customer);
-            }
+
             return result;
         }
         public async Task<IEnumerable<Driver>> GetDrivers()
         {
             var result = await userContext.Drivers
-                            .Include(l => l.Location)
                             .Include(c => c.ContactInformation)
                                    .ThenInclude(a => a.Address)
-                            
+                             .Include(r => r.DriverFlavours)
+                                    .ThenInclude(df => df.Flavour)
+                            .Include(d => d.Location)
                             .ToListAsync();
-            foreach (var driver in result)
+            return result; 
+        }
+        public IEnumerable<DriverResource> DriverToDriversResource(IEnumerable<Driver> drivers)
+        {
+            List<DriverResource> driverResource = new List<DriverResource>();
+            if (drivers != null)
             {
-                RemovePasswordOfDriver(driver);
+                foreach (var driver in drivers)
+                {
+                    driverResource.Add(mapper.Map<Driver, DriverResource>(driver));
+                }
+                return driverResource;
             }
-            return result;
+            return null; 
+        }
+        public IEnumerable<CustomerResource> CustomerToCustomersResource(IEnumerable<Customer> customers)
+        {
+            List<CustomerResource> customerResource = new List<CustomerResource>();
+            if (customers != null)
+            {
+                foreach (var customer in customers)
+                {
+                    customerResource.Add(mapper.Map<Customer, CustomerResource>(customer));
+                }
+                return customerResource;
+            }
+            return null;
         }
 
         public async Task<Customer> GetCustomerByEmail(string email)
@@ -54,8 +79,6 @@ namespace WebApi.Models.Repositories
                             .Include(c => c.ContactInformation)
                                    .ThenInclude(a => a.Address)
                             .SingleOrDefaultAsync(u => u.ContactInformation.Email == email);
-            //user.Salt = null;
-            //user.Password = null;
             return customer;
         }
         public async Task<Driver> GetDriverByEmail(string email)
@@ -63,9 +86,10 @@ namespace WebApi.Models.Repositories
             var driver = await userContext.Drivers
                             .Include(c => c.ContactInformation)
                                    .ThenInclude(a => a.Address)
+                            .Include(r => r.DriverFlavours)
+                                    .ThenInclude(df => df.Flavour)
+                            .Include(d => d.Location)
                             .SingleOrDefaultAsync(u => u.ContactInformation.Email == email);
-            //user.Salt = null;
-            //user.Password = null;
             return driver;
         }
         public async Task<Customer> GetCustomerById(int id)
@@ -85,14 +109,6 @@ namespace WebApi.Models.Repositories
                             .SingleOrDefaultAsync(u => u.DriverID == id);
 
             return driver;
-        }
-
-        public async Task<IEnumerable<Driver>> GetDriversLocations()
-        {
-            var users = await userContext.Drivers
-                                .Include(d => d.Location)
-                                .ToListAsync();
-            return users;
         }
 
 
@@ -134,22 +150,7 @@ namespace WebApi.Models.Repositories
             return UserRoleTypes.NOTFOUND;
 
         }
-        public void RemovePasswordOfCustomer(Customer customer)
-        {
-            if(customer != null)
-            {
-                customer.Password = null;
-                customer.Salt = null;
-            }
-        }
-        public void RemovePasswordOfDriver(Driver driver)
-        {
-            if (driver != null)
-            {
-                driver.Password = "";
-                driver.Salt = null;
-            }
-        }
+
         public async Task<bool> CreateDriverFlavourTable(Driver driver)
         {
             var flavours = await orderContext.Flavours.ToListAsync();

@@ -15,7 +15,7 @@ namespace WebApi.Models.Orders
 
 
         public ICollection<OrderItemFlavour> OrderItemFlavours { get; set; }
-
+        public int OrderID { get; set; }
         public Order Order { get; set; }
 
         public OrderItem()

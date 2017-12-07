@@ -7,10 +7,11 @@ export class Driver{
   location: Location;
   distance: number;
   duration: number;
-  locationAddress: string;
+  locationAddress: string
+  totalPrice: number;
 }
 
-  
+
 export class Location{
   latitude: any;
   longitude: any;

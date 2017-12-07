@@ -10,6 +10,8 @@ using Newtonsoft.Json.Linq;
 using System;
 using WebApi.Models.Repositories;
 using WebApi.Models.Orders;
+using WebApi.Models.Orders.Resources;
+using System.Collections.Generic;
 
 namespace WebApi.Controllers
 {
@@ -36,35 +38,25 @@ namespace WebApi.Controllers
         [HttpGet("customers")]
         public async Task<IActionResult> GetAllCustomers()
         {
-            var result = await usersRepo.GetCustomers();
-                    
-            if (result == null) return NotFound("No customers found");
-
-            return Ok(result);
+            var customers = await usersRepo.GetCustomers();
+            if (customers != null)
+            {
+                return Ok(usersRepo.CustomerToCustomersResource(customers));
+            }
+            return NotFound("No customers found");
         }
 
         [HttpGet("drivers")]
         public async Task<IActionResult> GetAllDrivers()
         {
-            var result = await usersRepo.GetDrivers();
-
-            if (result == null) return NotFound("No drivers found");
-
-            return Ok(result);
+            var drivers = await usersRepo.GetDrivers();
+            if (drivers != null)
+            {
+                return Ok(usersRepo.DriverToDriversResource(drivers));
+            }
+            return NotFound("No customers found");
         }
 
-        
-        ///////////////////////////////////////////////
-        ///     GET: api/users/location           /////
-        ///////////////////////////////////////////////
-        [HttpGet("location")]
-        public async Task<IActionResult> GetDriversLocation()
-        {
-            var users = await usersRepo.GetDriversLocations();
-            if (users != null)
-                return Ok(users);
-            return BadRequest();
-        }
 
         ///////////////////////////////////////////////
         ///     GET: api/users/chingiz@uber.be    /////
@@ -78,10 +70,10 @@ namespace WebApi.Controllers
                 return NotFound("Email " + email + " not found");
 
             if (customerOrDriver == UserRoleTypes.CUSTOMER)
-                return Ok(await usersRepo.GetCustomerByEmail(email));
+                return Ok( mapper.Map<Customer, CustomerResource>(await usersRepo.GetCustomerByEmail(email)));
 
             else if(customerOrDriver == UserRoleTypes.DRIVER)
-                return Ok(await usersRepo.GetDriverByEmail(email));
+                return Ok(mapper.Map<Driver, CustomerResource>(await usersRepo.GetDriverByEmail(email))); 
 
             return BadRequest();
             

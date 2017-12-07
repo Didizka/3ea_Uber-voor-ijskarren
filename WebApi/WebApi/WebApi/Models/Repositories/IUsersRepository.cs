@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebApi.Models.Orders;
+using WebApi.Models.Orders.Resources;
 using WebApi.Models.Users;
 
 namespace WebApi.Models.Repositories
@@ -16,10 +17,9 @@ namespace WebApi.Models.Repositories
         Task<bool> CanUserLogin(LoginForm loginUser, UserRoleTypes userRole);
         Task<IEnumerable<Customer>> GetCustomers();
         Task<IEnumerable<Driver>> GetDrivers();
-        Task<IEnumerable<Driver>> GetDriversLocations();
+        IEnumerable<DriverResource> DriverToDriversResource(IEnumerable<Driver> drivers);
+        IEnumerable<CustomerResource> CustomerToCustomersResource(IEnumerable<Customer> customers);
         Task<List<DriverFlavour>> GetDriversFlavours(string email);
-        void RemovePasswordOfCustomer(Customer customer);
-        void RemovePasswordOfDriver(Driver customer);
         Task<bool> CreateDriverFlavourTable(Driver driver);
     }
 }

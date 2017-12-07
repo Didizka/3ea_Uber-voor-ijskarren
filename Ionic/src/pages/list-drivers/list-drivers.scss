@@ -3,5 +3,28 @@ page-list-drivers {
     height: 70%;
     width: 100%;
   }
-
+  .borderX {
+    border: solid 2px red;
+  }
+  .no-padding {
+    padding: 0px !important;
+  }
+  ion-badge {
+    font-size: $badge-font-size;
+  }
+  .roundBorder{
+    border: solid 2px #4889fe;
+    background: #d6eeff;
+    border-radius: 20%;
+    text-align: center;
+    color: #1130ff;
+    top: 50%;
+    left: 50%;
+    font-weight: bold;
+    padding: 5%;
+  }
+  h3::after{
+    content: " €";
+  }
+  $badge-font-size: 1.8rem;
 }

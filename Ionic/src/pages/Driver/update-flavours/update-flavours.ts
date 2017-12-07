@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {IonicPage, LoadingController, NavController, NavParams, ViewController} from 'ionic-angular';
 import {Flavour, FlavourUpdate} from "../../../Models/flavour.model";
-import {OrderProvider} from "../../../providers/order-provider";
+import {OrderProvider} from "../../../providers/order";
 import {CurrencyPipe} from "@angular/common"
 import {DriverProvider} from "../../../providers/driver";
 import {DriverFlavour} from "../../../Models/driver";

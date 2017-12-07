@@ -9,7 +9,7 @@ import { MyApp } from './app.component';
 import { UserProvider } from '../providers/user';
 import {HttpModule} from "@angular/http";
 import {ListDriversPage} from "../pages/list-drivers/list-drivers";
-import {OrderProvider} from '../providers/order-provider';
+import {OrderProvider} from '../providers/order';
 import {CommonModule} from "@angular/common";
 import {Toast} from "@ionic-native/toast";
 import { DriverProvider } from '../providers/driver';
