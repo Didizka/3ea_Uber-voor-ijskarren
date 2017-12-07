@@ -50,7 +50,11 @@ export class ListDriversPage implements OnInit {
       this.removeOrder();
     }
 
-    this.getUserPosition();
+    this.getUserPosition(); 
+  }
+
+
+  getDriversInfo() {
     this.storage.ready().then(()=>{
       this.storage.get('orderId').then( orderId => {
         if(isNumber(orderId)){
@@ -72,9 +76,7 @@ export class ListDriversPage implements OnInit {
 
       });
     });
-
   }
-
   initMap() {
     let mapOptions = {
       center: new google.maps.LatLng(this.lat, this.lng),
@@ -84,6 +86,7 @@ export class ListDriversPage implements OnInit {
       draggable: false
     };
     this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+    this.addUserMarker();
   }
   onChooseDriver(driver: Driver){
     if(!driver.totalPrice){
@@ -154,12 +157,33 @@ export class ListDriversPage implements OnInit {
     this.geolocation.getCurrentPosition(options).then(position => {
       this.lat = position.coords.latitude;
       this.lng = position.coords.longitude;
+
+      let geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ location: new google.maps.LatLng(this.lat, this.lng) }, function (resp, status) {
+        let isAddressCorrect = confirm('Uw locatie is: ' + resp[0].formatted_address + '. Is deze correct bepaald?');
+        if (isAddressCorrect) {
+          this.initMap();
+          this.getDriversInfo();
+        } else {
+          let address = prompt('Geef hier uw adres in');
+          geocoder.geocode({ address: address }, function (resp, status) {
+            // results[0].geometry.location)
+            this.lat = resp[0].geometry.location.lat();
+            this.lng = resp[0].geometry.location.lng();
+            console.log(this.lat);
+            console.log(this.lng);
+            this.initMap();
+          }.bind(this));
+        }
+        this.getDriversInfo();
+      }.bind(this));
+
       this.initMap();
-      this.addUserMarker();
     }).catch(err => {
       console.log('Position error: ' + err.message);
     });
   }
+
   loadDriversWithTotalPrice(orderId: number){
     this.orderProvider.getDriversWithTotalPrice(orderId).subscribe(
       data => {
