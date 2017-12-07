@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApi.Models.Repositories;
 using WebApi.Models.Orders;
 using WebApi.Models.Orders.Repo;
+using WebApi.Models.Users;
 
 namespace WebApi.Controllers
 {
@@ -33,7 +34,7 @@ namespace WebApi.Controllers
         ///     GET: api/Orders     ////////
         //////////////////////////////////// 
         [HttpGet]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<IActionResult> GetAllFlavours()
         {
             var result = await orderRepo.GetFlavoursAsync();
 
@@ -46,7 +47,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("{email}")]
-        public async Task<IActionResult> Post(string email, [FromBody]ShoppingCart shoppingcart)
+        public async Task<IActionResult> PostNewOrder(string email, [FromBody]ShoppingCart shoppingcart)
         {
             var customer = await userReop.GetCustomerByEmail(email);
             if (shoppingcart == null || customer == null)
@@ -57,7 +58,8 @@ namespace WebApi.Controllers
             {
                 CustomerID = customer.CustomerID,
                 //Customer = await userContext.Customers.SingleOrDefaultAsync(c => c.CustomerID == customer.CustomerID),
-                TotalPrice = 14
+                TotalPrice = 14,
+                Location = shoppingcart.Location
             };
             await context.Orders.AddAsync(currentOrder);
             await context.SaveChangesAsync();
