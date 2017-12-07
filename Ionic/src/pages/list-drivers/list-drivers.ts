@@ -68,8 +68,6 @@ export class ListDriversPage implements OnInit {
     } else {
       this.getUserPosition();
     }
-
-
   }
 
 
@@ -100,8 +98,7 @@ export class ListDriversPage implements OnInit {
       });
     });
   }
-
-
+  
   initMap() {
     let mapOptions = {
       center: new google.maps.LatLng(this.lat, this.lng),
