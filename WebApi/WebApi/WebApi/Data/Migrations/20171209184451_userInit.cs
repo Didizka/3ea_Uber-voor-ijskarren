@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace WebApi.Data.Migrations
 {
-    public partial class initorders : Migration
+    public partial class userInit : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -170,6 +170,8 @@ namespace WebApi.Data.Migrations
                     CustomerID = table.Column<int>(type: "int", nullable: false),
                     DriverID = table.Column<int>(type: "int", nullable: false),
                     LocationID = table.Column<int>(type: "int", nullable: true),
+                    Payed = table.Column<bool>(type: "bit", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
                     TotalPrice = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
@@ -182,8 +184,8 @@ namespace WebApi.Data.Migrations
                         principalColumn: "CustomerID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Orders_Drivers_CustomerID",
-                        column: x => x.CustomerID,
+                        name: "FK_Orders_Drivers_DriverID",
+                        column: x => x.DriverID,
                         principalTable: "Drivers",
                         principalColumn: "DriverID",
                         onDelete: ReferentialAction.Cascade);
@@ -246,6 +248,12 @@ namespace WebApi.Data.Migrations
                 column: "AddressID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ContactInformation_Email",
+                table: "ContactInformation",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Customers_ContactInformationID",
                 table: "Customers",
                 column: "ContactInformationID");
@@ -284,6 +292,11 @@ namespace WebApi.Data.Migrations
                 name: "IX_Orders_CustomerID",
                 table: "Orders",
                 column: "CustomerID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_DriverID",
+                table: "Orders",
+                column: "DriverID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_LocationID",

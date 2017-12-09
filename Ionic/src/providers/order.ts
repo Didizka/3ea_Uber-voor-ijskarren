@@ -49,8 +49,10 @@ export class OrderProvider {
     });
   }
   confirmOrder(orderRepo: ConfirmOrder){
+    console.log(orderRepo);
     return this.http.post(this.ip + "confirm", orderRepo, {headers: this.headers})
       .map((response: Response) => {
+      console.log(response);
         return response.json();
       });
   }

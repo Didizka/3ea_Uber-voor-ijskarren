@@ -78,7 +78,7 @@ export class OrderConfirmPage implements OnInit{
       content: 'Please wait...'
     });
     this.confirmOrderRepo.totalPrice = this.chosenDiver.totalPrice;
-    //this.confirmOrderRepo.driverEmail = this.chosenDiver.email;
+    this.confirmOrderRepo.driverEmail = this.chosenDiver.email;
     this.userProvider.getCurrentUser().then(
       email => {
         loading.present();

@@ -7,12 +7,13 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
 using WebApi.Data;
+using WebApi.Models;
 
 namespace WebApi.Data.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20171207115201_initusers")]
-    partial class initusers
+    [Migration("20171209184451_userInit")]
+    partial class userInit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -177,6 +178,10 @@ namespace WebApi.Data.Migrations
                     b.Property<int>("DriverID");
 
                     b.Property<int?>("LocationID");
+
+                    b.Property<bool>("Payed");
+
+                    b.Property<int>("Status");
 
                     b.Property<double>("TotalPrice");
 

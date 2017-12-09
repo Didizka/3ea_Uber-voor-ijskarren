@@ -8,13 +8,13 @@ using WebApi.Models.Users;
 namespace WebApi.Models
 {
 
-    public enum UserRoleTypes
-    {
-        CUSTOMER = 0,
-        DRIVER = 1,
-        ADMIN = 2,
-        NOTFOUND=3
-    }
+    //public enum UserRoleTypes
+    //{
+    //    CUSTOMER = 0,
+    //    DRIVER = 1,
+    //    ADMIN = 2,
+    //    NOTFOUND=3
+    //}
     
     //public class User
     //{

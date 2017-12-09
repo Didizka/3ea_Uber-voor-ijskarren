@@ -33,7 +33,8 @@ namespace WebApi.Models.Repositories
             Order currentOrder = new Order
             {
                 CustomerID = customer.CustomerID,
-                Location = shoppingcart.Location
+                Location = shoppingcart.Location,
+                Status = OrderStatus.Pending
             };
             await context.Orders.AddAsync(currentOrder);
             await context.SaveChangesAsync();
@@ -61,6 +62,8 @@ namespace WebApi.Models.Repositories
             {
                 order.DriverID = driver.DriverID;
                 order.TotalPrice = confirmOrder.TotalPrice;
+                order.Status = OrderStatus.Confirmed;
+                order.Payed = true;
                 await context.SaveChangesAsync();
                 return true;
             }

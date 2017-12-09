@@ -15,6 +15,8 @@ namespace WebApi.Models.Orders
         public double TotalPrice { get; set; }
         public ICollection<OrderItem> OrderItems { get; set; }
         public Location Location { get; set; }
+        public OrderStatus Status { get; set; }
+        public bool Payed { get; set; }
 
 
         public int CustomerID { get; set; }

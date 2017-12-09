@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
 using WebApi.Data;
+using WebApi.Models;
 
 namespace WebApi.Data.Migrations
 {
@@ -176,6 +177,10 @@ namespace WebApi.Data.Migrations
                     b.Property<int>("DriverID");
 
                     b.Property<int?>("LocationID");
+
+                    b.Property<bool>("Payed");
+
+                    b.Property<int>("Status");
 
                     b.Property<double>("TotalPrice");
 
