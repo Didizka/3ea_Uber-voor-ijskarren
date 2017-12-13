@@ -31,7 +31,6 @@ export class ListDriversPage implements OnInit {
   // DRIVERS
   drivers: Driver[] = [];
   driversInZone: Driver[] = [];
-  areDriversProcessed: boolean = false;
 
   //orderCancel
   isOrderCanceled = false;
@@ -82,13 +81,8 @@ export class ListDriversPage implements OnInit {
           // if no order has been placed, display the list of drivers without their prices
           this.userProvider.getDrivers().subscribe(
             data => {
-              //console.log(data);
               this.drivers = data;
-              this.checkRangeOfDrivers().then(data => {
-                this.driversInZone = data as Driver[];
-                // console.log(data)
-              });
-              this.areDriversProcessed = true;
+              this.checkRangeOfDrivers();
             },
             err => {
               console.log(err);
@@ -156,7 +150,6 @@ export class ListDriversPage implements OnInit {
       map: this.map,
       animation: google.maps.Animation.DROP,
       position: driversLocation
-      // icon: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_QnIIaRF01p59K0GhwiodnX4f20Sc7lWM-RbjYLOqSEQjdIIfNw'
     });
 
     // Translate drivers coordinates to address and display it on the infowindow
@@ -223,11 +216,7 @@ export class ListDriversPage implements OnInit {
       data => {
         //console.log(data);
         this.drivers = data;
-        this.checkRangeOfDrivers().then(data => {
-          this.driversInZone = data as Driver[];
-          this.areDriversProcessed = true;
-          console.log(data)
-        })
+        this.checkRangeOfDrivers();
       },
       err => {
         console.log(err);
@@ -257,14 +246,11 @@ export class ListDriversPage implements OnInit {
       default:
         this.distance = 0;
     }
-    this.checkRangeOfDrivers().then(data => {
-      this.driversInZone = data as Driver[];
-      this.areDriversProcessed = true;
-      console.log(data);
-    });
+    this.checkRangeOfDrivers();
   }
 
   onLogout() {
+    this.userProvider.stopSignalRSession();
     this.navCtrl.setRoot('SigninPage');
   }
 
@@ -274,8 +260,6 @@ export class ListDriversPage implements OnInit {
 
 
   checkRangeOfDrivers() {
-    // Hide the list with drivers untill the distance has been calculated
-    this.areDriversProcessed = false;
 
     // Clear driversInZone array
     while (this.driversInZone.length > 0) {
@@ -286,13 +270,6 @@ export class ListDriversPage implements OnInit {
     for (let driverMarker of this.driversMarkers) {
       driverMarker.setMap(null);
     }
-    this.driversMarkers = [];
-
-    // Return promise to use with then in ngOnInit
-    var promise = new Promise((resolve, reject) => {
-
-      // local placeholder for drivers in range
-      let driversInZone: Driver[] = [];
 
       // Wait until the users position has been determined
       if (this.lat != null && this.lng != null) {
@@ -316,40 +293,14 @@ export class ListDriversPage implements OnInit {
             driver.locationAddress = resp.destinationAddresses;
             driver.distance = resp.rows[0].elements[0].distance.value;
             driver.duration = resp.rows[0].elements[0].duration.value;
-
-            // console.log('------------ALL DRIVERS-----------------------');
-            // console.log('Driver ID: ' + driver.userID);
-            // console.log('Range: ' + this.distance);
-            // console.log('Km: ' + (driver.distance / 1000));
-            // console.log('Rounded: ' + Math.round((driver.distance / 1000)));
             // If the driver is in the range zone, add him to the temporary array and create a marker
             if ((driver.distance / 1000) < this.distance) {
-              // console.log('------------DRIVERS IN ZONE-----------------------------');
-              // console.log('Driver ID: ' + driver.userID);
-              // console.log('Driver Name: ' + driver.firstName + ' ' + driver.lastName);
-              // console.log('From: ' + resp.originAddresses);
-              // console.log('To: ' + resp.destinationAddresses);
-              // if (driver.distance > 1000) {
-              //   console.log('Distance: ' + driver.distance / 1000 + ' km'); // distance in meters => / 1000 to get km's
-              // } else {
-              //   console.log('Distance: ' + driver.distance + ' m'); // distance in meters
-              // }
-              // console.log('Duration: ' + driver.duration / 60 + ' min'); //value = in seconds => / 60 to get minutes
-              // console.log(driver);
-              driversInZone.push(driver);
+              this.driversInZone.push(driver);
               this.addDriversMarkers(driver);
             }
           }.bind(this)); // Access this scope in callback
         }
       }
-      else {
-        setTimeout(() => {
-          this.checkRangeOfDrivers();
-        }, 500);
-      }
-      resolve(driversInZone);
-    });
-    return promise;
   };
 
   removeOrder() {
@@ -357,5 +308,9 @@ export class ListDriversPage implements OnInit {
     for (let driver of this.drivers) {
       driver.totalPrice = null;
     }
+  }
+
+  showDriversInZone() {
+    console.log(this.driversInZone);
   }
 }
