@@ -63,6 +63,7 @@ namespace WebApi.Controllers
             }
 
             var result = await orderRepo.PlaceOrder(shoppingcart, customer);
+            //return Ok(result);
             return Ok(result.First().OrderID);
         }
 

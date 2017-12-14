@@ -6,6 +6,7 @@ import { Geolocation } from "@ionic-native/geolocation";
 import { Storage } from "@ionic/storage"
 import { OrderProvider } from "../../providers/order";
 import { isNumber } from "ionic-angular/util/util";
+import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 
 declare var google;
 
@@ -14,7 +15,7 @@ declare var google;
   selector: 'page-list-drivers',
   templateUrl: 'list-drivers.html',
 })
-export class ListDriversPage implements OnInit {
+export class ListDriversPage implements OnInit, OnDestroy {
   // MAP
   lat: number = null;
   lng: number = null;
@@ -45,6 +46,12 @@ export class ListDriversPage implements OnInit {
   }
 
   ngOnInit() {
+    // start new session with signalr server
+    this.userProvider.getCurrentUser().then(email => {
+      this.userProvider.startSignalRSession(email);
+    });
+
+
     // Remove price label from drivers list if order has been cancelled
     if (this.isOrderCanceled) {
       this.removeOrder();
@@ -67,6 +74,11 @@ export class ListDriversPage implements OnInit {
     } else {
       this.getUserPosition();
     }
+  }
+
+  // Delete session from SignalR database if the user exited the screen
+  ngOnDestroy() {
+    this.userProvider.stopSignalRSession();
   }
 
 

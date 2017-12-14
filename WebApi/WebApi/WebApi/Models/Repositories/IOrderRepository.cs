@@ -9,6 +9,7 @@ namespace WebApi.Models.Repositories
     {
         Task<IEnumerable<Flavour>> GetFlavoursAsync();
         Task<IEnumerable<OrderTotalPriceResource>> PlaceOrder(ShoppingCart shoppingcart, Customer customer);
+        //Task<Order> PlaceOrder(ShoppingCart shoppingcart, Customer customer);
         Task<Order> GetOrder(int orderId);
         Task<bool> ConfirmOrder(Order order, ConfirmOrderResource confirmOrder);
     }

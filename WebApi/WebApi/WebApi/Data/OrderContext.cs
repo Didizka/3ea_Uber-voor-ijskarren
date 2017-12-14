@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebApi.Models.Orders;
+using WebApi.Models.SignalR;
 
 namespace WebApi.Data
 {
@@ -11,6 +12,7 @@ namespace WebApi.Data
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItemFlavour> OrderItemFlavours { get; set; }
+        public DbSet<Session> Sessions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

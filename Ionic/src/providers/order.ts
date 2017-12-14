@@ -7,9 +7,9 @@ import {ConfirmOrder} from "../Models/order";
 @Injectable()
 export class OrderProvider {
 
-  ip: string = 'http://localhost:9000/api/order/';
+  // ip: string = 'http://localhost:9000/api/order/';
 
-  // ip: string = 'http://172.16.207.186:80/api/order/';
+  ip: string = 'http://172.16.251.76:80/api/order/';
   //school-sanjy
   //ip: string = 'http://172.16.205.90:80/api/order/';
   //thuis-sanjy

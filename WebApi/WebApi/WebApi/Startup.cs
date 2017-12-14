@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using WebApi.Data;
 using AutoMapper;
 using WebApi.Models.Repositories;
-using WebApi.Controllers;
+using WebApi.Hubs;
 
 namespace WebApi
 {
@@ -51,6 +51,9 @@ namespace WebApi
             services.AddMvc();
             services.AddMvcCore().AddDataAnnotations().AddJsonFormatters();
 
+            services.AddSignalR();
+
+
             // Require all requests to use https, http gets ignored here, see redirect below
             //            Run the following command to create a certificate
             //            cd C:\Program Files(x86)\IIS Express
@@ -70,6 +73,13 @@ namespace WebApi
             }
 
             app.UseCors("AllowClient");
+
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<OrderHub>("orderhub");
+            });
+
 
             app.UseMvcWithDefaultRoute();
 

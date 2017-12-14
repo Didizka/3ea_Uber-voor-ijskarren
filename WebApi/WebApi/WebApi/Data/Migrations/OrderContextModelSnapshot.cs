@@ -221,6 +221,17 @@ namespace WebApi.Data.Migrations
                     b.ToTable("OrderItemFlavours");
                 });
 
+            modelBuilder.Entity("WebApi.Models.SignalR.Session", b =>
+                {
+                    b.Property<string>("ConnectionID");
+
+                    b.Property<string>("Email");
+
+                    b.HasKey("ConnectionID");
+
+                    b.ToTable("Sessions");
+                });
+
             modelBuilder.Entity("WebApi.Models.Users.Location", b =>
                 {
                     b.Property<int>("LocationID")

@@ -53,7 +53,7 @@ namespace WebApi.Models.Repositories
                 await context.OrderItems.AddAsync(orderItem);
                 await context.SaveChangesAsync();
             }
-            return await driverRepo.CalculatePriceForAllDrivers(shoppingcart, currentOrder); ;
+            return await driverRepo.CalculatePriceForAllDrivers(shoppingcart, currentOrder);
         }
         public async Task<bool> ConfirmOrder(Order order, ConfirmOrderResource confirmOrder)
         {

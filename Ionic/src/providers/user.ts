@@ -17,8 +17,8 @@ export class UserProvider {
 
 
   // Local DEV
-  ip: string = 'http://localhost:9000/api/users/';
-  // ip: string = 'http://172.16.207.186:80/api/users/';
+  // ip: string = 'http://localhost:9000/api/users/';
+  ip: string = 'http://172.16.251.76:80/api/users/';
   //school-sanjy
   //ip: string = 'http://172.16.205.90:80/api/users/';
   //thuis-sanjy
@@ -75,7 +75,8 @@ export class UserProvider {
   }
 
   startSignalRSession(email: string) { 
-    this.hubConnection = new HubConnection('http://172.16.207.186:80/orderhub?email=' + email);
+    this.hubConnection = new HubConnection('http://localhost:9000/orderhub?email=' + email);
+    // this.hubConnection = new HubConnection('http://172.16.251.76:80/orderhub?email=' + email);
       // Method used to debug server info
       this.hubConnection.on('Debug', (data: any) => {
         console.log(data);

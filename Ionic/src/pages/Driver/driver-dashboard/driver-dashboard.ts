@@ -19,7 +19,7 @@ export class DriverDashboardPage implements OnInit {
   ngOnInit() {
     this.userProvider.getCurrentUser().then(email => {
       this.userProvider.startSignalRSession(email);
-    })
+    });
   }
 
   onUpdateFlavours() {
