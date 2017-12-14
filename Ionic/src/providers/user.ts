@@ -17,8 +17,8 @@ export class UserProvider {
 
 
   // Local DEV
-  // ip: string = 'http://localhost:9000/api/users/';
-  ip: string = 'http://172.16.251.76:80/api/users/';
+  ip: string = 'http://localhost:9000/api/users/';
+  // ip: string = 'http://172.16.251.76:80/api/users/';
   //school-sanjy
   //ip: string = 'http://172.16.205.90:80/api/users/';
   //thuis-sanjy
@@ -80,7 +80,11 @@ export class UserProvider {
       // Method used to debug server info
       this.hubConnection.on('Debug', (data: any) => {
         console.log(data);
-      });      
+      });     
+      
+      this.hubConnection.on('OrderNotification', (data: any) => {
+        console.log(data);
+      });   
 
       this.hubConnection.start()
         .then(() => {

@@ -6,8 +6,8 @@ import {FlavourUpdate, FlavourUpdateJson} from "../Models/flavour.model";
 
 @Injectable()
 export class DriverProvider {
-  // ip: string = 'http:/localhost:9000/api/driver/';
-  ip: string = 'http://172.16.251.76:80/api/driver/';
+  ip: string = 'http:/localhost:9000/api/driver/';
+  // ip: string = 'http://172.16.251.76:80/api/driver/';
 
 
   //school-sanjy

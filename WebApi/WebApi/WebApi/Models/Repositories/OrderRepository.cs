@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApi.Data;
+using WebApi.Hubs;
 using WebApi.Models.Orders;
 using WebApi.Models.Orders.Resources;
 

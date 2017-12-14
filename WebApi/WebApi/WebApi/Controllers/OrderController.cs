@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Data;
-using Microsoft.EntityFrameworkCore;
 using WebApi.Models.Repositories;
 using WebApi.Models.Orders;
 using WebApi.Models.Orders.Resources;
 using AutoMapper;
+using Microsoft.AspNetCore.SignalR;
+using WebApi.Hubs;
 
 namespace WebApi.Controllers
 {
@@ -20,18 +20,21 @@ namespace WebApi.Controllers
         private readonly IDriverRepository driverRepo;
         private readonly IMapper mapper;
         private readonly OrderContext orderContext;
+        private readonly IHubContext<OrderHub> hubContext;
 
         public OrderController(IOrderRepository orderRepo, 
                                 IUsersRepository userReop,
                                 IDriverRepository driverRepo,
                                 IMapper mapper,
-                                OrderContext orderContext)
+                                OrderContext orderContext,
+                                IHubContext<OrderHub> hubcontext)
         {
             this.orderRepo = orderRepo;
             this.userReop = userReop;
             this.driverRepo = driverRepo;
             this.mapper = mapper;
             this.orderContext = orderContext;
+            this.hubContext = hubcontext;
         }
 
         //////////////////////////////////// 
@@ -88,7 +91,14 @@ namespace WebApi.Controllers
             var order = await orderRepo.GetOrder(confirmOrder.OrderID);
             if (order != null)
             {
-                return Ok(await orderRepo.ConfirmOrder(order, confirmOrder));
+                var result = await orderRepo.ConfirmOrder(order, confirmOrder);
+                var session = orderContext.Sessions.FirstOrDefault(s => s.Email == confirmOrder.DriverEmail);
+                if (session != null)
+                {
+                    var notification = await GetOrderBackWithPrice(confirmOrder.OrderID, confirmOrder.DriverEmail);
+                    await hubContext.Clients.Client(session.ConnectionID).InvokeAsync("OrderNotification", notification);
+                }
+                return Ok(result);
             }
 
             return BadRequest("No order with id: " + confirmOrder.OrderID);

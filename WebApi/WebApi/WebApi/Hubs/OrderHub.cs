@@ -10,6 +10,7 @@ namespace WebApi.Hubs
 {
     public class OrderHub : Hub
     {
+
         private OrderContext sessionContext;
 
 
