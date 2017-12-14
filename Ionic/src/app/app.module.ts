@@ -14,6 +14,7 @@ import {CommonModule} from "@angular/common";
 import {Toast} from "@ionic-native/toast";
 import { DriverProvider } from '../providers/driver';
 import {IonicStorageModule} from "@ionic/storage";
+import { OrderInProgressPage } from '../pages/order/order-in-progress/order-in-progress';
 
 @NgModule({
   declarations: [

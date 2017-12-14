@@ -10,7 +10,7 @@ import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 
 declare var google;
 
-//@IonicPage()
+@IonicPage()
 @Component({
   selector: 'page-list-drivers',
   templateUrl: 'list-drivers.html',
