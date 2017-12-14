@@ -73,7 +73,7 @@ namespace WebApi.Controllers
                 return Ok( mapper.Map<Customer, CustomerResource>(await usersRepo.GetCustomerByEmail(email)));
 
             else if(customerOrDriver == UserRoleTypes.DRIVER)
-                return Ok(mapper.Map<Driver, CustomerResource>(await usersRepo.GetDriverByEmail(email))); 
+                return Ok(mapper.Map<Driver, DriverResource>(await usersRepo.GetDriverByEmail(email))); 
 
             return BadRequest();
             

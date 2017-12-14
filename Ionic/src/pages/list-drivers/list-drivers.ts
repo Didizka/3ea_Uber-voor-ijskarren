@@ -47,9 +47,9 @@ export class ListDriversPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     // start new session with signalr server
-    this.userProvider.getCurrentUser().then(email => {
-      this.userProvider.startSignalRSession(email);
-    });
+    // this.userProvider.getCurrentUser().then(email => {
+    //   this.userProvider.startSignalRSession(email);
+    // });
 
 
     // Remove price label from drivers list if order has been cancelled
@@ -78,7 +78,7 @@ export class ListDriversPage implements OnInit, OnDestroy {
 
   // Delete session from SignalR database if the user exited the screen
   ngOnDestroy() {
-    this.userProvider.stopSignalRSession();
+  //   this.userProvider.stopSignalRSession();
   }
 
 

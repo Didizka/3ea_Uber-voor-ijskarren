@@ -52,15 +52,5 @@ namespace WebApi.Hubs
             return;
         }
 
-        public async Task SendOrderNotificationToDriver(string email)
-        {
-            var message = "new order";
-            var connection = sessionContext.Sessions.FirstOrDefault(s => s.Email == email);
-            if (connection != null)
-            {
-                await Clients.Client(connection.ConnectionID).InvokeAsync("OrderNotification", message);
-            }
-        }
-
     }
 }

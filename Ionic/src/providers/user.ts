@@ -86,6 +86,10 @@ export class UserProvider {
         console.log(data);
       });   
 
+      this.hubConnection.on('CustomerNotification', (data: any) => {
+        console.log(data);
+      });   
+
       this.hubConnection.start()
         .then(() => {
           console.log('Hub connection started');
