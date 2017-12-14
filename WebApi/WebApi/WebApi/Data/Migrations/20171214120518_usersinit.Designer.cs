@@ -11,9 +11,9 @@ using WebApi.Models;
 
 namespace WebApi.Data.Migrations
 {
-    [DbContext(typeof(OrderContext))]
-    [Migration("20171209184517_orderInit")]
-    partial class orderInit
+    [DbContext(typeof(UserContext))]
+    [Migration("20171214120518_usersinit")]
+    partial class usersinit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -62,6 +62,9 @@ namespace WebApi.Data.Migrations
                     b.HasKey("ContactInformationID");
 
                     b.HasIndex("AddressID");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("ContactInformation");
                 });
@@ -186,6 +189,8 @@ namespace WebApi.Data.Migrations
 
                     b.HasIndex("CustomerID");
 
+                    b.HasIndex("DriverID");
+
                     b.HasIndex("LocationID");
 
                     b.ToTable("Orders");
@@ -287,7 +292,7 @@ namespace WebApi.Data.Migrations
 
                     b.HasOne("WebApi.Models.Driver", "Driver")
                         .WithMany("Orders")
-                        .HasForeignKey("CustomerID")
+                        .HasForeignKey("DriverID")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("WebApi.Models.Users.Location", "Location")

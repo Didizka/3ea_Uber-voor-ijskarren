@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using WebApi.Models;
+using WebApi.Models.Orders;
 using WebApi.Models.Users;
 
 namespace WebApi.Data
@@ -54,6 +55,38 @@ namespace WebApi.Data
             }
 
             context.SaveChanges();
+
+            //var flavours = new List<Flavour>
+            //{
+            //    new Flavour{ Name = "Vanilla", Price = 1.10 },
+            //    new Flavour{ Name = "Chocolade", Price = 1.20 },
+            //    new Flavour{ Name = "Pistache", Price = 1.30 },
+            //    new Flavour{ Name = "Banana", Price = 1.40 },
+            //    new Flavour{ Name = "Strawberry", Price = 1.50 }
+
+            //};
+
+            //foreach (var flavour in flavours)
+            //{
+            //    context.Flavours.Add(flavour);
+            //}
+
+            //context.SaveChanges();
+
+            //var driversFromDB = context.Drivers.ToList();
+            //foreach (var driver in driversFromDB)
+            //{
+            //    foreach (var flavour in flavours)
+            //    {
+            //        context.DriverFlavours.Add(new DriverFlavour
+            //        {
+            //            DriverID = driver.DriverID,
+            //            FlavourID = flavours.Single(f => f.Name == flavour.Name).FlavourID,
+            //            Price = flavour.Price
+            //        });
+            //    }
+            //}
+            //context.SaveChanges();
 
 
 

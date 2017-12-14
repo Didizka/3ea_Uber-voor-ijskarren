@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApi.Data;
+using WebApi.Hubs;
 using WebApi.Models.Orders;
 using WebApi.Models.Orders.Resources;
 
@@ -53,7 +54,7 @@ namespace WebApi.Models.Repositories
                 await context.OrderItems.AddAsync(orderItem);
                 await context.SaveChangesAsync();
             }
-            return await driverRepo.CalculatePriceForAllDrivers(shoppingcart, currentOrder); ;
+            return await driverRepo.CalculatePriceForAllDrivers(shoppingcart, currentOrder);
         }
         public async Task<bool> ConfirmOrder(Order order, ConfirmOrderResource confirmOrder)
         {
