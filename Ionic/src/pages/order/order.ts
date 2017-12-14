@@ -46,7 +46,7 @@ export class OrderPage implements OnInit{
         for(let i = 0; i < data.length; i++){
           this.flavours.push(data[i].name);
         }
-        this.usedFlavours = this.flavours;
+        //this.usedFlavours = this.flavours;
       }
     );
     this.shoppingCart.cart.splice(0);
@@ -64,7 +64,7 @@ export class OrderPage implements OnInit{
       this.addFlavours[index].amount--;
   }
   onAddFlavour(){
-    //this.checkFlavourAlreadySelect();
+    this.checkFlavourAlreadySelect();
     if(this.addFlavours.length>=4)
       return;
     else
@@ -132,8 +132,9 @@ export class OrderPage implements OnInit{
         if(f>-1)
           this.usedFlavours.splice(f, 1);
         console.log(this.usedFlavours);
+        console.log(this.flavours);
       }
-      //this.usedFlavours.push(this.addFlavours[i].name);
+      this.usedFlavours.push(this.addFlavours[i].name);
     }
   }
 }

@@ -10,7 +10,9 @@ export class DriverDashboardPage {
 
   constructor(public navCtrl: NavController, public modalCtrl: ModalController) {
   }
-
+  onLogout() {
+    this.navCtrl.setRoot('SigninPage');
+  }
   onUpdateFlavours() {
     let model = this.modalCtrl.create('UpdateFlavoursPage');
     model.present();

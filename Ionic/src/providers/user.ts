@@ -13,11 +13,10 @@ export class UserProvider {
   // change ip address to your local ip address in order to test the app on the mobile and have access to the backend
 
 
-  // Local DEV
   //school-sanjy
-  //ip: string = 'http://172.16.205.90:80/api/users/';
+  ip: string = 'http://172.16.246.45:80/api/users/';
   //thuis-sanjy
-  ip: string = 'http://192.168.0.172:80/api/users/';
+  //ip: string = 'http://192.168.0.172:80/api/users/';
   //ip: string = 'http://172.16.229.9:80/api/users/';
 
   // ip: string = 'http://192.168.0.155:8080/api/users/';

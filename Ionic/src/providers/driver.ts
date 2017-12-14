@@ -8,9 +8,9 @@ import {FlavourUpdate, FlavourUpdateJson} from "../Models/flavour.model";
 export class DriverProvider {
 
   //school-sanjy
-  //ip: string = 'http://172.16.205.90:80/api/driver/';
+  ip: string = 'http://172.16.246.45:80/api/driver/';
   //thuis-sanjy
-  ip: string = 'http://192.168.0.172:80/api/driver/';
+  //ip: string = 'http://192.168.0.172:80/api/driver/';
 
   //ip: string = 'http://172.16.229.9:80/api/driver/';
   // ip: string = 'http://192.168.0.172:80/api/driver/';
