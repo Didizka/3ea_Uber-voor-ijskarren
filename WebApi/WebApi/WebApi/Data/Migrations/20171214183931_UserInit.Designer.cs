@@ -12,8 +12,8 @@ using WebApi.Models;
 namespace WebApi.Data.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20171214120518_usersinit")]
-    partial class usersinit
+    [Migration("20171214183931_UserInit")]
+    partial class UserInit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace WebApi.Data.Migrations
 {
-    public partial class ordersinit : Migration
+    public partial class UserInit : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -50,18 +50,6 @@ namespace WebApi.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Location", x => x.LocationID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Sessions",
-                columns: table => new
-                {
-                    ConnectionID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Sessions", x => x.ConnectionID);
                 });
 
             migrationBuilder.CreateTable(
@@ -196,8 +184,8 @@ namespace WebApi.Data.Migrations
                         principalColumn: "CustomerID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Orders_Drivers_CustomerID",
-                        column: x => x.CustomerID,
+                        name: "FK_Orders_Drivers_DriverID",
+                        column: x => x.DriverID,
                         principalTable: "Drivers",
                         principalColumn: "DriverID",
                         onDelete: ReferentialAction.Cascade);
@@ -260,6 +248,12 @@ namespace WebApi.Data.Migrations
                 column: "AddressID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ContactInformation_Email",
+                table: "ContactInformation",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Customers_ContactInformationID",
                 table: "Customers",
                 column: "ContactInformationID");
@@ -300,6 +294,11 @@ namespace WebApi.Data.Migrations
                 column: "CustomerID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Orders_DriverID",
+                table: "Orders",
+                column: "DriverID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Orders_LocationID",
                 table: "Orders",
                 column: "LocationID");
@@ -312,9 +311,6 @@ namespace WebApi.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "OrderItemFlavours");
-
-            migrationBuilder.DropTable(
-                name: "Sessions");
 
             migrationBuilder.DropTable(
                 name: "Flavours");

@@ -19,6 +19,7 @@ export class OrderPage implements OnInit{
   usedFlavours: string[] = [];
   amount: number = 1;
   addFlavour: number = 1;
+  flavoursToSelect = [];
   selectAlertOpts:any;
   currentLocation: Location =  new Location(JSON.parse(localStorage.getItem('coords')).lat, JSON.parse(localStorage.getItem('coords')).lng);
 
@@ -40,12 +41,13 @@ export class OrderPage implements OnInit{
   }
 
   ngOnInit(){
-    console.log(this.currentLocation);
     this.orderProvider.getFlavours().subscribe(
       data => {
         for(let i = 0; i < data.length; i++){
           this.flavours.push(data[i].name);
         }
+        this.flavoursToSelect.push(this.flavours.slice());
+        console.log(this.flavoursToSelect);
         //this.usedFlavours = this.flavours;
       }
     );
@@ -64,11 +66,13 @@ export class OrderPage implements OnInit{
       this.addFlavours[index].amount--;
   }
   onAddFlavour(){
-    this.checkFlavourAlreadySelect();
     if(this.addFlavours.length>=4)
       return;
     else
       this.addFlavours.push(new Flavour("", 1, 0));
+    this.checkFlavourAlreadySelect();
+    this.flavoursToSelect.push(this.flavours.slice());
+    console.log(this.flavoursToSelect);
   }
   onRemoveFlavour(){
     this.addFlavours.splice(this.addFlavours.length-1, 1)
@@ -126,15 +130,14 @@ export class OrderPage implements OnInit{
     alert.present();
   }
   private checkFlavourAlreadySelect(){
+    //this.flavours.splice(0, 1);
     for(let i = 0; i < this.addFlavours.length; i++){
       if(this.usedFlavours[i] != "" ){
         let f = this.flavours.indexOf(this.addFlavours[i].name);
         if(f>-1)
-          this.usedFlavours.splice(f, 1);
-        console.log(this.usedFlavours);
-        console.log(this.flavours);
+          this.flavours.splice(f, 1);
       }
-      this.usedFlavours.push(this.addFlavours[i].name);
+      //this.usedFlavours.push(this.addFlavours[i].name);
     }
   }
 }
