@@ -3,6 +3,8 @@ import { Http, Headers, Response } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { Storage } from '@ionic/storage';
 import { HubConnection } from '@aspnet/signalr-client';
+import { App } from 'ionic-angular';
+import { OrderInProgressPage } from '../pages/order/order-in-progress/order-in-progress';
 
 @Injectable()
 export class UserProvider {
@@ -33,7 +35,7 @@ export class UserProvider {
   // Production server
   // ip: string = 'http://cloud-app.ddns.net/api/users/';
 
-  constructor(public http: Http, private storage: Storage) {
+  constructor(public http: Http, private storage: Storage, private app: App) {
 
   }
   private headers: Headers = new Headers({
@@ -87,13 +89,16 @@ export class UserProvider {
         console.log(data);
       });
 
+      this.hubConnection.on('CustomerNotification', (data: any) => {
+        console.log(data);
+        this.app.getRootNavs()[0].setRoot('OrderInProgressPage', { 'driver' : data });
+      });   
+
       this.hubConnection.start()
         .then(() => {
           console.log('Hub connection started');
           console.log(this.hubConnection);
           localStorage.setItem('hubConnection', this.hubConnection);
-          // console.log(JSON.parse(localStorage.getItem('hubConnection')));
-          // this.storage.set('hubConnection', this.hubConnection);
         })
         .catch(err => {
           console.log('Error while establishing connection')

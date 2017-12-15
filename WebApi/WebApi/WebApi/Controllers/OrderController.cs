@@ -8,6 +8,8 @@ using WebApi.Models.Orders.Resources;
 using AutoMapper;
 using Microsoft.AspNetCore.SignalR;
 using WebApi.Hubs;
+using Newtonsoft.Json;
+using WebApi.Models;
 
 namespace WebApi.Controllers
 {
@@ -97,6 +99,11 @@ namespace WebApi.Controllers
                 {
                     var notification = await GetOrderBackWithPrice(confirmOrder.OrderID, confirmOrder.DriverEmail);
                     await hubContext.Clients.Client(session.ConnectionID).InvokeAsync("OrderNotification", notification);
+
+                    var customerSession = orderContext.Sessions.FirstOrDefault(s => s.Email == confirmOrder.CustomerEmail);
+
+                    var customerNotification = mapper.Map<Driver, DriverResource>(await userReop.GetDriverByEmail(confirmOrder.DriverEmail));
+                    await hubContext.Clients.Client(customerSession.ConnectionID).InvokeAsync("CustomerNotification", customerNotification);
                 }
                 return Ok(result);
             }

@@ -8,13 +8,14 @@ import {UserProvider} from "../../providers/user";
 import {isNumber} from "ionic-angular/util/util";
 import { Storage } from '@ionic/storage';
 import { Location } from '../../Models/driver';
+import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 
 @IonicPage()
 @Component({
   selector: 'page-order',
   templateUrl: 'order.html',
 })
-export class OrderPage implements OnInit{
+export class OrderPage implements OnInit, OnDestroy {
   flavours: string[] = [];
   usedFlavours: string[] = [];
   amount: number = 1;
@@ -53,6 +54,13 @@ export class OrderPage implements OnInit{
     );
     this.shoppingCart.cart.splice(0);
   }
+
+    // Delete session from SignalR database if the user exited the screen
+    ngOnDestroy() {
+    //   this.userProvider.stopSignalRSession();
+    }
+
+    
   increaseAmount(index: number){
     if(this.addFlavours[index].amount >= 4)
       this.addFlavours[index].amount = 4;

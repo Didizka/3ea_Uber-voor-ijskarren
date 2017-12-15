@@ -36,9 +36,11 @@ export class SigninPage implements OnInit{
         console.log(data);
         if(data == "CUSTOMER"){
           loading.dismiss();
+          this.userProvider.startSignalRSession(form.value.email);
           this.navCtrl.setRoot(ListDriversPage);
         } else if(data == "DRIVER") {
           loading.dismiss();
+          this.userProvider.startSignalRSession(form.value.email);
           this.navCtrl.setRoot('DriverDashboardPage');
         }
         else if(data == false) {
