@@ -116,9 +116,11 @@ namespace WebApi.Controllers
         {
             var order = await orderRepo.GetOrder(id);
             var driver = await userReop.GetDriverByEmail(driverEmail);
+            var customer = await userReop.GetCustomerById(order.CustomerID);
             if (order != null && driver != null)
             {
                 order.Driver = driver;
+                order.Customer = customer;
                 return Ok(mapper.Map<Order, OrderResource>(order));
             }
 

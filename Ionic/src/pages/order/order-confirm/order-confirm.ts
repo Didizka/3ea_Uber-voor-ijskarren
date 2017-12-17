@@ -4,7 +4,6 @@ import {AlertController, IonicPage, LoadingController, NavController, NavParams}
 import {Driver, DriverFlavour} from "../../../Models/driver";
 import {OrderProvider} from "../../../providers/order";
 import {ShoppingCart} from "../../../Models/flavour.model";
-import {ListDriversPage} from "../../list-drivers/list-drivers";
 import {ConfirmOrder} from "../../../Models/order";
 import {UserProvider} from "../../../providers/user";
 import {Toast} from "@ionic-native/toast";
@@ -65,7 +64,7 @@ export class OrderConfirmPage implements OnInit{
         {
           text: 'Yes',
           handler: () => {
-            this.navCtrl.setRoot(ListDriversPage, {cancellation: true});
+            this.navCtrl.setRoot('ListDriversPage', {cancellation: true});
           }
         }
       ]
@@ -92,7 +91,7 @@ export class OrderConfirmPage implements OnInit{
                   console.log(toast);
                 }
               );*/
-              // this.navCtrl.setRoot(ListDriversPage, {cancellation: true});
+               this.navCtrl.setRoot('ListDriversPage', {cancellation: true});
             }else{
               this.errorMessage();
             }

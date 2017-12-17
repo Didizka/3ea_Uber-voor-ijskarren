@@ -46,6 +46,14 @@ export class OrderProvider {
       });
   }
 
+  //for test
+  getDriverCurrentOrder(driver: string){
+    return this.http.get(this.ip + 1+ "/"+ driver)
+      .map((response: Response) => {
+        return response.json();
+      });
+  }
+
   placeOrder(shoppingCart: JSON, currentUser: string){
     //console.log(shoppingCart);
     return this.http.post(this.ip + currentUser, shoppingCart, {headers: this.headers})

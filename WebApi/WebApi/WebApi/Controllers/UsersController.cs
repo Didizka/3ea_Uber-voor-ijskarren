@@ -175,7 +175,10 @@ namespace WebApi.Controllers
             if (customerOrDriver != UserRoleTypes.NOTFOUND)
             {
                 canAccess = await usersRepo.CanUserLogin(loginUser, customerOrDriver);
-                return Ok(customerOrDriver.ToString());
+                if (canAccess)
+                    return Ok(customerOrDriver.ToString());
+                else
+                    return Ok(canAccess);
 
             }
             return Ok(canAccess);

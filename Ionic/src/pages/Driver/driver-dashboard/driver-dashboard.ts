@@ -18,9 +18,7 @@ export class DriverDashboardPage implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // this.userProvider.getCurrentUser().then(email => {
-    //   this.userProvider.startSignalRSession(email);
-    // });
+
   }
 
   ngOnDestroy() {
@@ -32,5 +30,8 @@ export class DriverDashboardPage implements OnInit, OnDestroy {
   onUpdateFlavours() {
     let model = this.modalCtrl.create('UpdateFlavoursPage');
     model.present();
+  }
+  onCurrentOrder(){
+    this.navCtrl.push("CurrentOrdersPage");
   }
 }

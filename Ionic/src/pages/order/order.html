@@ -21,7 +21,7 @@
       <div *ngFor="let i of addFlavours; let n = index"><!--*ngIf="addFlavour==3"-->
         <ion-row padding-left padding-right >
           <ion-label >Flavour</ion-label>
-          <ion-select [(ngModel)]="addFlavours[n].name" name="flavour_{{n}}"
+          <ion-select [(ngModel)]="addFlavours[n].name" name="flavour_{{n}}" placeholder="Flavour"
                       interface="popover" required>
             <div *ngFor="let flavour of flavoursToSelect[n]; let idx = index">
                 <ion-option

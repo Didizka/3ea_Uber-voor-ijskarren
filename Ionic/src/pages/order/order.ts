@@ -3,7 +3,6 @@ import {AlertController, IonicPage, LoadingController, NavController, NavParams,
 import {OrderProvider} from "../../providers/order";
 import {Toast} from "@ionic-native/toast";
 import {Flavour, Icecream, ShoppingCart} from "../../Models/flavour.model";
-import {ListDriversPage} from "../list-drivers/list-drivers";
 import {UserProvider} from "../../providers/user";
 import {isNumber} from "ionic-angular/util/util";
 import { Storage } from '@ionic/storage';
@@ -17,9 +16,9 @@ import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 })
 export class OrderPage implements OnInit, OnDestroy {
   flavours: string[] = [];
+  fixedFlavours: string[] = [];
   usedFlavours: string[] = [];
   amount: number = 1;
-  addFlavour: number = 1;
   flavoursToSelect = [];
   selectAlertOpts:any;
   currentLocation: Location =  new Location(JSON.parse(localStorage.getItem('coords')).lat, JSON.parse(localStorage.getItem('coords')).lng);
@@ -45,11 +44,10 @@ export class OrderPage implements OnInit, OnDestroy {
     this.orderProvider.getFlavours().subscribe(
       data => {
         for(let i = 0; i < data.length; i++){
-          this.flavours.push(data[i].name);
+          this.fixedFlavours.push(data[i].name);
         }
+        this.flavours = this.fixedFlavours.slice();
         this.flavoursToSelect.push(this.flavours.slice());
-        console.log(this.flavoursToSelect);
-        //this.usedFlavours = this.flavours;
       }
     );
     this.shoppingCart.cart.splice(0);
@@ -60,7 +58,7 @@ export class OrderPage implements OnInit, OnDestroy {
     //   this.userProvider.stopSignalRSession();
     }
 
-    
+
   increaseAmount(index: number){
     if(this.addFlavours[index].amount >= 4)
       this.addFlavours[index].amount = 4;
@@ -80,7 +78,6 @@ export class OrderPage implements OnInit, OnDestroy {
       this.addFlavours.push(new Flavour("", 1, 0));
     this.checkFlavourAlreadySelect();
     this.flavoursToSelect.push(this.flavours.slice());
-    console.log(this.flavoursToSelect);
   }
   onRemoveFlavour(){
     this.addFlavours.splice(this.addFlavours.length-1, 1)
@@ -88,13 +85,17 @@ export class OrderPage implements OnInit, OnDestroy {
   onAddToCart(){
     this.shoppingCart.cart.push(new Icecream(this.addFlavours));
     this.addFlavours = [new Flavour("", 1, 0)];
+    this.flavoursToSelect.splice(0);
+    this.flavours = this.fixedFlavours.slice();
+    this.flavoursToSelect.push(this.flavours.slice());
+
   }
   onRemoveFromList(ice:Icecream){
     let index = this.shoppingCart.cart.indexOf(ice);
     this.shoppingCart.cart.splice(index, 1);
   }
   backToMap(){
-    this.navCtrl.setRoot(ListDriversPage);
+    this.navCtrl.setRoot('ListDriversPage');
   }
   placeOrder(){
     const loading = this.loadingCtrl.create({
@@ -106,7 +107,6 @@ export class OrderPage implements OnInit, OnDestroy {
     this.userProvider.getCurrentUser().then(user => {
       this.orderProvider.placeOrder(JSON.parse(JSON.stringify(this.shoppingCart)), user).subscribe(
         data => {
-          console.log(data);
           if(isNumber(data)){
             this.storage.set("orderId", data);
             loading.dismiss();

@@ -17,8 +17,8 @@ declare var google;
 })
 export class ListDriversPage implements OnInit, OnDestroy {
   // MAP
-  lat: number = null;
-  lng: number = null;
+  lat: number = null;//51.2304878;
+  lng: number = null; //4.477407;
   distance: number = 5;
   zoom: number = 11;
   orderId: number = null;

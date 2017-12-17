@@ -1,3 +1,4 @@
+import { Location } from './driver';
 export interface Customer{
   firstName: string,
   lastName: string,
@@ -5,6 +6,7 @@ export interface Customer{
   address: Address,
   email: string,
   password: string,
+  location: Location;
   userRoleType: number
 
 }

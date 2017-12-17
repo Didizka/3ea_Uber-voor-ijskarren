@@ -11,5 +11,8 @@ namespace WebApi.Models.Orders.Resources
         public ShoppingCart ShoppingCart { get; set; }
 
         public DriverResource Driver { get; set; }
+        public CustomerResource Customer { get; set; }
+
+        public double TotalPrice { get; set; }
     }
 }

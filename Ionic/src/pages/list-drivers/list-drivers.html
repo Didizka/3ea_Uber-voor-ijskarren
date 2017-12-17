@@ -1,73 +1,71 @@
 
 <ion-header>
-  
+
     <ion-navbar>
       <ion-buttons right="">
-        <button type="button" ion-button icon-only (click)="onLogout()">
+        <button type="button" ion-button icon-only (click)="onLogout()" color="primary">
           <ion-icon name="log-out"></ion-icon>
           Logout
         </button>
       </ion-buttons>
-      <ion-title>{{title}}</ion-title>
+      <ion-title >{{title}}</ion-title>
     </ion-navbar>
-  
+
   </ion-header>
-  
-  
+
+
   <ion-content padding="">
-  
+
     <!-- Slidebar -->
     <p text-center class="no-padding">Zoek in een straal van <b>{{distance}}</b> km</p>
     <ion-range class="no-padding" min="11" max="15" pin="true" [(ngModel)]="zoom" (ionChange)="onRangeChange($event)" padding="0">  <!-- (ionChange)="onRangeChange($event)" -->
       <ion-icon range-left small name="pin"></ion-icon>
       <ion-icon range-right name="pin"></ion-icon>
     </ion-range>
-  
-  
+
+
     <!-- Map -->
-  
+
   <div #map id="map" data-tap-disabled="true"></div>
-  
+
     <!-- Position button -->
-    <ion-buttons>
-        <button type="button" ion-button full (click)="getUserPosition()" round="">
+    <ion-buttons padding>
+        <button type="button" ion-button full (click)="getUserPosition()" round="" >
           <ion-icon></ion-icon><!--navigate-->
           Show my current position
         </button>
-  
+
         <button type="button" ion-button full (click)="showDriversInZone()" round="">
           <ion-icon></ion-icon><!--navigate-->
           Show drivers in range
         </button>
       </ion-buttons>
-  
+
       <!-- List of drivers -->
     <div *ngIf="driversInZone">
       <ion-card *ngFor="let driver of driversInZone" (click)="onChooseDriver(driver)">
-        <ion-card-content>
-          <ion-row>
-            <p><b>Naam: </b> {{driver?.firstName }} {{ driver?.lastName}}</p>
-          </ion-row>
-          <ion-row>
-            <p><b>Afstand: </b>{{driver?.distance / 1000 | number: '1.2-2'}} km</p>
-          </ion-row>
-          <ion-row>
-            <p><b>Duur: </b>{{driver?.duration / 60 | number: '1.1-1'}} min</p>
-          </ion-row>
-          <ion-row >
-            <ion-col col-9>
-              <p><b>Locatie: </b>{{driver?.locationAddress}}</p>
-            </ion-col>
-            <ion-col col-3 *ngIf="driver?.totalPrice">
-              <h3  class="roundBorder" >{{driver?.totalPrice | number: '1.2-2'}}</h3>
-            </ion-col>
-          </ion-row>
-  
-        </ion-card-content>
+          <ion-list>
+            <ion-item>
+              <ion-icon name="contact" icon-only large="" icon-start color="primary"></ion-icon>
+              {{driver?.firstName }} {{ driver?.lastName}}
+            </ion-item>
+            <ion-item >
+              <ion-icon name="locate" icon-only large="" icon-start color="primary"></ion-icon>
+              <div class="itemTest">{{driver?.locationAddress}}</div>
+            </ion-item>
+            <ion-item>
+              <ion-icon name="navigate" icon-only large="" icon-start color="primary"></ion-icon>
+              {{driver?.distance / 1000 | number: '1.2-2'}} km
+            </ion-item>
+            <ion-item>
+              <ion-icon name="time" icon-only large="" icon-start color="primary"></ion-icon>
+              {{driver?.duration / 60 | number: '1.1-1'}} min
+              <h3  class="roundBorder" item-end *ngIf="driver?.totalPrice">{{driver?.totalPrice | number: '1.2-2'}}</h3>
+            </ion-item>
+          </ion-list>
       </ion-card>
     </div>
     <ion-fab right bottom *ngIf="!drivers[0]?.totalPrice">
       <button ion-fab color="primary" (click)="placeOrder()"><ion-icon name="add"></ion-icon></button>
     </ion-fab>
   </ion-content>
-  
