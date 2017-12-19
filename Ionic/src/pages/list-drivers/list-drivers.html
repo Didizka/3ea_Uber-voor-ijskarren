@@ -44,6 +44,32 @@
       <!-- List of drivers -->
     <div *ngIf="driversInZone">
       <ion-card *ngFor="let driver of driversInZone" (click)="onChooseDriver(driver)">
+
+        <!-- <ion-card-content>
+          <ion-item>
+              <ion-icon name="contact" icon-only large="" icon-start=""></ion-icon>
+             {{driver?.firstName }} {{ driver?.lastName}}
+          </ion-item>
+          <ion-item>
+              <ion-icon name="navigate" icon-only large="" icon-start=""></ion-icon>
+              {{driver?.distance / 1000 | number: '1.2-2'}} km
+          </ion-item>
+          <ion-item>
+              <ion-icon name="time" icon-only large="" icon-start=""></ion-icon>
+              {{driver?.duration / 60 | number: '1.1-1'}} min
+          </ion-item>
+          <ion-row >
+            <ion-col col-9>
+                <ion-icon name="locate" icon-only large="" icon-start=""></ion-icon>
+                {{driver?.locationAddress}}
+            </ion-col>
+            <ion-col col-3 *ngIf="driver?.totalPrice">
+              <h3  class="roundBorder" >{{driver?.totalPrice | number: '1.2-2'}}</h3>
+            </ion-col>
+          </ion-row>
+  
+        </ion-card-content> -->
+
           <ion-list>
             <ion-item>
               <ion-icon name="contact" icon-only large="" icon-start color="primary"></ion-icon>

@@ -26,6 +26,7 @@ export class UserProvider {
   //thuis-sanjy
   //ip: string = 'http://192.168.0.172:80/api/users/';
   // ip: string = 'http://192.168.0.172:80/api/users/';
+  // ip: string = 'http://192.168.0.172:80/api/users/';
   //ip: string = 'http://172.16.229.9:80/api/users/';
   // ip: string = 'http://192.168.0.155:8080/api/users/';
 
@@ -103,6 +104,14 @@ export class UserProvider {
         .catch(err => {
           console.log('Error while establishing connection')
         });
+  }
+
+  askForDriverLocation(email: string) {
+    // console.log('ok');
+    return this.http.get('http://localhost:9000/api/order/driver/location/' + email)
+      .map(resp => {
+        return resp.json();
+      })
   }
 
   stopSignalRSession() {

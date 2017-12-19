@@ -1,22 +1,24 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApi.Data;
 using WebApi.Models.SignalR;
+using WebApi.Models.Repositories;
 
 namespace WebApi.Hubs
 {
     public class OrderHub : Hub
     {
 
-        private OrderContext sessionContext;
+        private readonly OrderContext sessionContext;
+        private readonly IUsersRepository userRepo;
 
 
-        public OrderHub(OrderContext context)
+        public OrderHub(OrderContext context, IUsersRepository userRepo)
         {
             sessionContext = context;
+            this.userRepo = userRepo;
         }
 
         public async override Task OnConnectedAsync()

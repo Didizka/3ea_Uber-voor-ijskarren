@@ -15,6 +15,7 @@ export class OrderProvider {
   //thuis-sanjy
   //ip: string = 'http://192.168.0.172:80/api/order/';
   // ip: string = 'http://192.168.0.172:80/api/order/';
+  // ip: string = 'http://192.168.0.172:80/api/order/';
   //ip: string = 'http://172.16.229.9:80/api/order/';
   // ip: string = 'http://192.168.0.172:80/api/order/';
 
@@ -61,6 +62,7 @@ export class OrderProvider {
       return response.json();
     });
   }
+
   confirmOrder(orderRepo: ConfirmOrder){
     console.log(orderRepo);
     return this.http.post(this.ip + "confirm", orderRepo, {headers: this.headers})
