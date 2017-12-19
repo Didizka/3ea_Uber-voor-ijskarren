@@ -97,6 +97,7 @@ namespace WebApi.Models.Repositories
             var customer = await userContext.Customers
                             .Include(c => c.ContactInformation)
                                    .ThenInclude(a => a.Address)
+                            .Include(d => d.Location)
                             .SingleOrDefaultAsync(u => u.CustomerID == id);
             
             return customer;

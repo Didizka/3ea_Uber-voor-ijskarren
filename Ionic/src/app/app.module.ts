@@ -15,6 +15,7 @@ import {Toast} from "@ionic-native/toast";
 import { DriverProvider } from '../providers/driver';
 import {IonicStorageModule} from "@ionic/storage";
 import { OrderInProgressPage } from '../pages/order/order-in-progress/order-in-progress';
+import {Ionic2RatingModule} from "ionic2-rating";
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { OrderInProgressPage } from '../pages/order/order-in-progress/order-in-p
     CommonModule,
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(),
-    ListDriversPageModule
+    Ionic2RatingModule
+    //ListDriversPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

@@ -35,7 +35,9 @@ export class OrderInProgressPage implements OnInit {
 
   GetDriverLocationAtInterval() {
     setInterval(() => { 
-      this.GetDriversInfo()
+      console.log('order in progress page');
+      this.GetDriversInfo();
+      
      }, 10000);
   }
 

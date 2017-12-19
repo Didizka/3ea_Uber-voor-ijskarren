@@ -22,7 +22,8 @@ export class SignupPage {
       streetName: '',
       streetNumber: '',
       zipCode: null
-    }
+    },
+    location: null
   };
   constructor(public navCtrl: NavController,
               public loadingCtrl: LoadingController,

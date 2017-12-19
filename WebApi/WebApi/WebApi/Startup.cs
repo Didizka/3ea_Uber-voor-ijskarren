@@ -90,7 +90,7 @@ namespace WebApi
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "CA2-UBER API's v1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
             });
 
 

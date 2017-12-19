@@ -11,8 +11,9 @@ export class OrderProvider {
 
   // ip: string = 'http://172.16.251.76:80/api/order/';
   //school-sanjy
-  //ip: string = 'http://172.16.205.90:80/api/order/';
+  //ip: string = 'http://172.16.246.45:80/api/order/';
   //thuis-sanjy
+  // ip: string = 'http://192.168.0.172:80/api/order/';
   // ip: string = 'http://192.168.0.172:80/api/order/';
   //ip: string = 'http://172.16.229.9:80/api/order/';
   // ip: string = 'http://192.168.0.172:80/api/order/';
@@ -45,6 +46,14 @@ export class OrderProvider {
       });
   }
 
+  //for test
+  getDriverCurrentOrder(driver: string){
+    return this.http.get(this.ip + 1+ "/"+ driver)
+      .map((response: Response) => {
+        return response.json();
+      });
+  }
+
   placeOrder(shoppingCart: JSON, currentUser: string){
     //console.log(shoppingCart);
     return this.http.post(this.ip + currentUser, shoppingCart, {headers: this.headers})
@@ -52,6 +61,7 @@ export class OrderProvider {
       return response.json();
     });
   }
+  
   confirmOrder(orderRepo: ConfirmOrder){
     console.log(orderRepo);
     return this.http.post(this.ip + "confirm", orderRepo, {headers: this.headers})

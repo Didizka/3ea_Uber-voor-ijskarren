@@ -13,18 +13,26 @@ page-list-drivers {
     font-size: $badge-font-size;
   }
   .roundBorder{
-    border: solid 2px #4889fe;
-    background: #d6eeff;
-    border-radius: 20%;
+    border: solid 2px #1e8031;
+    background: #3ad3b8;
+    border-radius: 15%;
     text-align: center;
-    color: #1130ff;
-    top: 50%;
-    left: 50%;
+    color: #1e8031;
     font-weight: bold;
-    padding: 5%;
+    padding: 7px;
   }
   h3::after{
     content: " €";
+  }
+  .itemTest{
+    //border: solid 2px red;
+    margin-top: -25px;
+    margin-left: 23px;
+    overflow: inherit ;
+    white-space: normal ;
+  }
+  ion-item{
+    overflow: auto;
   }
   $badge-font-size: 1.8rem;
 }

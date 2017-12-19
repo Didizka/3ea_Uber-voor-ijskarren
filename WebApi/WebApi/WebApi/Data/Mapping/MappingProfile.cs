@@ -68,6 +68,7 @@ namespace WebApi.Data.Mapping
                  .AfterMap((o, or) =>
                  {
                      or.Driver = Mapper.Map<Driver, DriverResource>(o.Driver);
+                     or.Customer = Mapper.Map<Customer, CustomerResource>(o.Customer);
                      or.ShoppingCart = Mapper.Map<Order, ShoppingCart>(o);
                      foreach (var icecream in or.ShoppingCart.Cart)
                      {
