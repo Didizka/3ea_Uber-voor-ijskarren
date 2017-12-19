@@ -14,8 +14,31 @@
 
 
 <ion-content padding>
-Driver: {{driver?.firstName + driver?.lastName}} <br>
-Email: {{driver?.email}}<br>
-Location lat: {{driver?.location?.latitude}}<br>
-Location lng: {{driver?.location?.longitude}}<br>
+<div *ngIf="driver">
+  <!-- Driver: {{driver?.firstName + driver?.lastName}} <br>
+  Email: {{driver?.email}}<br>
+  Location lat: {{driver?.location?.latitude}}<br>
+  Location lng: {{driver?.location?.longitude}}<br> -->
+  <ion-card>
+    <ion-card-header>
+      Driver details
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-icon name="contact" icon-only large="" icon-start=""></ion-icon>
+          {{driver?.firstName }} {{ chosenDiver?.lastName}}
+        </ion-item>
+        <ion-item>
+          <ion-icon name="navigate" icon-only large="" icon-start=""></ion-icon>
+          {{driver?.distance / 1000 | number: '1.2-2'}} km
+        </ion-item>
+        <ion-item>
+          <ion-icon name="time" icon-only large="" icon-start=""></ion-icon>
+          {{driver?.duration / 60 | number: '1.1-1'}} min
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+</div>
 </ion-content>

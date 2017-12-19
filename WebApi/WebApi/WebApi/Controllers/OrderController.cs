@@ -102,8 +102,8 @@ namespace WebApi.Controllers
 
                     var customerSession = orderContext.Sessions.FirstOrDefault(s => s.Email == confirmOrder.CustomerEmail);
 
-                    var customerNotification = mapper.Map<Driver, DriverResource>(await userReop.GetDriverByEmail(confirmOrder.DriverEmail));
-                    await hubContext.Clients.Client(customerSession.ConnectionID).InvokeAsync("CustomerNotification", customerNotification);
+                    var driver = mapper.Map<Driver, DriverResource>(await userReop.GetDriverByEmail(confirmOrder.DriverEmail));
+                    await hubContext.Clients.Client(customerSession.ConnectionID ).InvokeAsync("CustomerNotification", driver);
                 }
                 return Ok(result);
             }
@@ -124,10 +124,20 @@ namespace WebApi.Controllers
 
             return BadRequest("No order with id: " + id + ", or can not find driver: " + driverEmail);
         }
-        
 
-    // DELETE: api/ApiWithActions/5
-    [HttpDelete("{id}")]
+        [Route("driver/location/{email}")]
+        [HttpGet]
+        public async Task<IActionResult> GetDriversLocation(string email)
+        {
+            //return Ok(email);
+            var driver = mapper.Map<Driver, DriverResource>(await userReop.GetDriverByEmail(email));
+            return Ok(driver);
+        }
+
+
+
+        // DELETE: api/ApiWithActions/5
+        [HttpDelete("{id}")]
         public void Delete(int id)
         {
         }

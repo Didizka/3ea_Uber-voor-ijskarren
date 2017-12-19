@@ -1,5 +1,5 @@
 import { Driver } from './../../Models/driver';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { UserProvider } from "../../providers/user";
 import { Geolocation } from "@ionic-native/geolocation";
@@ -17,8 +17,8 @@ declare var google;
 })
 export class ListDriversPage implements OnInit, OnDestroy {
   // MAP
-  lat: number = null;
-  lng: number = null;
+  lat: number = null;//51.2304878;
+  lng: number = null; //4.477407;
   distance: number = 5;
   zoom: number = 11;
   orderId: number = null;
@@ -41,7 +41,8 @@ export class ListDriversPage implements OnInit, OnDestroy {
     private storage: Storage,
     private userProvider: UserProvider,
     private orderProvider: OrderProvider,
-    private geolocation: Geolocation) {
+    private geolocation: Geolocation,
+    private ref: ChangeDetectorRef) {
     this.isOrderCanceled = this.navParams.get("cancellation")
   }
 
@@ -50,7 +51,6 @@ export class ListDriversPage implements OnInit, OnDestroy {
     // this.userProvider.getCurrentUser().then(email => {
     //   this.userProvider.startSignalRSession(email);
     // });
-
 
     // Remove price label from drivers list if order has been cancelled
     if (this.isOrderCanceled) {
@@ -78,7 +78,7 @@ export class ListDriversPage implements OnInit, OnDestroy {
 
   // Delete session from SignalR database if the user exited the screen
   ngOnDestroy() {
-  //   this.userProvider.stopSignalRSession();
+    //   this.userProvider.stopSignalRSession();
   }
 
 
@@ -283,36 +283,43 @@ export class ListDriversPage implements OnInit, OnDestroy {
       driverMarker.setMap(null);
     }
 
-      // Wait until the users position has been determined
-      if (this.lat != null && this.lng != null) {
-        // Distance calculator
-        let origin = new google.maps.LatLng(this.lat, this.lng);
-        let distanceCalculator: any = new google.maps.DistanceMatrixService();
-        console.log("Range: " + this.distance + "km");
+console.log(this.lat);
+console.log(this.lng);
+    // Wait until the users position has been determined
+    if (this.lat != null && this.lng != null) {
+      // Distance calculator
+      let origin = new google.maps.LatLng(this.lat, this.lng);
+      let distanceCalculator: any = new google.maps.DistanceMatrixService();
+      console.log("Range: " + this.distance + "km");
 
-        // calculate distance between origin and destination for each driver
-        for (let driver of this.drivers) {
-          distanceCalculator.getDistanceMatrix({
-            origins: [origin],
-            destinations: [new google.maps.LatLng(driver.location.latitude, driver.location.longitude)],
-            travelMode: google.maps.TravelMode.DRIVING,
-            drivingOptions: {
-              departureTime: new Date(Date.now())
-            }
-            // Callback function when the calculation has been finished
-          }, function (resp, status) {
+      // calculate distance between origin and destination for each driver
+      for (let driver of this.drivers) {
+        distanceCalculator.getDistanceMatrix({
+          origins: [origin],
+          destinations: [new google.maps.LatLng(driver.location.latitude, driver.location.longitude)],
+          travelMode: google.maps.TravelMode.DRIVING,
+          drivingOptions: {
+            departureTime: new Date(Date.now())
+          }
+          // Callback function when the calculation has been finished
+        }, function (resp, status) {
+          if (status == "OK") {
             // Save driver's info to drivers object
             driver.locationAddress = resp.destinationAddresses;
             driver.distance = resp.rows[0].elements[0].distance.value;
             driver.duration = resp.rows[0].elements[0].duration.value;
+            this.ref.detectChanges();
             // If the driver is in the range zone, add him to the temporary array and create a marker
             if ((driver.distance / 1000) < this.distance) {
               this.driversInZone.push(driver);
               this.addDriversMarkers(driver);
             }
-          }.bind(this)); // Access this scope in callback
-        }
+          } else {
+            console.log('Error occured with google maps API. Errro: ' + status);
+          }
+        }.bind(this)); // Access this scope in callback
       }
+    }
   };
 
   removeOrder() {

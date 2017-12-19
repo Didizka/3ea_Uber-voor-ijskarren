@@ -104,6 +104,14 @@ export class UserProvider {
         });      
   }
 
+  askForDriverLocation(email: string) {
+    // console.log('ok');
+    return this.http.get('http://localhost:9000/api/order/driver/location/' + email)
+      .map(resp => {
+        return resp.json();
+      })
+  }
+
   stopSignalRSession() {
     if (this.hubConnection != null) this.hubConnection.stop();
   }

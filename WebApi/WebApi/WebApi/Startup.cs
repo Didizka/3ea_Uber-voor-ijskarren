@@ -7,6 +7,7 @@ using WebApi.Data;
 using AutoMapper;
 using WebApi.Models.Repositories;
 using WebApi.Hubs;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace WebApi
 {
@@ -53,6 +54,11 @@ namespace WebApi
 
             services.AddSignalR();
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "CA2-UBER API's", Version = "v1" });
+            });
+
 
             // Require all requests to use https, http gets ignored here, see redirect below
             //            Run the following command to create a certificate
@@ -78,6 +84,13 @@ namespace WebApi
             app.UseSignalR(routes =>
             {
                 routes.MapHub<OrderHub>("orderhub");
+            });
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "CA2-UBER API's v1");
             });
 
 
