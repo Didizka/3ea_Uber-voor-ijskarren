@@ -22,9 +22,9 @@ export class UserProvider {
   //ip: string = 'http://localhost:9000/api/users/';
   // ip: string = 'http://172.16.251.76:80/api/users/';
   //school-sanjy
-  //ip: string = 'http://172.16.246.45:80/api/users/';
+  ip: string = 'http://172.16.205.5:80/api/users/';
   //thuis-sanjy
-  ip: string = 'http://192.168.0.172:80/api/users/';
+  //ip: string = 'http://192.168.0.172:80/api/users/';
   // ip: string = 'http://192.168.0.172:80/api/users/';
   //ip: string = 'http://172.16.229.9:80/api/users/';
   // ip: string = 'http://192.168.0.155:8080/api/users/';
@@ -92,7 +92,7 @@ export class UserProvider {
       this.hubConnection.on('CustomerNotification', (data: any) => {
         console.log(data);
         this.app.getRootNavs()[0].setRoot('OrderInProgressPage', { 'driver' : data });
-      });   
+      });
 
       this.hubConnection.start()
         .then(() => {

@@ -43,14 +43,12 @@
           <span item-end>  {{customer?.firstName }} {{ customer?.lastName}}</span></h3>
         </ion-item>
         <ion-item>
-          <h3 > <span> Latitude: </span>
-            <span item-end> {{customer?.location.latitude }}</span></h3>
+          <h3 > <span> Address: </span>
+            <span item-end> {{address?.toString() }}</span></h3>
         </ion-item>
-        <ion-item>
-          <h3 > <span> Longitude: </span>
-            <span item-end>  {{customer?.location.longitude }}</span></h3>
-        </ion-item>
+
       </ion-list>
     </ion-card-content>
   </ion-card>
+  <button ion-button (click)="onClickMe()">Click me</button>
 </ion-content>
