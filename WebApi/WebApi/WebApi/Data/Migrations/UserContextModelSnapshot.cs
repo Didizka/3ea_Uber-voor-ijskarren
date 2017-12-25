@@ -226,6 +226,54 @@ namespace WebApi.Data.Migrations
                     b.ToTable("OrderItemFlavours");
                 });
 
+            modelBuilder.Entity("WebApi.Models.Review.CustomerReview", b =>
+                {
+                    b.Property<string>("CustomerReviewID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("CustomerID");
+
+                    b.Property<int>("DriverID");
+
+                    b.Property<string>("Review")
+                        .IsRequired()
+                        .HasMaxLength(150);
+
+                    b.Property<int>("Score");
+
+                    b.HasKey("CustomerReviewID");
+
+                    b.HasIndex("CustomerID");
+
+                    b.HasIndex("DriverID");
+
+                    b.ToTable("CustomerReview");
+                });
+
+            modelBuilder.Entity("WebApi.Models.Review.DriverReview", b =>
+                {
+                    b.Property<string>("DriverReviewID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("CustomerID");
+
+                    b.Property<int>("DriverID");
+
+                    b.Property<string>("Review")
+                        .IsRequired()
+                        .HasMaxLength(150);
+
+                    b.Property<int>("Score");
+
+                    b.HasKey("DriverReviewID");
+
+                    b.HasIndex("CustomerID");
+
+                    b.HasIndex("DriverID");
+
+                    b.ToTable("DriverReview");
+                });
+
             modelBuilder.Entity("WebApi.Models.Users.Location", b =>
                 {
                     b.Property<int>("LocationID")
@@ -317,6 +365,32 @@ namespace WebApi.Data.Migrations
                     b.HasOne("WebApi.Models.Orders.OrderItem", "OrderItem")
                         .WithMany("OrderItemFlavours")
                         .HasForeignKey("OrderItemID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("WebApi.Models.Review.CustomerReview", b =>
+                {
+                    b.HasOne("WebApi.Models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("WebApi.Models.Driver", "Driver")
+                        .WithMany()
+                        .HasForeignKey("DriverID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("WebApi.Models.Review.DriverReview", b =>
+                {
+                    b.HasOne("WebApi.Models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("WebApi.Models.Driver", "Driver")
+                        .WithMany()
+                        .HasForeignKey("DriverID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

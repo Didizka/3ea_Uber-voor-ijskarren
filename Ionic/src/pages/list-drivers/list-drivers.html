@@ -67,10 +67,13 @@
               <h3  class="roundBorder" >{{driver?.totalPrice | number: '1.2-2'}}</h3>
             </ion-col>
           </ion-row>
-  
+
         </ion-card-content> -->
 
           <ion-list>
+            <ion-item>
+              <star-rating-comp [starType]="'svg'" [rating]="5" class="borderX"></star-rating-comp>
+            </ion-item>
             <ion-item>
               <ion-icon name="contact" icon-only large="" icon-start color="primary"></ion-icon>
               {{driver?.firstName }} {{ driver?.lastName}}

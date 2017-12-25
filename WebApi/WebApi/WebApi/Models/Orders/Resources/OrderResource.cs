@@ -14,5 +14,6 @@ namespace WebApi.Models.Orders.Resources
         public CustomerResource Customer { get; set; }
 
         public double TotalPrice { get; set; }
+        public int OrderID { get; set; }
     }
 }

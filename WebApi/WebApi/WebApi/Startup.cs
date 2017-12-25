@@ -56,15 +56,10 @@ namespace WebApi
 
             services.AddSwaggerGen(c =>
             {
-<<<<<<< HEAD
-                c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
-            });
-=======
                 c.SwaggerDoc("v1", new Info { Title = "CA2-UBER API's", Version = "v1" });
             });
 
-
->>>>>>> c6a9963c4039c6353e0c523f8bb5f4b7f4b6941d
+            
             // Require all requests to use https, http gets ignored here, see redirect below
             //            Run the following command to create a certificate
             //            cd C:\Program Files(x86)\IIS Express
@@ -92,21 +87,12 @@ namespace WebApi
             });
 
             app.UseSwagger();
-<<<<<<< HEAD
-=======
 
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
             });
 
->>>>>>> c6a9963c4039c6353e0c523f8bb5f4b7f4b6941d
-
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            });
             app.UseMvcWithDefaultRoute();
 
             // Redirect http to https
