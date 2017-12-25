@@ -79,7 +79,7 @@ namespace WebApi
             }
 
             app.UseCors("AllowClient");
-
+            
 
             app.UseSignalR(routes =>
             {

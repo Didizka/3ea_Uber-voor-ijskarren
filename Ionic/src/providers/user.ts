@@ -10,7 +10,7 @@ import { OrderInProgressPage } from '../pages/order/order-in-progress/order-in-p
 export class UserProvider {
   private hubConnection;
 
-  //ip: string = 'http://172.16.220.163';
+  ip: string = 'http://146.185.141.77:9000/api/users/';
 
   // Run webapi backend on port 9000
   // download iisexpress-proxy (see github repo)
@@ -19,7 +19,7 @@ export class UserProvider {
 
 
   // Local DEV
-  ip: string = 'http://localhost:9000/api/users/';
+  // ip: string = 'http://localhost:9000/api/users/';
   // ip: string = 'http://172.16.251.76:80/api/users/';
   //school-sanjy
   //ip: string = 'http://172.16.246.45:80/api/users/';
@@ -78,8 +78,8 @@ export class UserProvider {
   }
 
   startSignalRSession(email: string) {
-    this.hubConnection = new HubConnection('http://localhost:9000/orderhub?email=' + email);
-    // this.hubConnection = new HubConnection('http://172.16.251.76:80/orderhub?email=' + email);
+    // this.hubConnection = new HubConnection('http://localhost:9000/orderhub?email=' + email);
+    this.hubConnection = new HubConnection('http://http://146.185.141.77:9000/orderhub?email=' + email);
       // Method used to debug server info
       this.hubConnection.on('Debug', (data: any) => {
         console.log(data);
@@ -107,7 +107,7 @@ export class UserProvider {
 
   askForDriverLocation(email: string) {
     // console.log('ok');
-    return this.http.get('http://localhost:9000/api/order/driver/location/' + email)
+    return this.http.get('http://146.185.141.77:9000/api/order/driver/location/' + email)
       .map(resp => {
         return resp.json();
       })

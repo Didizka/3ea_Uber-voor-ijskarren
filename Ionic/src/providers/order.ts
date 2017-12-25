@@ -7,9 +7,9 @@ import {ConfirmOrder} from "../Models/order";
 @Injectable()
 export class OrderProvider {
 
-  ip: string = 'http://localhost:9000/api/order/';
+  // ip: string = 'http://localhost:9000/api/order/';
 
-  // ip: string = 'http://172.16.251.76:80/api/order/';
+  ip: string = 'http://http://146.185.141.77:9000/api/order/';
   //school-sanjy
   //ip: string = 'http://172.16.246.45:80/api/order/';
   //thuis-sanjy
@@ -61,7 +61,7 @@ export class OrderProvider {
       return response.json();
     });
   }
-  
+
   confirmOrder(orderRepo: ConfirmOrder){
     console.log(orderRepo);
     return this.http.post(this.ip + "confirm", orderRepo, {headers: this.headers})
