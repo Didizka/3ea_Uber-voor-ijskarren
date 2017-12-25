@@ -86,10 +86,10 @@ export class OrderInProgressPage implements OnInit {
 
   FireNotification() {
     // For mobile
-    // this.localNotifications.schedule({
-    //   id: 1,
-    //   text: 'The driver with your icecream will arrive in 5 mins'
-    // });
+    this.localNotifications.schedule({
+      id: 1,
+      text: 'The driver with your icecream will arrive in 5 mins'
+    });
 
     // For Dev
     console.log('The driver with your icecream will arrive in 5 mins');

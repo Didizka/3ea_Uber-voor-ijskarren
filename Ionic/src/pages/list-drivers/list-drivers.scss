@@ -13,8 +13,7 @@ page-list-drivers {
     font-size: $badge-font-size;
   }
   .roundBorder{
-    border: solid 2px #1e8031;
-    background: #3ad3b8;
+    border: solid 2px #2eae64;
     border-radius: 15%;
     text-align: center;
     color: #1e8031;
@@ -26,13 +25,16 @@ page-list-drivers {
   }
   .itemTest{
     //border: solid 2px red;
-    margin-top: -25px;
-    margin-left: 23px;
-    overflow: inherit ;
+    // margin-top: -25px;
+    // margin-left: 23px;
+    // overflow: auto ;
     white-space: normal ;
   }
   ion-item{
     overflow: auto;
+  }
+  .marginCards {
+    margin-top: 30px;
   }
   $badge-font-size: 1.8rem;
 }
