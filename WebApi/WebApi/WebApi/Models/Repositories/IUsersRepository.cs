@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebApi.Models.Orders;
-using WebApi.Models.Orders.Resources;
+using WebApi.Models.Resources;
 using WebApi.Models.Users;
 
 namespace WebApi.Models.Repositories

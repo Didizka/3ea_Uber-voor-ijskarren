@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApi.Models.Orders;
-using WebApi.Models.Orders.Resources;
+using WebApi.Models.Resources;
 
 namespace WebApi.Models.Repositories
 {

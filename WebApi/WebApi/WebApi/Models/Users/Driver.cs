@@ -51,8 +51,7 @@ namespace WebApi.Models
             }
         }
 
-
-
+        public int Rating { get; set; }
 
         // Navigation Properties
 

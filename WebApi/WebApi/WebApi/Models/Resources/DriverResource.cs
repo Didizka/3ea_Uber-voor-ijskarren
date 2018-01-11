@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApi.Models.Users;
 
-namespace WebApi.Models.Orders.Resources
+namespace WebApi.Models.Resources
 {
     public class DriverResource
     {
@@ -13,6 +13,7 @@ namespace WebApi.Models.Orders.Resources
         public Location Location { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public int Rating { get; set; }
         public ICollection<FlavourResource> Flavours { get; set; }
         public DriverResource()
         {

@@ -128,6 +128,7 @@ namespace WebApi.Data.Migrations
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LocationID = table.Column<int>(type: "int", nullable: true),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Rating = table.Column<int>(type: "int", nullable: false),
                     RegistrationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Salt = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false)
                 },

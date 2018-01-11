@@ -11,9 +11,9 @@ using WebApi.Models;
 
 namespace WebApi.Data.Migrations
 {
-    [DbContext(typeof(OrderContext))]
-    [Migration("20171224113355_OrderInit")]
-    partial class OrderInit
+    [DbContext(typeof(UserContext))]
+    [Migration("20171227183050_UserInit")]
+    partial class UserInit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -62,6 +62,9 @@ namespace WebApi.Data.Migrations
                     b.HasKey("ContactInformationID");
 
                     b.HasIndex("AddressID");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("ContactInformation");
                 });
@@ -120,6 +123,8 @@ namespace WebApi.Data.Migrations
                     b.Property<int?>("LocationID");
 
                     b.Property<string>("Password");
+
+                    b.Property<int>("Rating");
 
                     b.Property<DateTime>("RegistrationDate");
 
@@ -186,6 +191,8 @@ namespace WebApi.Data.Migrations
 
                     b.HasIndex("CustomerID");
 
+                    b.HasIndex("DriverID");
+
                     b.HasIndex("LocationID");
 
                     b.ToTable("Orders");
@@ -220,17 +227,6 @@ namespace WebApi.Data.Migrations
                     b.HasIndex("FlavourID");
 
                     b.ToTable("OrderItemFlavours");
-                });
-
-            modelBuilder.Entity("WebApi.Models.SignalR.Session", b =>
-                {
-                    b.Property<string>("ConnectionID");
-
-                    b.Property<string>("Email");
-
-                    b.HasKey("ConnectionID");
-
-                    b.ToTable("Sessions");
                 });
 
             modelBuilder.Entity("WebApi.Models.Users.Location", b =>
@@ -298,7 +294,7 @@ namespace WebApi.Data.Migrations
 
                     b.HasOne("WebApi.Models.Driver", "Driver")
                         .WithMany("Orders")
-                        .HasForeignKey("CustomerID")
+                        .HasForeignKey("DriverID")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("WebApi.Models.Users.Location", "Location")

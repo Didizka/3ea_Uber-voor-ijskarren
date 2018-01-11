@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebApi.Models.Orders.Resources;
+using WebApi.Models.Resources;
 
-namespace WebApi.Models.Orders.Resources
+namespace WebApi.Models.Resources
 {
     public class OrderResource
     {

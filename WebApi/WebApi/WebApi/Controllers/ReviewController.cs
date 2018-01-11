@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Data;
+using WebApi.Models.Repositories;
+using WebApi.Models.Resources;
 using WebApi.Models.Review;
 
 namespace WebApi.Controllers
@@ -12,37 +16,50 @@ namespace WebApi.Controllers
     [Route("api/Review")]
     public class ReviewController : Controller
     {
-        // GET: api/Review
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly IUsersRepository userReop;
+        private readonly IDriverRepository driverRepo;
+        private readonly IReviewRepository reviewRepo;
+        private readonly IMapper mapper;
+
+        public ReviewController(IUsersRepository userReop,
+                                IDriverRepository driverRepo,
+                                IReviewRepository reviewRepo,
+                                IMapper mapper)
         {
-            return new string[] { "value1", "value2" };
+            this.userReop = userReop;
+            this.driverRepo = driverRepo;
+            this.reviewRepo = reviewRepo;
+            this.mapper = mapper;
         }
 
-        // GET: api/Review/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-        
         // POST: api/Review
-        [HttpPost("driver/{email}")]
-        public async Task<IActionResult> PostDriverReview(string email, [FromBody]DriverReview driverRiview)
+        [HttpPost("driver")]
+        public async Task<IActionResult> PostDriverReview([FromBody]ReviewResource review)
         {
-            return Ok( driverRiview);
+            if (ModelState.IsValid)
+            {
+                var result = await reviewRepo.AddDriverReview(review);
+                if(result)
+                    return Ok(result);
+                else
+                    return NotFound("Driver or Customer not found"); 
+            }
+            return BadRequest(false);
         }
-        
-        // PUT: api/Review/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+
+        // POST: api/Review
+        [HttpGet("{email}")]
+        public async Task<IActionResult> GetReviewsOfDriver(string email)
         {
+            var driver = await userReop.GetDriverByEmail(email);
+            if(driver != null)
+            {
+                return Ok(reviewRepo.GetDriverReviews(driver));
+            }
+            
+            return BadRequest();
         }
-        
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+
+
     }
 }

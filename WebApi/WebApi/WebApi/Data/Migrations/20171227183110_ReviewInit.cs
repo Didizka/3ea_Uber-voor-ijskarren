@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace WebApi.Data.Migrations
 {
-    public partial class UserInit : Migration
+    public partial class ReviewInit : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -50,6 +50,18 @@ namespace WebApi.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Location", x => x.LocationID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Sessions",
+                columns: table => new
+                {
+                    ConnectionID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sessions", x => x.ConnectionID);
                 });
 
             migrationBuilder.CreateTable(
@@ -116,6 +128,7 @@ namespace WebApi.Data.Migrations
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LocationID = table.Column<int>(type: "int", nullable: true),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Rating = table.Column<int>(type: "int", nullable: false),
                     RegistrationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Salt = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false)
                 },
@@ -137,26 +150,26 @@ namespace WebApi.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CustomerReview",
+                name: "CustomerReviews",
                 columns: table => new
                 {
                     CustomerReviewID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CustomerID = table.Column<int>(type: "int", nullable: false),
                     DriverID = table.Column<int>(type: "int", nullable: false),
-                    Review = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Score = table.Column<int>(type: "int", nullable: false)
+                    Rating = table.Column<int>(type: "int", nullable: false),
+                    Review = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CustomerReview", x => x.CustomerReviewID);
+                    table.PrimaryKey("PK_CustomerReviews", x => x.CustomerReviewID);
                     table.ForeignKey(
-                        name: "FK_CustomerReview_Customers_CustomerID",
+                        name: "FK_CustomerReviews_Customers_CustomerID",
                         column: x => x.CustomerID,
                         principalTable: "Customers",
                         principalColumn: "CustomerID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CustomerReview_Drivers_DriverID",
+                        name: "FK_CustomerReviews_Drivers_DriverID",
                         column: x => x.DriverID,
                         principalTable: "Drivers",
                         principalColumn: "DriverID",
@@ -189,26 +202,26 @@ namespace WebApi.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DriverReview",
+                name: "DriverReviews",
                 columns: table => new
                 {
                     DriverReviewID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CustomerID = table.Column<int>(type: "int", nullable: false),
                     DriverID = table.Column<int>(type: "int", nullable: false),
-                    Review = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Score = table.Column<int>(type: "int", nullable: false)
+                    Rating = table.Column<int>(type: "int", nullable: false),
+                    Review = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DriverReview", x => x.DriverReviewID);
+                    table.PrimaryKey("PK_DriverReviews", x => x.DriverReviewID);
                     table.ForeignKey(
-                        name: "FK_DriverReview_Customers_CustomerID",
+                        name: "FK_DriverReviews_Customers_CustomerID",
                         column: x => x.CustomerID,
                         principalTable: "Customers",
                         principalColumn: "CustomerID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_DriverReview_Drivers_DriverID",
+                        name: "FK_DriverReviews_Drivers_DriverID",
                         column: x => x.DriverID,
                         principalTable: "Drivers",
                         principalColumn: "DriverID",
@@ -302,19 +315,13 @@ namespace WebApi.Data.Migrations
                 column: "AddressID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ContactInformation_Email",
-                table: "ContactInformation",
-                column: "Email",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CustomerReview_CustomerID",
-                table: "CustomerReview",
+                name: "IX_CustomerReviews_CustomerID",
+                table: "CustomerReviews",
                 column: "CustomerID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CustomerReview_DriverID",
-                table: "CustomerReview",
+                name: "IX_CustomerReviews_DriverID",
+                table: "CustomerReviews",
                 column: "DriverID");
 
             migrationBuilder.CreateIndex(
@@ -333,13 +340,13 @@ namespace WebApi.Data.Migrations
                 column: "DriverID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DriverReview_CustomerID",
-                table: "DriverReview",
+                name: "IX_DriverReviews_CustomerID",
+                table: "DriverReviews",
                 column: "CustomerID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DriverReview_DriverID",
-                table: "DriverReview",
+                name: "IX_DriverReviews_DriverID",
+                table: "DriverReviews",
                 column: "DriverID");
 
             migrationBuilder.CreateIndex(
@@ -381,16 +388,19 @@ namespace WebApi.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "CustomerReview");
+                name: "CustomerReviews");
 
             migrationBuilder.DropTable(
                 name: "DriverFlavours");
 
             migrationBuilder.DropTable(
-                name: "DriverReview");
+                name: "DriverReviews");
 
             migrationBuilder.DropTable(
                 name: "OrderItemFlavours");
+
+            migrationBuilder.DropTable(
+                name: "Sessions");
 
             migrationBuilder.DropTable(
                 name: "Flavours");

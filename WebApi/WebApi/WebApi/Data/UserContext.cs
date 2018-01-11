@@ -15,8 +15,6 @@ namespace WebApi.Data
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Driver> Drivers { get; set; }
         public DbSet<DriverFlavour> DriverFlavours { get; set; }
-        public DbSet<DriverReview> DriverReview { get; set; }
-        public DbSet<CustomerReview> CustomerReview { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

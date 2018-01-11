@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApi.Models.Users;
 
-namespace WebApi.Models.Orders.Resources
+namespace WebApi.Models.Resources
 {
     public class ShoppingCart
     {

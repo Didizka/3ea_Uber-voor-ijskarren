@@ -11,10 +11,11 @@ using WebApi.Models;
 
 namespace WebApi.Data.Migrations
 {
-    [DbContext(typeof(OrderContext))]
-    partial class OrderContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(ReviewContext))]
+    [Migration("20171227183110_ReviewInit")]
+    partial class ReviewInit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -187,6 +188,8 @@ namespace WebApi.Data.Migrations
 
                     b.HasIndex("CustomerID");
 
+                    b.HasIndex("DriverID");
+
                     b.HasIndex("LocationID");
 
                     b.ToTable("Orders");
@@ -221,6 +224,50 @@ namespace WebApi.Data.Migrations
                     b.HasIndex("FlavourID");
 
                     b.ToTable("OrderItemFlavours");
+                });
+
+            modelBuilder.Entity("WebApi.Models.Review.CustomerReview", b =>
+                {
+                    b.Property<string>("CustomerReviewID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("CustomerID");
+
+                    b.Property<int>("DriverID");
+
+                    b.Property<int>("Rating");
+
+                    b.Property<string>("Review");
+
+                    b.HasKey("CustomerReviewID");
+
+                    b.HasIndex("CustomerID");
+
+                    b.HasIndex("DriverID");
+
+                    b.ToTable("CustomerReviews");
+                });
+
+            modelBuilder.Entity("WebApi.Models.Review.DriverReview", b =>
+                {
+                    b.Property<string>("DriverReviewID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("CustomerID");
+
+                    b.Property<int>("DriverID");
+
+                    b.Property<int>("Rating");
+
+                    b.Property<string>("Review");
+
+                    b.HasKey("DriverReviewID");
+
+                    b.HasIndex("CustomerID");
+
+                    b.HasIndex("DriverID");
+
+                    b.ToTable("DriverReviews");
                 });
 
             modelBuilder.Entity("WebApi.Models.SignalR.Session", b =>
@@ -299,7 +346,7 @@ namespace WebApi.Data.Migrations
 
                     b.HasOne("WebApi.Models.Driver", "Driver")
                         .WithMany("Orders")
-                        .HasForeignKey("CustomerID")
+                        .HasForeignKey("DriverID")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("WebApi.Models.Users.Location", "Location")
@@ -325,6 +372,32 @@ namespace WebApi.Data.Migrations
                     b.HasOne("WebApi.Models.Orders.OrderItem", "OrderItem")
                         .WithMany("OrderItemFlavours")
                         .HasForeignKey("OrderItemID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("WebApi.Models.Review.CustomerReview", b =>
+                {
+                    b.HasOne("WebApi.Models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("WebApi.Models.Driver", "Driver")
+                        .WithMany()
+                        .HasForeignKey("DriverID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("WebApi.Models.Review.DriverReview", b =>
+                {
+                    b.HasOne("WebApi.Models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("WebApi.Models.Driver", "Driver")
+                        .WithMany()
+                        .HasForeignKey("DriverID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

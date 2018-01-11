@@ -13,6 +13,7 @@ import {Toast} from "@ionic-native/toast";
 import { DriverProvider } from '../providers/driver';
 import {IonicStorageModule} from "@ionic/storage";
 import {StarRatingModule} from "angular-star-rating";
+import { ReviewProvider } from '../providers/review';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import {StarRatingModule} from "angular-star-rating";
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     UserProvider,
     OrderProvider,
-    DriverProvider
+    DriverProvider,
+    ReviewProvider
   ]
 })
 export class AppModule {}

@@ -13,9 +13,9 @@ export class DriverProvider {
 
 
   //school-sanjy
-  //ip: string = 'http://172.16.205.5:80/api/driver/';
+  ip: string = 'http://172.16.196.203:80/api/driver/';
   //thuis-sanjy
-  ip: string = 'http://192.168.0.172:80/api/driver/';
+  //ip: string = 'http://192.168.0.172:80/api/driver/';
   // ip: string = 'http://192.168.0.172:80/api/driver/';
   // ip: string = 'http://192.168.0.172:80/api/driver/';
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using WebApi.Data;
 using WebApi.Hubs;
 using WebApi.Models.Orders;
-using WebApi.Models.Orders.Resources;
+using WebApi.Models.Resources;
 
 namespace WebApi.Models.Repositories
 {
@@ -34,6 +34,7 @@ namespace WebApi.Models.Repositories
             Order currentOrder = new Order
             {
                 CustomerID = customer.CustomerID,
+                DriverID = 1,
                 Location = shoppingcart.Location,
                 Status = OrderStatus.Pending
             };

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebApi.Data;
 using WebApi.Models.Repositories;
 using WebApi.Models.Orders;
-using WebApi.Models.Orders.Resources;
+using WebApi.Models.Resources;
 using AutoMapper;
 using Microsoft.AspNetCore.SignalR;
 using WebApi.Hubs;

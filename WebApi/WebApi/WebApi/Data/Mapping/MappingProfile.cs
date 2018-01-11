@@ -2,15 +2,19 @@
 using System.Linq;
 using WebApi.Models;
 using WebApi.Models.Orders;
-using WebApi.Models.Orders.Resources;
+using WebApi.Models.Repositories;
+using WebApi.Models.Resources;
+using WebApi.Models.Review;
 using WebApi.Models.Users;
 
 namespace WebApi.Data.Mapping
 {
     public class MappingProfile: Profile
     {
+
         public MappingProfile()
         {
+            
             /*CreateMap<RegistrationForm, Driver>()
                 .ForMember(d => d.IsApproved, opt => opt.MapFrom( rf => rf.IsApproved))
                 .ForMember(d => d.ContactInformation, opt => opt.MapFrom( 
@@ -78,8 +82,24 @@ namespace WebApi.Data.Mapping
                          }
                      }
                  });
-                
-    
+
+            CreateMap<ReviewResource, DriverReview>();
+                /*.AfterMap(async (r, dr) =>
+                {
+                    Driver driver = await usersRepo.GetDriverByEmail(r.ReviewToEmail);
+                    dr.DriverID = driver.DriverID;
+                    Customer customer = await usersRepo.GetCustomerByEmail(r.ReviewFromEmail);
+                    dr.CustomerID = customer.CustomerID;
+                });*/
+            CreateMap<ReviewResource, CustomerReview>();
+            CreateMap<DriverReview, ReviewResource>()
+                .ForMember(dest => dest.ReviewFromEmail, opt => opt.MapFrom(c => c.Customer.ContactInformation.Email))
+                .ForMember(dest => dest.ReviewerName,
+                   opts => opts.MapFrom(
+                       src => string.Format("{0} {1}",
+                           src.Customer.FirstName,
+                           src.Customer.LastName)));
+
         }
     }
 }

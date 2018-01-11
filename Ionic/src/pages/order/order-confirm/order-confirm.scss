@@ -15,11 +15,11 @@ page-order-confirm {
   }
 
   .itemTest{
-    //border: solid 2px red;
-    margin-top: -20px;
-    margin-left: 25px;
-    overflow: inherit ;
-    text-overflow: inherit ;
     white-space: normal ;
+  }
+  .noPadding{
+    padding: 0;
+    margin-bottom: -10px;
+    margin-top: -10px;
   }
 }

@@ -25,6 +25,9 @@ namespace WebApi
 
                     var OrderContext = services.GetRequiredService<OrderContext>();
                     OrderDbInitializer.Initialize(OrderContext, UserContext);
+
+                    var ReviewContext = services.GetRequiredService<ReviewContext>();
+                    ReviewDbInitializer.Initialize(ReviewContext);
                 }
                 catch (Exception ex)
                 {

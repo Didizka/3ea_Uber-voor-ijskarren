@@ -36,7 +36,7 @@
       <td style="width:25%" text-center class="addEuro">{{chosenDiver?.totalPrice | number: '1.2-2'}}</td>
     </tr>
   </table>
-  <ion-row>
+  <ion-row *ngIf="!confirmed">
     <ion-col col-6="">
       <button ion-button full color="danger" type="button"
               round="" (click)="onCancelOrder()">
@@ -58,22 +58,48 @@
     <ion-card-content>
       <ion-list>
         <ion-item>
-          <ion-icon name="contact" icon-only large="" icon-start=""></ion-icon>
+          <ion-icon name="contact" icon-only large="" item-start color="primary"></ion-icon>
           {{chosenDiver?.firstName }} {{ chosenDiver?.lastName}}
         </ion-item>
-        <ion-item>
-          <ion-icon name="time" icon-only large="" icon-start=""></ion-icon>
-          {{chosenDiver?.duration / 60 | number: '1.1-1'}} min
+        <ion-item >
+          <ion-icon name="locate" icon-only large="" item-start color="primary"></ion-icon>
+          <div class="itemTest">{{chosenDiver?.locationAddress}}</div>
         </ion-item>
         <ion-item>
-          <ion-icon name="navigate" icon-only large="" icon-start=""></ion-icon>
+          <ion-icon name="navigate" icon-only large="" item-start color="primary"></ion-icon>
           {{chosenDiver?.distance / 1000 | number: '1.2-2'}} km
         </ion-item>
-        <ion-item >
-          <ion-icon name="locate" icon-only large="" icon-start=""></ion-icon>
-          <div class="itemTest">{{chosenDiver?.locationAddress}}</div>
+        <ion-item>
+          <ion-icon name="time" icon-only large="" item-start color="primary"></ion-icon>
+          {{chosenDiver?.duration / 60 | number: '1.1-1'}} min
         </ion-item>
       </ion-list>
     </ion-card-content>
+  </ion-card>
+  <ion-card>
+    <ion-card-header text-center>
+      Reviews
+    </ion-card-header>
+    <ion-card-content >
+      <ion-list *ngFor="let driverReview of driverReviews">
+        <ion-item class="noPadding">
+          <star-rating-comp item-start [starType]="'svg'"
+                            numOfStars="5"
+                            size="medium"
+                            [rating]="driverReview.rating"
+                            [staticColor]="'ok'"
+                            [readOnly]="true"
+          ></star-rating-comp>
+        </ion-item>
+        <ion-item class="noPadding" *ngIf="driverReview.review != ''">
+          {{driverReview.review}}
+        </ion-item>
+        <ion-item class="noPadding">
+          <p><i>{{driverReview.reviewerName}}</i></p>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+    <hr>
+
   </ion-card>
 </ion-content>

@@ -7,6 +7,8 @@ import {ShoppingCart} from "../../../Models/flavour.model";
 import {ConfirmOrder} from "../../../Models/order";
 import {UserProvider} from "../../../providers/user";
 import {Toast} from "@ionic-native/toast";
+import {ReviewProvider} from "../../../providers/review";
+import {Review} from "../../../Models/review";
 
 @IonicPage()
 @Component({
@@ -17,6 +19,8 @@ export class OrderConfirmPage implements OnInit{
   driverWithPrice: DriverFlavour;
   shoppingCart: ShoppingCart;
   chosenDiver: Driver;
+  confirmed: boolean = false;
+  driverReviews: Review[] = [];
   confirmOrderRepo: ConfirmOrder = {
     orderID: null,
     customerEmail: null,
@@ -28,7 +32,8 @@ export class OrderConfirmPage implements OnInit{
               private orderProvider: OrderProvider,
               private storage: Storage,
               private alertCtrl: AlertController, private toast: Toast,
-              private userProvider: UserProvider, private loadingCtrl: LoadingController) {
+              private userProvider: UserProvider, private loadingCtrl: LoadingController,
+              private reviewProvider: ReviewProvider) {
   }
 
   ngOnInit(){
@@ -48,6 +53,11 @@ export class OrderConfirmPage implements OnInit{
           }
         );
       });
+    this.reviewProvider.getDriverReviews(this.chosenDiver.email).subscribe(
+      (data: Review[]) => {
+        this.driverReviews = data;
+      }
+    );
   }
 
   onCancelOrder(){
@@ -86,6 +96,8 @@ export class OrderConfirmPage implements OnInit{
           data => {
             loading.dismiss();
             if(data == true){
+              this.confirmed = data;
+              this.storage.set('cancellation', true);
               /*this.toast.showLongBottom("Order Placed success!").subscribe(
                 toast => {
                   console.log(toast);

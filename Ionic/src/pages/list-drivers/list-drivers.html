@@ -18,8 +18,9 @@
 
     <!-- Slidebar -->
 <div padding>
+
     <p text-center class="no-padding">Zoek in een straal van <b>{{distance}}</b> km</p>
-    <ion-range class="no-padding" min="11" max="15" pin="true" [(ngModel)]="zoom" (ionChange)="onRangeChange($event)" padding="0">  <!-- (ionChange)="onRangeChange($event)" -->
+    <ion-range class="no-padding" min="11" max="15"  [(ngModel)]="zoom" (ionChange)="onRangeChange($event)" padding="0">  <!-- (ionChange)="onRangeChange($event)" -->
       <ion-icon range-left small name="pin"></ion-icon>
       <ion-icon range-right name="pin"></ion-icon>
     </ion-range>
@@ -29,7 +30,6 @@
     <!-- Map -->
 
   <div #map id="map" data-tap-disabled="true"></div>
-
     <!-- Position button -->
     <ion-buttons>
         <button type="button" ion-button full (click)="getUserPosition()">
@@ -41,36 +41,18 @@
       <!-- List of drivers -->
     <div *ngIf="driversInZone">
       <ion-card class="marginCards" *ngFor="let driver of driversInZone" (click)="onChooseDriver(driver)">
-        <!-- <ion-card-content>
-          <ion-item>
-              <ion-icon name="contact" icon-only large="" icon-start=""></ion-icon>
-             {{driver?.firstName }} {{ driver?.lastName}}
-          </ion-item>
-          <ion-item>
-              <ion-icon name="navigate" icon-only large="" icon-start=""></ion-icon>
-              {{driver?.distance / 1000 | number: '1.2-2'}} km
-          </ion-item>
-          <ion-item>
-              <ion-icon name="time" icon-only large="" icon-start=""></ion-icon>
-              {{driver?.duration / 60 | number: '1.1-1'}} min
-          </ion-item>
-          <ion-row >
-            <ion-col col-9>
-                <ion-icon name="locate" icon-only large="" icon-start=""></ion-icon>
-                {{driver?.locationAddress}}
-            </ion-col>
-            <ion-col col-3 *ngIf="driver?.totalPrice">
-              <h3  class="roundBorder" >{{driver?.totalPrice | number: '1.2-2'}}</h3>
-            </ion-col>
-          </ion-row>
-
-        </ion-card-content> -->
-
 
           <ion-list>
             <ion-item>
               <ion-icon name="contact" icon-only large="" item-start color="primary"></ion-icon>
               {{driver?.firstName }} {{ driver?.lastName}}
+              <star-rating-comp item-end [starType]="'svg'"
+                                numOfStars="5"
+                                size="medium"
+                                [rating]="driver?.rating"
+                                [staticColor]="'ok'"
+                                [readOnly]="true"
+              ></star-rating-comp>
             </ion-item>
             <ion-item >
               <ion-icon name="locate" icon-only large="" item-start color="primary"></ion-icon>

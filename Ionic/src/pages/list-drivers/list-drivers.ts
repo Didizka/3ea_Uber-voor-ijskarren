@@ -25,6 +25,7 @@ export class ListDriversPage implements OnInit, OnDestroy {
   @ViewChild('map') mapElement: ElementRef;
   map: any;
   driversMarkers: any[] = [];
+  ratingsObject: any;
 
   // APP
   title: string = 'Uber voor ijskarren';
@@ -36,6 +37,9 @@ export class ListDriversPage implements OnInit, OnDestroy {
   //orderCancel
   isOrderCanceled = false;
 
+  //rating
+
+
   constructor(public navCtrl: NavController,
     private navParams: NavParams,
     private storage: Storage,
@@ -43,7 +47,11 @@ export class ListDriversPage implements OnInit, OnDestroy {
     private orderProvider: OrderProvider,
     private geolocation: Geolocation,
     private ref: ChangeDetectorRef) {
-    this.isOrderCanceled = this.navParams.get("cancellation")
+    this.isOrderCanceled = this.navParams.get("cancellation");
+    this.storage.get("cancellation").then(
+      data => {
+        this.isOrderCanceled = data;
+      });
   }
 
   ngOnInit() {
@@ -120,7 +128,8 @@ export class ListDriversPage implements OnInit, OnDestroy {
 
   onChooseDriver(driver: Driver) {
     if (!driver.totalPrice) {
-      console.log("You have to place order first!");
+      // console.log("You have to place order first!");
+       this.navCtrl.push("ReviewPage", { driver: driver });
     } else {
       this.navCtrl.push("OrderConfirmPage", { driver: driver });
     }
@@ -226,7 +235,7 @@ export class ListDriversPage implements OnInit, OnDestroy {
   loadDriversWithTotalPrice(orderId: number) {
     this.orderProvider.getDriversWithTotalPrice(orderId).subscribe(
       data => {
-        //console.log(data);
+        console.log(data);
         this.drivers = data;
         this.checkRangeOfDrivers();
       },

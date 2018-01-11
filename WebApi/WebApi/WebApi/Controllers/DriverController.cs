@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Models.Orders.Resources;
+using WebApi.Models.Resources;
 using WebApi.Models.Repositories;
 using AutoMapper;
 using WebApi.Models;

@@ -14,7 +14,9 @@ export class DriverDashboardPage implements OnInit, OnDestroy {
   hubConnection: HubConnection;
 
 
-  constructor(public navCtrl: NavController, private userProvider: UserProvider, private navParams: NavParams, public modalCtrl: ModalController, private storage: Storage) {
+  constructor(private navCtrl: NavController,
+              private userProvider: UserProvider,
+              private modalCtrl: ModalController) {
   }
 
   ngOnInit() {

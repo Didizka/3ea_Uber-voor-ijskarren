@@ -11,9 +11,9 @@ export class OrderProvider {
 
   //ip: string = 'http://http://146.185.141.77:9000/api/order/';
   //school-sanjy
-  //ip: string = 'http://172.16.205.5:80/api/order/';
+  ip: string = 'http://172.16.196.203:80/api/order/';
   //thuis-sanjy
-  ip: string = 'http://192.168.0.172:80/api/order/';
+  //ip: string = 'http://192.168.0.172:80/api/order/';
   // ip: string = 'http://192.168.0.172:80/api/order/';
   // ip: string = 'http://192.168.0.172:80/api/order/';
   //ip: string = 'http://172.16.229.9:80/api/order/';

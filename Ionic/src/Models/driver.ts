@@ -9,6 +9,7 @@ export class Driver{
   duration: number;
   locationAddress: string
   totalPrice: number;
+  rating: number
 }
 
 

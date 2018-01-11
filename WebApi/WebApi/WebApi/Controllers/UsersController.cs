@@ -10,7 +10,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using WebApi.Models.Repositories;
 using WebApi.Models.Orders;
-using WebApi.Models.Orders.Resources;
+using WebApi.Models.Resources;
 using System.Collections.Generic;
 
 namespace WebApi.Controllers
