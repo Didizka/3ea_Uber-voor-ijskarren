@@ -46,13 +46,6 @@
             <ion-item>
               <ion-icon name="contact" icon-only large="" item-start color="primary"></ion-icon>
               {{driver?.firstName }} {{ driver?.lastName}}
-              <star-rating-comp item-end [starType]="'svg'"
-                                numOfStars="5"
-                                size="medium"
-                                [rating]="driver?.rating"
-                                [staticColor]="'ok'"
-                                [readOnly]="true"
-              ></star-rating-comp>
             </ion-item>
             <ion-item >
               <ion-icon name="locate" icon-only large="" item-start color="primary"></ion-icon>
@@ -65,6 +58,17 @@
             <ion-item>
               <ion-icon name="time" icon-only large="" item-start color="primary"></ion-icon>
               {{driver?.duration / 60 | number: '1.1-1'}} min
+
+            </ion-item>
+            <ion-item>
+              <ion-icon name="star-half" icon-only large="" item-start color="primary"></ion-icon>
+              <star-rating-comp item-start [starType]="'svg'"
+                                numOfStars="5"
+                                size="medium"
+                                [rating]="driver?.rating"
+                                [staticColor]="'ok'"
+                                [readOnly]="true"
+              ></star-rating-comp>
               <h3  class="roundBorder" item-end *ngIf="driver?.totalPrice">{{driver?.totalPrice | number: '1.2-2'}}</h3>
             </ion-item>
           </ion-list>

@@ -49,6 +49,7 @@ export class ReviewPage implements OnInit{
   };
   onSubmitReview(){
     this.review.reviewToEmail = this.driver.email;
+    console.log("test");
     this.reviewProvider.addReviewToDriver(this.review).subscribe(
       data => {
         if(data == true){

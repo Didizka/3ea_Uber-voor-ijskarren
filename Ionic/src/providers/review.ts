@@ -6,7 +6,7 @@ import {Review} from "../Models/review";
 @Injectable()
 export class ReviewProvider {
   //school-sanjy
-  ip: string = 'http://172.16.196.203:80/api/driver/';
+  ip: string = 'http://172.16.196.203:80/api/review/';
   //thuis-sanjy
   //ip: string = 'http://192.168.0.172:80/api/review/';
 
@@ -17,8 +17,10 @@ export class ReviewProvider {
 
   }
   addReviewToDriver(driverReview: Review){
+    console.log(driverReview);
     return this.http.post(this.ip + 'driver', driverReview)
       .map((response: Response) => {
+        console.log(response);
         return response.json();
       });
   }
